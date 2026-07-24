@@ -26,7 +26,7 @@ async function expectSnapshotToExists(
 ) {
   const info = await test.info();
   // If we are using the Argos reporter, screenshots are not saved locally
-  if (info.config.reporter.some((rep) => rep[0].includes("argos"))) {
+  if (info.config.reporter.some((rep) => /argos|snapvisor/.test(rep[0]))) {
     return;
   }
   const extension = { screenshot: "png", aria: ".aria.yml" }[type];
