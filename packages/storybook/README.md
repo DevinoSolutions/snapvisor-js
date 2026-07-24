@@ -11,9 +11,9 @@
 
 # Official Argos Storybook integration
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/storybook.svg)](https://www.npmjs.com/package/@argos-ci/storybook)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/storybook.svg)](https://www.npmjs.com/package/@argos-ci/storybook)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/storybook.svg)](https://www.npmjs.com/package/@argos-ci/storybook)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/storybook.svg)](https://www.npmjs.com/package/@snapvisor/storybook)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/storybook.svg)](https://www.npmjs.com/package/@snapvisor/storybook)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/storybook.svg)](https://www.npmjs.com/package/@snapvisor/storybook)
 
 Capture and review visual changes of your [Storybook](https://storybook.js.org/) stories with Argos. It runs your stories in a real browser and uploads a screenshot of each one to Argos in your CI.
 
@@ -22,7 +22,7 @@ Visit the [Storybook SDK documentation](https://argos-ci.com/docs/reference/stor
 ## Installation
 
 ```sh
-npm install --save-dev @argos-ci/storybook
+npm install --save-dev @snapvisor/storybook
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ The recommended way to run visual tests is with the [Storybook Vitest addon](htt
 ```ts
 // vitest.config.ts
 import { defineConfig } from "vitest/config";
-import { argosVitestPlugin } from "@argos-ci/storybook/vitest-plugin";
+import { argosVitestPlugin } from "@snapvisor/storybook/vitest-plugin";
 
 export default defineConfig({
   plugins: [
@@ -48,7 +48,7 @@ A screenshot is captured for every story automatically. To capture additional sc
 
 ```ts
 // Button.stories.tsx
-import { argosScreenshot } from "@argos-ci/storybook/vitest";
+import { argosScreenshot } from "@snapvisor/storybook/vitest";
 
 export const Example: Story = {
   play: async (ctx) => {
@@ -57,7 +57,7 @@ export const Example: Story = {
 };
 ```
 
-> Using the [Storybook Test Runner](https://storybook.js.org/docs/writing-tests/integrations/test-runner) instead? Import `argosScreenshot` from `@argos-ci/storybook/test-runner` and call it from the `postVisit` hook. See the [Test Runner quickstart](https://argos-ci.com/docs/quickstart/storybook-quickstart/storybook-test-runner-quickstart).
+> Using the [Storybook Test Runner](https://storybook.js.org/docs/writing-tests/integrations/test-runner) instead? Import `argosScreenshot` from `@snapvisor/storybook/test-runner` and call it from the `postVisit` hook. See the [Test Runner quickstart](https://argos-ci.com/docs/quickstart/storybook-quickstart/storybook-test-runner-quickstart).
 
 ## Links
 

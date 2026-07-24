@@ -11,9 +11,9 @@
 
 # Official Argos WebdriverIO integration
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/webdriverio.svg)](https://www.npmjs.com/package/@argos-ci/webdriverio)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/webdriverio.svg)](https://www.npmjs.com/package/@argos-ci/webdriverio)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/webdriverio.svg)](https://www.npmjs.com/package/@argos-ci/webdriverio)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/webdriverio.svg)](https://www.npmjs.com/package/@snapvisor/webdriverio)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/webdriverio.svg)](https://www.npmjs.com/package/@snapvisor/webdriverio)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/webdriverio.svg)](https://www.npmjs.com/package/@snapvisor/webdriverio)
 
 Capture stable Argos screenshots from your [WebdriverIO](https://webdriver.io) tests.
 
@@ -24,7 +24,7 @@ Visit the [WebdriverIO SDK documentation](https://argos-ci.com/docs/reference/we
 Install the SDK alongside the [Argos CLI](https://argos-ci.com/docs/reference/argos-command-line-interface-cli), which uploads the screenshots to Argos:
 
 ```sh
-npm install --save-dev @argos-ci/webdriverio @argos-ci/cli
+npm install --save-dev @snapvisor/webdriverio @snapvisor/cli
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ npm install --save-dev @argos-ci/webdriverio @argos-ci/cli
 Use `argosScreenshot` to stabilize the UI and capture a screenshot:
 
 ```ts
-import { argosScreenshot } from "@argos-ci/webdriverio";
+import { argosScreenshot } from "@snapvisor/webdriverio";
 
 describe("Homepage", () => {
   it("takes a screenshot", async () => {
@@ -45,7 +45,7 @@ describe("Homepage", () => {
 Screenshots are saved locally (in `./screenshots/argos` by default). Upload them to Argos with the Argos CLI, usually at the end of your CI job:
 
 ```sh
-npx @argos-ci/cli upload ./screenshots
+npx @snapvisor/cli upload ./screenshots
 ```
 
 ## Links

@@ -11,9 +11,9 @@
 
 # Official Argos Vitest integration
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/vitest.svg)](https://www.npmjs.com/package/@argos-ci/vitest)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/vitest.svg)](https://www.npmjs.com/package/@argos-ci/vitest)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/vitest.svg)](https://www.npmjs.com/package/@argos-ci/vitest)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/vitest.svg)](https://www.npmjs.com/package/@snapvisor/vitest)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/vitest.svg)](https://www.npmjs.com/package/@snapvisor/vitest)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/vitest.svg)](https://www.npmjs.com/package/@snapvisor/vitest)
 
 Capture Argos screenshots directly from your [Vitest browser tests](https://vitest.dev/guide/browser/).
 
@@ -24,7 +24,7 @@ Visit the [Vitest SDK documentation](https://argos-ci.com/docs/reference/vitest)
 Install the package:
 
 ```sh
-npm install --save-dev @argos-ci/vitest
+npm install --save-dev @snapvisor/vitest
 ```
 
 `argosSnapshot` runs in any Vitest test — browser or Node — and needs nothing else.
@@ -46,7 +46,7 @@ Register the plugin in your Vitest config:
 // vitest.config.ts
 import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
-import { argosVitestPlugin } from "@argos-ci/vitest/plugin";
+import { argosVitestPlugin } from "@snapvisor/vitest/plugin";
 
 export default defineConfig({
   plugins: [
@@ -71,7 +71,7 @@ Then take screenshots from your browser tests:
 ```ts
 import { test } from "vitest";
 import { render } from "vitest-browser-react";
-import { argosScreenshot } from "@argos-ci/vitest";
+import { argosScreenshot } from "@snapvisor/vitest";
 import { Button } from "./Button";
 
 test("Button", async () => {
@@ -112,7 +112,7 @@ explicitly:
 
 ```ts
 import { test } from "vitest";
-import { argosSnapshot } from "@argos-ci/vitest";
+import { argosSnapshot } from "@snapvisor/vitest";
 
 test("API response", async () => {
   const user = await fetchUser();

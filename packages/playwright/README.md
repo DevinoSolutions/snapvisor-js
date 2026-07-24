@@ -11,9 +11,9 @@
 
 # Official Argos Playwright integration
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/playwright.svg)](https://www.npmjs.com/package/@argos-ci/playwright)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/playwright.svg)](https://www.npmjs.com/package/@argos-ci/playwright)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/playwright.svg)](https://www.npmjs.com/package/@argos-ci/playwright)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/playwright.svg)](https://www.npmjs.com/package/@snapvisor/playwright)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/playwright.svg)](https://www.npmjs.com/package/@snapvisor/playwright)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/playwright.svg)](https://www.npmjs.com/package/@snapvisor/playwright)
 
 Capture stable Argos screenshots from your [Playwright](https://playwright.dev/) tests, and report failure screenshots and traces to Argos.
 
@@ -22,7 +22,7 @@ Visit the [Playwright SDK documentation](https://argos-ci.com/docs/reference/pla
 ## Installation
 
 ```sh
-npm install --save-dev @argos-ci/playwright
+npm install --save-dev @snapvisor/playwright
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ Set up the Argos reporter in your Playwright config:
 ```ts
 // playwright.config.ts
 import { defineConfig } from "@playwright/test";
-import { createArgosReporterOptions } from "@argos-ci/playwright/reporter";
+import { createArgosReporterOptions } from "@snapvisor/playwright/reporter";
 
 export default defineConfig({
   // ... other configuration
@@ -42,7 +42,7 @@ export default defineConfig({
 
     // Add the Argos reporter.
     [
-      "@argos-ci/playwright/reporter",
+      "@snapvisor/playwright/reporter",
       // Upload the screenshots to Argos only on CI.
       createArgosReporterOptions({ uploadToArgos: !!process.env.CI }),
     ],
@@ -55,7 +55,7 @@ Then capture stable screenshots with `argosScreenshot` in your tests:
 ```ts
 // tests/example.spec.ts
 import { test } from "@playwright/test";
-import { argosScreenshot } from "@argos-ci/playwright";
+import { argosScreenshot } from "@snapvisor/playwright";
 
 test("screenshot homepage", async ({ page }) => {
   await page.goto("http://localhost:3000");

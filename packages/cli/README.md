@@ -13,16 +13,16 @@
 
 Interact with and upload screenshots to [argos-ci.com](https://argos-ci.com) from the command line.
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/cli.svg)](https://www.npmjs.com/package/@argos-ci/cli)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/cli.svg)](https://www.npmjs.com/package/@argos-ci/cli)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/cli.svg)](https://www.npmjs.com/package/@argos-ci/cli)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/cli.svg)](https://www.npmjs.com/package/@snapvisor/cli)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/cli.svg)](https://www.npmjs.com/package/@snapvisor/cli)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/cli.svg)](https://www.npmjs.com/package/@snapvisor/cli)
 
 Visit the [Argos CLI documentation](https://argos-ci.com/docs/reference/argos-command-line-interface-cli) for the full command reference and more.
 
 ## Installation
 
 ```sh
-npm install --save-dev @argos-ci/cli
+npm install --save-dev @snapvisor/cli
 ```
 
 ## Usage
@@ -30,13 +30,13 @@ npm install --save-dev @argos-ci/cli
 Upload a directory of screenshots to Argos. Authenticate with your project token via the `ARGOS_TOKEN` environment variable:
 
 ```sh
-ARGOS_TOKEN="<your-argos-token>" npx @argos-ci/cli upload ./screenshots
+ARGOS_TOKEN="<your-argos-token>" npx @snapvisor/cli upload ./screenshots
 ```
 
 The CLI also exposes commands to `deploy` a static build, inspect and `review` builds, post a `comment`, and more. List them all with:
 
 ```sh
-npx @argos-ci/cli --help
+npx @snapvisor/cli --help
 ```
 
 ## Links

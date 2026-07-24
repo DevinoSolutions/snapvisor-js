@@ -13,9 +13,9 @@
 
 Shared utilities used across the Argos SDKs (screenshot metadata, name resolution, and other helpers).
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/util.svg)](https://www.npmjs.com/package/@argos-ci/util)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/util.svg)](https://www.npmjs.com/package/@argos-ci/util)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/util.svg)](https://www.npmjs.com/package/@argos-ci/util)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/util.svg)](https://www.npmjs.com/package/@snapvisor/util)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/util.svg)](https://www.npmjs.com/package/@snapvisor/util)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/util.svg)](https://www.npmjs.com/package/@snapvisor/util)
 
 > This package is an internal building block shared by the other Argos SDKs. You usually don't need to install it directly — pick the integration for your test framework instead.
 
