@@ -6,7 +6,7 @@ const mustBeApiBaseUrl = (value: any) => {
     /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
   if (!URL_REGEX.test(value)) {
-    throw new Error("Invalid Argos API base URL");
+    throw new Error("Invalid Snapvisor API base URL");
   }
 };
 
@@ -24,7 +24,9 @@ const mustBeCommit = (value: any) => {
 
 const mustBeArgosToken = (value: any) => {
   if (value && value.length !== 40) {
-    throw new Error("Invalid Argos repository token (must be 40 characters)");
+    throw new Error(
+      "Invalid Snapvisor repository token (must be 40 characters)",
+    );
   }
 };
 
@@ -263,7 +265,7 @@ const schema = {
 
 export interface Config {
   /**
-   * Base URL of the Argos API.
+   * Base URL of the Snapvisor API.
    * Use this to target a self-hosted installation.
    * @default "https://api.snapvisor.io/v2/"
    */
@@ -281,13 +283,13 @@ export interface Config {
   branch: string;
 
   /**
-   * Argos repository access token.
+   * Snapvisor repository access token.
    */
   token: string | null;
 
   /**
-   * Argos project slug used for tokenless authentication.
-   * Useful to disambiguate when multiple Argos projects are linked
+   * Snapvisor project slug used for tokenless authentication.
+   * Useful to disambiguate when multiple Snapvisor projects are linked
    * to the same repository.
    * @example "my-org/my-project"
    */
@@ -392,7 +394,7 @@ export interface Config {
 
   /**
    * Diff sensitivity threshold between 0 and 1.
-   * Higher values make Argos less sensitive to differences.
+   * Higher values make Snapvisor less sensitive to differences.
    */
   threshold: number | null;
 
@@ -485,7 +487,7 @@ export async function readConfig(options: Partial<Config> = {}) {
 
   if (!config.get("branch") || !config.get("commit")) {
     throw new Error(
-      "Argos requires a branch and a commit to be set. If you are running in a non-git environment consider setting ARGOS_BRANCH and ARGOS_COMMIT environment variables.",
+      "Snapvisor requires a branch and a commit to be set. If you are running in a non-git environment consider setting ARGOS_BRANCH and ARGOS_COMMIT environment variables.",
     );
   }
 

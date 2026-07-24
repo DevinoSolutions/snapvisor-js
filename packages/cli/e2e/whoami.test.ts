@@ -24,7 +24,7 @@ describe("argos whoami", () => {
     }
     expect(error).toBeDefined();
     expect(error?.status).not.toBe(0);
-    expect(error?.stderr).toContain("No Argos token found");
+    expect(error?.stderr).toContain("No Snapvisor token found");
   });
 
   test("prints the authenticated user in JSON mode", () => {
@@ -44,7 +44,7 @@ describe("argos whoami", () => {
     const output = run(["whoami", "--token", userAccessToken], baseEnv);
     // `formatMe` prints identity + the account slugs on an "Accounts:" line
     // (there is no per-user slug — slug is account-scoped).
-    expect(output.stdout).toContain("Logged in to Argos as");
+    expect(output.stdout).toContain("Logged in to Snapvisor as");
     expect(output.stdout).toContain("Accounts:");
   });
 });

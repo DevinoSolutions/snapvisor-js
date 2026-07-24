@@ -1,15 +1,15 @@
 {
   "name": "@snapvisor/util",
   "description": "Set of utilities used across all Snapvisor SDKs.",
-  "version": "4.0.4",
+  "version": "5.0.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
     "directory": "packages/util"
   },
-  "homepage": "https://github.com/argos-ci/argos-javascript/blob/main/packages/util/README.md",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

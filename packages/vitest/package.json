@@ -1,15 +1,15 @@
 {
   "name": "@snapvisor/vitest",
   "description": "Vitest SDK for visual testing with Snapvisor.",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
     "directory": "packages/vitest"
   },
-  "homepage": "https://argos-ci.com/docs/reference/vitest",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

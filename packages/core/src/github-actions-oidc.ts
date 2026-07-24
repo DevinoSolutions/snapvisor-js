@@ -51,7 +51,7 @@ async function fetchOidcToken(args: { audience: string }): Promise<string> {
 }
 
 /**
- * Exchange a GitHub Actions OIDC token for a short-lived Argos token.
+ * Exchange a GitHub Actions OIDC token for a short-lived Snapvisor token.
  */
 export async function exchangeGitHubActionsOidcToken(args: {
   apiBaseUrl: string;

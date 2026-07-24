@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.8.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* build before from-package publish and bump cypress/puppeteer/webdriverio ([017f5f5](https://github.com/DevinoSolutions/snapvisor-js/commit/017f5f50519d2b3562650e57d0b369d711a55cbb))
+* display error messages from API ([#152](https://github.com/DevinoSolutions/snapvisor-js/issues/152)) ([44def81](https://github.com/DevinoSolutions/snapvisor-js/commit/44def8170d62553695724448fb0a2748c0b77b6d))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* **webdriverio:** fix module import ([4af9a03](https://github.com/DevinoSolutions/snapvisor-js/commit/4af9a035f64a499e316162d99dfa7c04d2333942))
+
+
+### Features
+
+* add webdriverio SDK ([96a39ab](https://github.com/DevinoSolutions/snapvisor-js/commit/96a39abcba78b02795ccf3785e4aa447e118a0d0))
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* **puppeteer:** allow to specify the full path of screenshot ([#103](https://github.com/DevinoSolutions/snapvisor-js/issues/103)) ([d118088](https://github.com/DevinoSolutions/snapvisor-js/commit/d118088fa7284be516b3f9871036e108ed175801))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+* **webdriverio:** support webdriverio v9 ([289a2ad](https://github.com/DevinoSolutions/snapvisor-js/commit/289a2ad206dde253c88f6fb8c9a1281cbbf68a5f))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* Node.js v20 or higher is now required
+* Node.js v18 or higher is required.
+
+
+
+
+
 ## [0.7.19](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/webdriverio@0.7.18...@argos-ci/webdriverio@0.7.19) (2026-07-23)
 
 **Note:** Version bump only for package @argos-ci/webdriverio

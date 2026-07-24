@@ -19,7 +19,7 @@ const BUILD_URL_REGEXP =
 
 /**
  * Parse a build reference, accepting either a bare build number (`"1234"`) or a
- * full Argos build URL. Returns `null` when the input is neither.
+ * full Snapvisor build URL. Returns `null` when the input is neither.
  */
 export function parseBuildReference(reference: string): BuildReference | null {
   const asNumber = Number(reference);
@@ -47,7 +47,7 @@ export function parseBuildReferenceOrFail(reference: string): BuildReference {
   const parsed = parseBuildReference(reference);
   if (!parsed) {
     fail(
-      `Build reference must be a valid build number or Argos build URL (https://app.argos-ci.com/.../builds/<number>), got "${reference}".`,
+      `Build reference must be a valid build number or Snapvisor build URL (https://app.snapvisor.io/.../builds/<number>), got "${reference}".`,
     );
   }
   return parsed;

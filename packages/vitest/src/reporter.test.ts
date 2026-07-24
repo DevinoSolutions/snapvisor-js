@@ -95,7 +95,7 @@ describe("ArgosReporter", () => {
     reporter.onInit(createVitest({}));
     await expect(reporter.onTestRunEnd()).resolves.toBeUndefined();
     expect(error).toHaveBeenCalledWith(
-      expect.stringContaining("Error while creating the Argos build"),
+      expect.stringContaining("Error while creating the Snapvisor build"),
     );
     expect(error).toHaveBeenCalledWith(
       expect.objectContaining({ message: "upload failed" }),
@@ -112,7 +112,7 @@ describe("ArgosReporter", () => {
     reporter.onInit(createVitest({}));
     await expect(reporter.onTestRunEnd()).resolves.toBeUndefined();
     expect(error).toHaveBeenCalledWith(
-      expect.stringContaining("Error while creating the Argos build"),
+      expect.stringContaining("Error while creating the Snapvisor build"),
     );
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("ignoreUploadFailures"),

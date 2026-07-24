@@ -26,7 +26,7 @@ export async function discoverSnapshots(
 }
 
 /**
- * Check if the given filename corresponds to an Argos image.
+ * Check if the given filename corresponds to an Snapvisor image.
  */
 export function checkIsValidImageFile(filename: string): boolean {
   const lowerFilename = extname(filename).toLowerCase();

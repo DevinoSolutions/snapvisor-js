@@ -8,7 +8,7 @@ export function registerCommentList(comment: Command) {
   comment
     .command("list")
     .description("List the comments on a build")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .addOption(tokenOption)
     .addOption(projectPathOption)
     .addOption(jsonOption)

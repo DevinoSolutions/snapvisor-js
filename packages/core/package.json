@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/core",
   "description": "Node.js SDK for visual testing with Snapvisor.",
-  "version": "6.6.2",
+  "version": "7.0.0",
   "type": "module",
   "exports": {
     ".": {
@@ -15,10 +15,10 @@
   "types": "./dist/index.d.mts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
     "directory": "packages/core"
   },
-  "homepage": "https://argos-ci.com/docs/reference/node.js-sdk",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

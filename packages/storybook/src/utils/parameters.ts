@@ -17,7 +17,7 @@ export type FitToContent = {
 };
 
 /**
- * Argos parameters in Storybook.
+ * Snapvisor parameters in Storybook.
  */
 export interface ArgosStorybookParameters {
   /**
@@ -70,7 +70,7 @@ export function getViewport(
 }
 
 /**
- * Get the Argos parameters from the Storybook context.
+ * Get the Snapvisor parameters from the Storybook context.
  */
 export function getArgosParameters(
   parameters: StoryParameters,

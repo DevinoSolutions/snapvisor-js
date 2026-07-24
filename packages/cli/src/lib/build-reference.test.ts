@@ -87,7 +87,7 @@ describe("parseBuildReferenceOrFail", () => {
   it("throws a CliError on invalid input", () => {
     expect(() => parseBuildReferenceOrFail("nope")).toThrow(CliError);
     expect(() => parseBuildReferenceOrFail("nope")).toThrow(
-      /valid build number or Argos build URL/,
+      /valid build number or Snapvisor build URL/,
     );
   });
 });

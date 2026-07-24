@@ -21,7 +21,7 @@ export function registerCommentCreate(comment: Command) {
   comment
     .command("create")
     .description("Post a comment (or reply) on a build")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .option("--body <markdown>", "Markdown body of the comment")
     .option("--body-file <path>", "Read the comment body from a Markdown file")
     .option(

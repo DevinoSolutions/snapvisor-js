@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/cli",
   "description": "Command-line (CLI) for visual testing with Snapvisor.",
-  "version": "6.4.1",
+  "version": "7.0.0",
   "bin": {
     "snapvisor": "./bin/argos-cli.js",
     "argos": "./bin/argos-cli.js"
@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
-    "directory": "packages/core"
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
+    "directory": "packages/cli"
   },
-  "homepage": "https://argos-ci.com/docs/reference/argos-command-line-interface-cli",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

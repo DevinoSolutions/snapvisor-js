@@ -73,7 +73,7 @@ describe("argos change ignore", () => {
       "acme/web",
     ]);
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("fails when no project is provided", () => {

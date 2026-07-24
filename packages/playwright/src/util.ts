@@ -20,7 +20,7 @@ import type { ArgosAttachment } from "./attachment";
 const require = createRequire(import.meta.url);
 
 /**
- * Check if the project is using the Argos reporter.
+ * Check if the project is using the Snapvisor reporter.
  */
 export function checkIsUsingArgosReporter(testInfo: TestInfo | null): boolean {
   if (!testInfo) {
@@ -199,7 +199,7 @@ export function getSnapshotNames(
 }
 
 /**
- * Inject Argos script into the document.
+ * Inject Snapvisor script into the document.
  */
 async function injectArgos(handler: Page | Frame) {
   const injected = await handler.evaluate(
@@ -211,7 +211,7 @@ async function injectArgos(handler: Page | Frame) {
 }
 
 /**
- * Prepare Argos screenshot by injecting the SDK and creating the root directory.
+ * Prepare Snapvisor screenshot by injecting the SDK and creating the root directory.
  */
 export async function prepare(args: {
   handler: Page | Frame;
@@ -222,7 +222,7 @@ export async function prepare(args: {
   await Promise.all([
     // Create the screenshot folder if it doesn't exist
     useArgosReporter ? null : mkdir(root, { recursive: true }),
-    // Inject Argos script into the page
+    // Inject Snapvisor script into the page
     injectArgos(handler),
   ]);
 }

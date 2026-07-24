@@ -3,6 +3,144 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* add ARGOS_PR_NUMBER, remove --pull-request arg ([362bd57](https://github.com/DevinoSolutions/snapvisor-js/commit/362bd5725334ebaca2ce66a0bfabc3f8206dce74))
+* better CI handling, specially Buildkite ([b6bc04c](https://github.com/DevinoSolutions/snapvisor-js/commit/b6bc04c43c3b0d5db88744495f0c5115faca5ad6))
+* **ci:** fix repository detection in GitHub Actions ([46ed1b9](https://github.com/DevinoSolutions/snapvisor-js/commit/46ed1b99228c8e2d9c17b698b0f0c39f813fd0ca))
+* **cli:** fix --token usage in CLI ([673dda3](https://github.com/DevinoSolutions/snapvisor-js/commit/673dda34da12dacd378ee5035844730094a8667e))
+* **config:** fix `parallelTotal` and `parallelIndex` validation ([3d64c32](https://github.com/DevinoSolutions/snapvisor-js/commit/3d64c32098638ac3351019d6a54817f965b549f2))
+* **config:** fix config resolution ([fa9a521](https://github.com/DevinoSolutions/snapvisor-js/commit/fa9a521e54ffdb4200acd8f70b54a3c26b8efeec))
+* **config:** fix setting parallel mode from environment vars ([fc25216](https://github.com/DevinoSolutions/snapvisor-js/commit/fc252168e6886cc47cd0d80fada00e4b39ddb871)), closes [#1825](https://github.com/DevinoSolutions/snapvisor-js/issues/1825)
+* **config:** improve parallel validation ([26d4f35](https://github.com/DevinoSolutions/snapvisor-js/commit/26d4f35ed364457d46afc5fc91225fdeb565c320))
+* **config:** local config is prioritary over environment variables ([6acec21](https://github.com/DevinoSolutions/snapvisor-js/commit/6acec2110ae3ad3363f0b8cf3012e40318c9eaa1))
+* **core:** add "mergeQueue" to schema ([523f613](https://github.com/DevinoSolutions/snapvisor-js/commit/523f61318ce407e8ea600a30443cdd30ebc817ed))
+* **core:** branch is now required ([840aec6](https://github.com/DevinoSolutions/snapvisor-js/commit/840aec63cece1dee589c90cb2bf0fd63563f17b5))
+* **core:** chunk image processing to reduce memory pressure ([#315](https://github.com/DevinoSolutions/snapvisor-js/issues/315)) ([6e0f17c](https://github.com/DevinoSolutions/snapvisor-js/commit/6e0f17c4d80725717ff09d233241acb73fc90028))
+* **core:** fix branch detection on CircleCI ([24549b1](https://github.com/DevinoSolutions/snapvisor-js/commit/24549b19ad026e24fd5a1235f23a164c1d8f077f))
+* **core:** improve message when branch and commit is missing ([3b8721e](https://github.com/DevinoSolutions/snapvisor-js/commit/3b8721ef19f20531c89119ed907020548eb51001))
+* **core:** prevent OS command injection via CI branch names (GHSA-4x45-gxvp-6283) ([#319](https://github.com/DevinoSolutions/snapvisor-js/issues/319)) ([8355f3a](https://github.com/DevinoSolutions/snapvisor-js/commit/8355f3af3be3f4fe361d58a688d21535cf672717))
+* **core:** resolve the merge base locally when a ref is missing on origin ([8b16c16](https://github.com/DevinoSolutions/snapvisor-js/commit/8b16c1647464e77e8507162e09be5bea1410dc31))
+* **core:** use correct content-type for image ([22625c0](https://github.com/DevinoSolutions/snapvisor-js/commit/22625c0faa6562946298fe0850a1b24b4bd44715))
+* display error messages from API ([#152](https://github.com/DevinoSolutions/snapvisor-js/issues/152)) ([44def81](https://github.com/DevinoSolutions/snapvisor-js/commit/44def8170d62553695724448fb0a2748c0b77b6d))
+* don't treat empty ARGOS_SUBSET/ARGOS_PARALLEL env as enabled ([8134950](https://github.com/DevinoSolutions/snapvisor-js/commit/8134950565288a3184adf4279d26674b5089b2d3))
+* fix branch fetching on CircleCI ([2ae4b37](https://github.com/DevinoSolutions/snapvisor-js/commit/2ae4b3722b6699a19b10b375f770d5198170812c))
+* fix common js finalize & readConfig ([10f67bc](https://github.com/DevinoSolutions/snapvisor-js/commit/10f67bc78d03b4537053c5210992d487e6ed2f1e))
+* fix external dependencies ([8a25fe1](https://github.com/DevinoSolutions/snapvisor-js/commit/8a25fe14be0b393cb9d99bbc55f35a7a00e92449))
+* **git:** fix merge base error ([b5fd2d6](https://github.com/DevinoSolutions/snapvisor-js/commit/b5fd2d68a99636d4e658c347252e461d34f6d82b))
+* **github-actions:** better commit & branch detection ([2131752](https://github.com/DevinoSolutions/snapvisor-js/commit/21317527ba61848f43221f02e8dc1ef5827601a0))
+* **github:** fix commit in "pull_request_target" event ([da07b9e](https://github.com/DevinoSolutions/snapvisor-js/commit/da07b9ea887b118c7bc91f75c9673971c650d77f))
+* **github:** fix running from "deployment_status" ([#106](https://github.com/DevinoSolutions/snapvisor-js/issues/106)) ([cc15807](https://github.com/DevinoSolutions/snapvisor-js/commit/cc1580743bd84342090bafbe13405a135dc09300))
+* **github:** fix tokenless auth ([660e80f](https://github.com/DevinoSolutions/snapvisor-js/commit/660e80f880dd626a6aef56c58d000b35fe00b713)), closes [#216](https://github.com/DevinoSolutions/snapvisor-js/issues/216)
+* **git:** improve Git behaviour on local repo ([591c476](https://github.com/DevinoSolutions/snapvisor-js/commit/591c47607beddeaa4e2e4873163a27767f81c339))
+* improve error message while optimizing images ([#101](https://github.com/DevinoSolutions/snapvisor-js/issues/101)) ([c167d95](https://github.com/DevinoSolutions/snapvisor-js/commit/c167d95a9774d8b2ee677cf2d63a8b123b491189))
+* make ARGOS_ environment variables prioritary ([b8e0ea7](https://github.com/DevinoSolutions/snapvisor-js/commit/b8e0ea7f6be7e381a0faeaf23892f39873425adb))
+* **merge-queue:** extract PR in "merge_group" event ([e9d635c](https://github.com/DevinoSolutions/snapvisor-js/commit/e9d635c2392b7e504641da58586c26a0bd3d78f1))
+* options overrides ci ([047d865](https://github.com/DevinoSolutions/snapvisor-js/commit/047d865e2d5638c3021010ca9fd928f93eb2f1b0))
+* **playwright:** fix trace upload ([aa4f9c3](https://github.com/DevinoSolutions/snapvisor-js/commit/aa4f9c394d3349ce6dc42d5e5b8f05932f9b4098))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* retry git fetch on lock contention ([b56137b](https://github.com/DevinoSolutions/snapvisor-js/commit/b56137b86ba88874b1229b0f32f94b7668dc61ae))
+* stabilize axios version ([2a1d487](https://github.com/DevinoSolutions/snapvisor-js/commit/2a1d487756d01bfc93ae2371cf361c96c5d087b9))
+* surface HTTP status and raw body in API errors ([6c465a3](https://github.com/DevinoSolutions/snapvisor-js/commit/6c465a345ae95a3e20240653a4749831f3b94d79))
+* **tokenless:** fix tokenless auth with forked PR ([375c16e](https://github.com/DevinoSolutions/snapvisor-js/commit/375c16e51bd2977b6066ade5309ed01c27cad956))
+* **tokenless:** fix tokenless with push event ([60b3cd7](https://github.com/DevinoSolutions/snapvisor-js/commit/60b3cd76c823497489dfc2432d4ca4a05fc552d2))
+* **upload:** fix upload error with some undici version ([#294](https://github.com/DevinoSolutions/snapvisor-js/issues/294)) ([418646b](https://github.com/DevinoSolutions/snapvisor-js/commit/418646bd19ffd78f79dcf6cf83156b91c43d1c69))
+* **upload:** handle same screenshots ([cfb8895](https://github.com/DevinoSolutions/snapvisor-js/commit/cfb88956a1af518ec8be86998998410bbafa06ed))
+* use pr base branch if available for no remote content access mode ([0e7e888](https://github.com/DevinoSolutions/snapvisor-js/commit/0e7e888715f12c9196258d1cbac1b352891d95b5))
+* **vercel:** fix getting pull request on Vercel repo dispatch ([17e4b96](https://github.com/DevinoSolutions/snapvisor-js/commit/17e4b96e092a2b2deb7fd158a5bfcaed1e3c06fe))
+
+
+### Features
+
+* add --skip-if-empty option to argos finalize ([#341](https://github.com/DevinoSolutions/snapvisor-js/issues/341)) ([b0c00eb](https://github.com/DevinoSolutions/snapvisor-js/commit/b0c00ebe9f9ad5d7248592bc5b89dc7f52bb72bf))
+* add `subset` option ([191d6ce](https://github.com/DevinoSolutions/snapvisor-js/commit/191d6ce2516e52cc5e94def3ca74e7b86c657147))
+* add buildkite pr number ([0111827](https://github.com/DevinoSolutions/snapvisor-js/commit/01118275e58d41abb6826d9a650a030cc9adee9c))
+* add circle pr number ([4512cd9](https://github.com/DevinoSolutions/snapvisor-js/commit/4512cd93c253e5bd2737b720464e72aa0db07f81))
+* add debug info for merge base ([a385a2c](https://github.com/DevinoSolutions/snapvisor-js/commit/a385a2c18ffc51c4284038e90876b71036063055))
+* add finalize command ([53ce57d](https://github.com/DevinoSolutions/snapvisor-js/commit/53ce57d7bec003368575495e05781a31698b2816))
+* add github pr number ([61c455d](https://github.com/DevinoSolutions/snapvisor-js/commit/61c455d35d18b841979430f69b2d17375b31bf37))
+* add prNumber option ([6ae3824](https://github.com/DevinoSolutions/snapvisor-js/commit/6ae38249c1cbe4901d464925f92982104cbc73df))
+* add travis pr number ([4b1aad8](https://github.com/DevinoSolutions/snapvisor-js/commit/4b1aad81977cc4423e3735f8ab0f4049fb5b8da9))
+* allow Node.js v14 ([3dff9a8](https://github.com/DevinoSolutions/snapvisor-js/commit/3dff9a8656e24dea5cc9d7fa659a114c6f5f7b29))
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to specify a threshold to control diff sensitivity ([820bb30](https://github.com/DevinoSolutions/snapvisor-js/commit/820bb3090c72607588d2f5c0829aa50f9a947de3))
+* allow to specify ref branch & ref commit ([a6c4ee3](https://github.com/DevinoSolutions/snapvisor-js/commit/a6c4ee3d5eda68c2b224c385f7aaa32c565f2c8f))
+* **ci:** support Bitrise CI ([#89](https://github.com/DevinoSolutions/snapvisor-js/issues/89)) ([98c8359](https://github.com/DevinoSolutions/snapvisor-js/commit/98c83595f4710e865cbeccdac3686fcf85b53908))
+* **ci:** support running on "deployment_status" event ([#105](https://github.com/DevinoSolutions/snapvisor-js/issues/105)) ([893636f](https://github.com/DevinoSolutions/snapvisor-js/commit/893636f8ea9626a06344dc4cd02771a41527142c))
+* **cli:** log stack when an error occurs ([0c47590](https://github.com/DevinoSolutions/snapvisor-js/commit/0c47590879fbff1ab6ae9ca01390bc14059e3c91))
+* **cli:** setup cli package ([4f589a5](https://github.com/DevinoSolutions/snapvisor-js/commit/4f589a5c7e1355e05f82174424e8d3eab8875a0f))
+* collect test report infos in cypress and playwright ([bc275a2](https://github.com/DevinoSolutions/snapvisor-js/commit/bc275a2ad1230bfd9a1aba9d85f86b780333f4a9))
+* compatibility to granular GitHub Actions jobs retries ([ac954dc](https://github.com/DevinoSolutions/snapvisor-js/commit/ac954dc896b538efe4a73db70a5320de9fed0a4a))
+* **core:** add support for GitHub merge queue ([d5488c8](https://github.com/DevinoSolutions/snapvisor-js/commit/d5488c845bb6c64f2b58f950ca0e755db87afab1))
+* **core:** allow specifying a project for tokenless authentication ([#318](https://github.com/DevinoSolutions/snapvisor-js/issues/318)) ([2fd3b58](https://github.com/DevinoSolutions/snapvisor-js/commit/2fd3b585ce7356e1a43e480243c758a5de2b92f6))
+* **core:** allow to upload text to be compared by Argos ([#313](https://github.com/DevinoSolutions/snapvisor-js/issues/313)) ([5bb0f3c](https://github.com/DevinoSolutions/snapvisor-js/commit/5bb0f3c17a228eef2a9fe5db616eb76e4e05daaf))
+* **core:** create @argos-ci/core package ([2a5f35d](https://github.com/DevinoSolutions/snapvisor-js/commit/2a5f35dab0f638922fbd72a9483ab020db1cee82))
+* **core:** drop env-ci dep ([e529be2](https://github.com/DevinoSolutions/snapvisor-js/commit/e529be277468b56e951ea0a027c48366850a7072))
+* **core:** finalize core package ([a832d13](https://github.com/DevinoSolutions/snapvisor-js/commit/a832d139cfa3a3dc5b16966c81b65a18ae98a487))
+* **core:** improve errors ([49360d8](https://github.com/DevinoSolutions/snapvisor-js/commit/49360d85350c2963567c53d297da3e5bca8d0c5c))
+* **core:** optimize compression ([d27e96b](https://github.com/DevinoSolutions/snapvisor-js/commit/d27e96b0b8edd1d87d6774b9b9fbfd0f0e225bd9))
+* **core:** resolve baseline from commits when no Git provider ([92a6889](https://github.com/DevinoSolutions/snapvisor-js/commit/92a68894aa205369806789d57429d550917c1664))
+* **core:** retry network errors ([8dad001](https://github.com/DevinoSolutions/snapvisor-js/commit/8dad001ebc5dd83ed6286a1300fef5303a00857f))
+* **core:** send prHeadCommit at build creation ([bcd0fa7](https://github.com/DevinoSolutions/snapvisor-js/commit/bcd0fa71479f3590c1cbc31cfcf11fab00ab68f5)), closes [#50](https://github.com/DevinoSolutions/snapvisor-js/issues/50)
+* **core:** split parallel shard uploads too ([4a71d67](https://github.com/DevinoSolutions/snapvisor-js/commit/4a71d6798431ff4f111893d391e4d368469c3a1e))
+* **core:** split the updateBuild request to avoid PayloadTooLargeError ([b2babd5](https://github.com/DevinoSolutions/snapvisor-js/commit/b2babd5da22a8526914068ab6639d94f0facb04e))
+* **core:** split upload in chunks ([2c1917e](https://github.com/DevinoSolutions/snapvisor-js/commit/2c1917e65c73eb49b8c6011bad6b3823bdec327b))
+* **core:** surface S3 error details on upload failure ([#316](https://github.com/DevinoSolutions/snapvisor-js/issues/316)) ([d913ac8](https://github.com/DevinoSolutions/snapvisor-js/commit/d913ac8935d9e54993cef22368cc5f45d3e3204d))
+* **cypress:** simplify setup ([de75af6](https://github.com/DevinoSolutions/snapvisor-js/commit/de75af62ba57a7cb9512435dd4c494fbfa42c927))
+* default API/app endpoints to snapvisor.io ([16d2908](https://github.com/DevinoSolutions/snapvisor-js/commit/16d2908760cfede3d780fc71fa4c6457982f234b))
+* **deploy:** allow to deploy a static build ([#292](https://github.com/DevinoSolutions/snapvisor-js/issues/292)) ([4f1cfa9](https://github.com/DevinoSolutions/snapvisor-js/commit/4f1cfa9db40cef760779b553b622524abcf6b199))
+* **deploy:** finalize deploy command ([#293](https://github.com/DevinoSolutions/snapvisor-js/issues/293)) ([5d29a15](https://github.com/DevinoSolutions/snapvisor-js/commit/5d29a153a04bdac28310d1f14f90dadbad7a7115))
+* github tokenless strategy ([8ee6251](https://github.com/DevinoSolutions/snapvisor-js/commit/8ee625172b27ca4b35fe75da24dd4ae6cbac6613))
+* **github-actions:** improve algorithm to find pull request ([ef188fb](https://github.com/DevinoSolutions/snapvisor-js/commit/ef188fbb4ed83bc080a54fda5aa945a4ddfb757b))
+* **gitlab:** gitlab status updater ([#124](https://github.com/DevinoSolutions/snapvisor-js/issues/124)) ([b62e4bb](https://github.com/DevinoSolutions/snapvisor-js/commit/b62e4bbe0c3b6cedca5cf1c2f18e510f27b17159))
+* **gitlab:** support gitlab ci ([8f9e7b8](https://github.com/DevinoSolutions/snapvisor-js/commit/8f9e7b8ea7bc05074ad45b9b8c697ebfcc4f30d8))
+* improve error handling ([baed0ef](https://github.com/DevinoSolutions/snapvisor-js/commit/baed0ef5a04386444ebcc5e3d734d6c7d3dc92db))
+* improve the resize algorithm ([29aa0e3](https://github.com/DevinoSolutions/snapvisor-js/commit/29aa0e3ea11ba4d8c3e6365e2cb2900149eded5b))
+* increase max-screenshot size ([1f5d6c3](https://github.com/DevinoSolutions/snapvisor-js/commit/1f5d6c36f7346646b9a9686f419a78fe55d90e59))
+* make GitHub tokenless auth more secure ([#301](https://github.com/DevinoSolutions/snapvisor-js/issues/301)) ([41b62d0](https://github.com/DevinoSolutions/snapvisor-js/commit/41b62d01df05cae2fb5d6145b4f62ccb65aebc4e))
+* **merge-queue:** support custom merge queue systems ([#280](https://github.com/DevinoSolutions/snapvisor-js/issues/280)) ([05a253c](https://github.com/DevinoSolutions/snapvisor-js/commit/05a253c2495f7f1ffc124148b77fb965b2928b9d))
+* **mode:** add "mode" support ([#126](https://github.com/DevinoSolutions/snapvisor-js/issues/126)) ([91a53b6](https://github.com/DevinoSolutions/snapvisor-js/commit/91a53b6732d99eb95807b1b8d20c061e45a87951))
+* modernize project ([43c9975](https://github.com/DevinoSolutions/snapvisor-js/commit/43c9975441ea49038851259db2bec314aa9f1df9))
+* **no-access:** send a list of commits ([8d36568](https://github.com/DevinoSolutions/snapvisor-js/commit/8d36568c01b30aaf5fc80d27b08d63c7f6d3ab7d))
+* **playwright:** sharding support ([a495905](https://github.com/DevinoSolutions/snapvisor-js/commit/a49590517e9668ae007dca486302f79bca37ed28))
+* **playwright:** support aria snapshots ([06fe7df](https://github.com/DevinoSolutions/snapvisor-js/commit/06fe7df8f2080146c1c3c01085fe7712555e3cd5))
+* **playwright:** support playwright trace ([d194e04](https://github.com/DevinoSolutions/snapvisor-js/commit/d194e0449cff224b4b9f984ca9ac0bdb8c130394))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* remove dependency to axios ([dee8fcb](https://github.com/DevinoSolutions/snapvisor-js/commit/dee8fcb274cc317cd914c02936fb39633a4387aa))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* send metadata along screenshots ([#62](https://github.com/DevinoSolutions/snapvisor-js/issues/62)) ([8a2e9db](https://github.com/DevinoSolutions/snapvisor-js/commit/8a2e9db6427071708c3d701a3230f228b1216893))
+* separate skip command ([de8d4cf](https://github.com/DevinoSolutions/snapvisor-js/commit/de8d4cf1dc084eb16812d6f652b201251f9bc7b0))
+* **skip:** allow to mark a build as skipped ([5cd48f3](https://github.com/DevinoSolutions/snapvisor-js/commit/5cd48f3395d784e0fdca1c77850d16b86ae28f70))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/DevinoSolutions/snapvisor-js/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/DevinoSolutions/snapvisor-js/issues/239)
+* support GitHub Actions OIDC authentication ([#296](https://github.com/DevinoSolutions/snapvisor-js/issues/296)) ([a8956ce](https://github.com/DevinoSolutions/snapvisor-js/commit/a8956ce7a9ff37f3ccbc3440b811083ada675daf))
+* support no-content access ([85f8491](https://github.com/DevinoSolutions/snapvisor-js/commit/85f8491a4191cc9f129d58ed0a80424f0c5c03e7))
+* support Playwright --repeat-each option ([3a7087f](https://github.com/DevinoSolutions/snapvisor-js/commit/3a7087f5ff208e5d8a7e503005352cc0f5210ee7))
+* support preview URL ([cb541de](https://github.com/DevinoSolutions/snapvisor-js/commit/cb541de9b1d75fcb797066578cc3cfe6e8d1d886))
+* **tokenless:** add runId to github token ([4d18900](https://github.com/DevinoSolutions/snapvisor-js/commit/4d189005c42211d3a4c6b61b76e99c84b80a7965))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+* **vercel:** support Vercel "repository_dispatch" events ([44b368b](https://github.com/DevinoSolutions/snapvisor-js/commit/44b368bdab5f3fd29eb38f1c8d5d5f231e17364d))
+* **vitest:** add argosSnapshot for value snapshots anywhere ([0a6201f](https://github.com/DevinoSolutions/snapvisor-js/commit/0a6201f7e3ad8f26045c50130978a1aacc8fe6c6))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* - `@argos-ci/cli`: `argos upload --skipped` is now `argos skip`
+- `@argos-ci/core`: `upload` no longer accepts `skipped` option, a new
+  `skip` method has been added instead
+* Node.js v20 or higher is now required
+* If you use large screenshots, images could be resized resulting in potential changes detection.
+* Node.js v18 or higher is required.
+* Require Node.js v16
+
+
+
+
+
 ## [6.6.2](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/core@6.6.1...@argos-ci/core@6.6.2) (2026-07-23)
 
 

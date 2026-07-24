@@ -81,11 +81,11 @@ export type ScreenshotMetadata = {
     /** @description The version of the automation library */
     version: string;
   };
-  /** @description The Argos SDK that generated the screenshot */
+  /** @description The Snapvisor SDK that generated the screenshot */
   sdk: {
-    /** @description The name of the Argos SDK */
+    /** @description The name of the Snapvisor SDK */
     name: string;
-    /** @description The version of the Argos SDK */
+    /** @description The version of the Snapvisor SDK */
     version: string;
   };
   // Metadata used to pass informations later removed from metadata.

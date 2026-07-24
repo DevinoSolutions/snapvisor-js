@@ -17,7 +17,7 @@ declare module "vitest/browser" {
 }
 
 /**
- * Setup Argos hooks for Vitest.
+ * Setup Snapvisor hooks for Vitest.
  */
 export function setupArgos(api: { afterEach: typeof vitest.afterEach }) {
   api.afterEach(async (ctx) => {
@@ -62,7 +62,7 @@ export function setupArgos(api: { afterEach: typeof vitest.afterEach }) {
 }
 
 /**
- * Take an Argos screenshot of a story in Vitest.
+ * Take an Snapvisor screenshot of a story in Vitest.
  */
 export async function argosScreenshot(
   story: {

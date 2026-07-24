@@ -31,7 +31,7 @@ export type ArgosSnapshotOptions = {
   element?: string | Locator;
 
   /**
-   * Folder where the snapshots will be saved if not using the Argos reporter.
+   * Folder where the snapshots will be saved if not using the Snapvisor reporter.
    * @default "./screenshots"
    */
   root?: string;

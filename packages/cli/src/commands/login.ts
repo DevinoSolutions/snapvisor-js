@@ -18,7 +18,7 @@ const LOGIN_TIMEOUT_MS = 5 * 60 * 1000;
 const CALLBACK_ERROR_HTML = `<!DOCTYPE html><html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Argos CLI</title>
+    <title>Snapvisor CLI</title>
   </head>
   <body>
     <p>Authorization failed. Please run <code>argos login</code> again.</p>
@@ -211,6 +211,6 @@ export function loginCommand(program: Command) {
         process.exit(1);
       }
 
-      console.log(successColor("Logged in to Argos successfully."));
+      console.log(successColor("Logged in to Snapvisor successfully."));
     });
 }

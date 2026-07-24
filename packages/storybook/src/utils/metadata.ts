@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
 /**
- * Get the version of the Argos Playwright SDK.
+ * Get the version of the Snapvisor Playwright SDK.
  */
 export async function getArgosStorybookVersion(): Promise<string> {
   const pkgPath = require.resolve("@snapvisor/storybook/package.json");

@@ -10,7 +10,7 @@ import type { Config } from "./config";
 import { debug } from "./debug";
 
 /**
- * Resolve the Argos authentication token.
+ * Resolve the Snapvisor authentication token.
  * Priority: ARGOS_TOKEN > GitHub Actions OIDC > GitHub Actions tokenless exchange.
  */
 export async function resolveArgosToken(config: Config): Promise<string> {
@@ -41,5 +41,5 @@ export async function resolveArgosToken(config: Config): Promise<string> {
     return token;
   }
 
-  throw new Error("Missing Argos repository token 'ARGOS_TOKEN'");
+  throw new Error("Missing Snapvisor repository token 'ARGOS_TOKEN'");
 }

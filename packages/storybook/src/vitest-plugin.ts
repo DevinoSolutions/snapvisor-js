@@ -31,14 +31,14 @@ export type ArgosScreenshotCommandArgs = [
 export interface ArgosVitestPluginOptions
   extends ArgosReporterConfig, ArgosScreenshotOptions {
   /**
-   * Upload the report to Argos.
+   * Upload the report to Snapvisor.
    * @default true
    */
   uploadToArgos?: boolean;
 }
 
 /**
- * Create a command for taking Argos screenshots in Vitest.
+ * Create a command for taking Snapvisor screenshots in Vitest.
  */
 export const createArgosScreenshotCommand = (
   pluginOptions?: ArgosVitestPluginOptions,

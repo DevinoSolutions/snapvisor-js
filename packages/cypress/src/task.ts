@@ -10,7 +10,7 @@ export type RegisterArgosTaskOptions = Omit<
   "files" | "root" | "metadata"
 > & {
   /**
-   * Upload the report to Argos.
+   * Upload the report to Snapvisor.
    * @default true
    */
   uploadToArgos?: boolean;
@@ -56,7 +56,7 @@ function getArgosConfigFromOptions(
 
 /**
  * Cypress "after:screenshot" event handler.
- * - Move screenshots to Argos directory
+ * - Move screenshots to Snapvisor directory
  */
 export async function argosAfterScreenshot(
   config: Cypress.PluginConfigOptions,
@@ -111,7 +111,7 @@ export async function argosAfterScreenshot(
 
 /**
  * Cypress "after:run" event handler.
- * - Upload screenshots to Argos
+ * - Upload screenshots to Snapvisor
  */
 export async function argosAfterRun(
   _config: Cypress.PluginConfigOptions,
@@ -145,11 +145,11 @@ export async function argosAfterRun(
     },
   });
 
-  console.log(`✅ Argos build created: ${res.build.url}`);
+  console.log(`✅ Snapvisor build created: ${res.build.url}`);
 }
 
 /**
- * Register the Argos tasks for Cypress.
+ * Register the Snapvisor tasks for Cypress.
  */
 export function registerArgosTask(
   on: Cypress.PluginEvents,

@@ -57,7 +57,7 @@ export function uploadCommand(program: Command) {
     .addOption(
       new Option(
         "--parallel",
-        "Enable parallel mode. Run multiple Argos builds and combine them at the end.\nCan also be set via the ARGOS_PARALLEL environment variable.",
+        "Enable parallel mode. Run multiple Snapvisor builds and combine them at the end.\nCan also be set via the ARGOS_PARALLEL environment variable.",
       ),
     )
     .addOption(

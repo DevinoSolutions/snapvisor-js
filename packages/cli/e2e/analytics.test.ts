@@ -55,7 +55,7 @@ describe("argos analytics", () => {
   test("fails when no token is provided", () => {
     const error = expectRunToFail(["analytics", "--account", account]);
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("fails when no account is provided", () => {

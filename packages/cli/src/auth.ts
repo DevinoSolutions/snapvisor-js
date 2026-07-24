@@ -152,13 +152,13 @@ export async function getAccessToken(): Promise<string | undefined> {
       if (err instanceof OAuthTokenError) {
         // The server rejected the refresh token — the session is really gone.
         console.warn(
-          "Warning: Your Argos session has expired. Run `argos login` again.",
+          "Warning: Your Snapvisor session has expired. Run `argos login` again.",
         );
       } else {
         // Transient failure (offline, DNS, timeout): don't claim the session
         // expired, and keep the stored tokens so a later retry can succeed.
         console.warn(
-          "Warning: Could not reach Argos to refresh your session. Check your connection and try again.",
+          "Warning: Could not reach Snapvisor to refresh your session. Check your connection and try again.",
         );
       }
       return undefined;

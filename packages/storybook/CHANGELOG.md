@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* detect library version only from "@storybook/test-runner" ([20294d1](https://github.com/DevinoSolutions/snapvisor-js/commit/20294d16b5379b848993c6de689853154f186c04))
+* **playwright:** make getCSPScriptHash synchronous ([86f3ee3](https://github.com/DevinoSolutions/snapvisor-js/commit/86f3ee3de937b6a1b58c078e9eba12da4f935028))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* **storybook:** also fit iframe width for horizontal overflow in Vitest ([e89aeab](https://github.com/DevinoSolutions/snapvisor-js/commit/e89aeab6e85aeccf5e0913d7658219bcdbf22f6f))
+* **storybook:** avoid changing viewport if not necessary ([0cf7483](https://github.com/DevinoSolutions/snapvisor-js/commit/0cf7483d486f478fbc36e4554b6e0c1138f1d36c))
+* **storybook:** disable aria-busy stabilization by default ([db781ec](https://github.com/DevinoSolutions/snapvisor-js/commit/db781ec31e8691bd0e2c0aae8d532b465c14cf6f))
+* **storybook:** fix `fitToContent` behaviour ([a44465a](https://github.com/DevinoSolutions/snapvisor-js/commit/a44465a1d4c02a58db8608cafbfd65348c2f34db))
+* **storybook:** fix error while importing `@argos-ci/storybook/vitest` ([ec2a0a8](https://github.com/DevinoSolutions/snapvisor-js/commit/ec2a0a888fdd24c09ca82e4a7d14f3d525b5466d))
+* **storybook:** fix fitElement selector in vitest ([536715f](https://github.com/DevinoSolutions/snapvisor-js/commit/536715f7cd7ab3c593c96a8081d80f054a470181))
+* **storybook:** fix full page screenshots on vitest ([ceab006](https://github.com/DevinoSolutions/snapvisor-js/commit/ceab0062caa5d3856e39bd72fc65a0913fe9be34))
+* **storybook:** fix full screen without modes ([b8d433c](https://github.com/DevinoSolutions/snapvisor-js/commit/b8d433cc77c69ee5940316b649a6bba1a9345c21))
+* **storybook:** fix fullPage mode ([8b2c8e7](https://github.com/DevinoSolutions/snapvisor-js/commit/8b2c8e7ef2cd758b691de7c50cb05af6c31da182))
+* **storybook:** fix metadata ([dd992aa](https://github.com/DevinoSolutions/snapvisor-js/commit/dd992aac34192b5f8326714caa96323995421710))
+* **storybook:** fix missing dependency ([#304](https://github.com/DevinoSolutions/snapvisor-js/issues/304)) ([a78556e](https://github.com/DevinoSolutions/snapvisor-js/commit/a78556e213f23112fe2a085d893e8f31282a0952)), closes [#303](https://github.com/DevinoSolutions/snapvisor-js/issues/303)
+* **storybook:** fix timeout and instability with test runner ([0437d07](https://github.com/DevinoSolutions/snapvisor-js/commit/0437d072e357c8e64c0842f50bfb6390be241a47))
+* **storybook:** fix Vitest v4 compatibility ([f122789](https://github.com/DevinoSolutions/snapvisor-js/commit/f1227894b025a2020f8da3c78d31f40f6a9c730b))
+* **storybook:** grow iframe to fit content after argosCSS in Vitest ([a73706f](https://github.com/DevinoSolutions/snapvisor-js/commit/a73706fec9cff30571c29ff35e2d74db762c4dea))
+* **storybook:** remove bin ([c32c024](https://github.com/DevinoSolutions/snapvisor-js/commit/c32c024dd6d1e8543910b9cd95c3e3e8c679d07e))
+* **storybook:** remove wrong types field ([23d5e0e](https://github.com/DevinoSolutions/snapvisor-js/commit/23d5e0e1d80234c6a17d60b55b3eeec881f1c3d8)), closes [#254](https://github.com/DevinoSolutions/snapvisor-js/issues/254)
+
+
+### Features
+
+* add support for Storybook Vitest Addon ([1fed57b](https://github.com/DevinoSolutions/snapvisor-js/commit/1fed57b8e1279e7919241c268ae782e9e2bae940))
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to disable every stabilization plugin ([60245ab](https://github.com/DevinoSolutions/snapvisor-js/commit/60245ab90a22ce2abd309761de6ac14fa5293e2d))
+* better dark mode detection ([ef78eee](https://github.com/DevinoSolutions/snapvisor-js/commit/ef78eeeb8894eacc475a2dcb6e060b59f08de6ae))
+* **playwright:** support aria snapshots ([06fe7df](https://github.com/DevinoSolutions/snapvisor-js/commit/06fe7df8f2080146c1c3c01085fe7712555e3cd5))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* **storybook:** add Storybook SDK ([c42b95c](https://github.com/DevinoSolutions/snapvisor-js/commit/c42b95c4a2f20434fe1a0f4cd9f9ff0e227234cf))
+* **storybook:** extract story metadata ([1939699](https://github.com/DevinoSolutions/snapvisor-js/commit/1939699dbc470305297a1f9b21975de9e5b8b051))
+* **storybook:** improve addons and manual screenshots ([46cfd9f](https://github.com/DevinoSolutions/snapvisor-js/commit/46cfd9f3346e57972a8d27c805067b7bd167da78))
+* **storybook:** support argos.modes ([32a55ca](https://github.com/DevinoSolutions/snapvisor-js/commit/32a55ca07202e9b8306a0534f13d8ca0b9135187))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/DevinoSolutions/snapvisor-js/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/DevinoSolutions/snapvisor-js/issues/239)
+* **vitest:** add standalone @argos-ci/vitest package ([e27f7d2](https://github.com/DevinoSolutions/snapvisor-js/commit/e27f7d2823ea8e60f50ae54977434cb5aa93448a))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* **storybook:** - Remove `applyGlobals` function (now not needed)
+- Replay the story before taking the screenshot
+- Manual screenshots are now taken for each defined mode
+- Story is now rendered in a `storybook-root` container
+* Node.js v20 or higher is now required
+* - `argosScreenshot` import path has changed to `@argos-ci/storybook/test-runner`.
+- All screenshots are now named with `${context.storyId} mode-[<mode>].png` format.
+* `options.stabilize` has changed and now accepts any stabilization plugin
+
+
+
+
+
 ## [6.1.8](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/storybook@6.1.7...@argos-ci/storybook@6.1.8) (2026-07-23)
 
 **Note:** Version bump only for package @argos-ci/storybook

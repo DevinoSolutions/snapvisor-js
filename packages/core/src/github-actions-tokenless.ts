@@ -49,7 +49,7 @@ function getTokenlessBearerToken(
 }
 
 /**
- * Exchange a tokenless GitHub Actions bearer token for a short-lived Argos token.
+ * Exchange a tokenless GitHub Actions bearer token for a short-lived Snapvisor token.
  */
 export async function exchangeGitHubActionsTokenlessToken(args: {
   apiBaseUrl: string;

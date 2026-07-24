@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.8.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* **gitlab:** fix binary name ([f61d721](https://github.com/argos-ci/argos-javascript/commit/f61d721156f1c33ab0059e6d81d281c633f3468e))
+* **gitlab:** rename token to ARGOS_GITLAB_TOKEN ([99ace50](https://github.com/argos-ci/argos-javascript/commit/99ace505c7cd5be652afcf972ef839a86bd9bd57))
+
+
+### Features
+
+* allow to customization stabilization options ([073c081](https://github.com/argos-ci/argos-javascript/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* **cli:** use new endpoint in build command ([7617772](https://github.com/argos-ci/argos-javascript/commit/76177722b78d6531260430fad6e92d9b1b6cf6e3))
+* **gitlab:** gitlab status updater ([#124](https://github.com/argos-ci/argos-javascript/issues/124)) ([b62e4bb](https://github.com/argos-ci/argos-javascript/commit/b62e4bbe0c3b6cedca5cf1c2f18e510f27b17159))
+* **merge-queue:** support custom merge queue systems ([#280](https://github.com/argos-ci/argos-javascript/issues/280)) ([05a253c](https://github.com/argos-ci/argos-javascript/commit/05a253c2495f7f1ffc124148b77fb965b2928b9d))
+* require Node.js > 20 ([c894a82](https://github.com/argos-ci/argos-javascript/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/argos-ci/argos-javascript/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/argos-ci/argos-javascript/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/argos-ci/argos-javascript/issues/239)
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* Node.js v20 or higher is now required
+
+
+
+
+
 ## [0.7.13](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/gitlab@0.7.12...@argos-ci/gitlab@0.7.13) (2026-07-12)
 
 **Note:** Version bump only for package @argos-ci/gitlab

@@ -33,7 +33,7 @@ import {
 type DynamicBuildName<T extends readonly string[]> = {
   /**
    * The values that the build name can take.
-   * It is required to ensure Argos will always upload
+   * It is required to ensure Snapvisor will always upload
    * for each build name in order to work in sharding mode.
    */
   values: readonly [...T];
@@ -49,7 +49,7 @@ export type ArgosReporterOptions<T extends string[] = string[]> = Omit<
   "files" | "root" | "buildName" | "metadata"
 > & {
   /**
-   * Upload the report to Argos.
+   * Upload the report to Snapvisor.
    * @default true
    */
   uploadToArgos?: boolean;
@@ -61,7 +61,7 @@ export type ArgosReporterOptions<T extends string[] = string[]> = Omit<
   ignoreUploadFailures?: boolean;
 
   /**
-   * The name of the build in Argos.
+   * The name of the build in Snapvisor.
    * Can be a string or a function that receives the test case and returns the build name.
    */
   buildName?: string | DynamicBuildName<T> | null;
@@ -78,7 +78,7 @@ function checkIsDynamicBuildName(
 
 /**
  * Chromium launch arguments recommended to stabilize font rendering
- * and get consistent Argos screenshots.
+ * and get consistent Snapvisor screenshots.
  */
 const RECOMMENDED_CHROMIUM_ARGS = [
   "--disable-lcd-text",
@@ -107,7 +107,7 @@ function checkLaunchOptions(config: FullConfig) {
       const projectLabel = project.name || "default";
       console.warn(
         chalk.yellow(
-          `⚠️  Argos: Playwright project "${projectLabel}" is missing recommended launchOptions args: ${missing.join(
+          `⚠️  Snapvisor: Playwright project "${projectLabel}" is missing recommended launchOptions args: ${missing.join(
             ", ",
           )}.\n` +
             `   Add them to stabilize font rendering and get consistent screenshots. See https://argos-ci.com/docs/reference/playwright`,
@@ -211,7 +211,7 @@ class ArgosReporter implements Reporter {
       : this.config.buildName;
 
     if (buildName === "") {
-      throw new Error('Argos "buildName" cannot be an empty string.');
+      throw new Error('Snapvisor "buildName" cannot be an empty string.');
     }
 
     const rootUploadDir = await this.getRootUploadDirectory();
@@ -233,7 +233,7 @@ class ArgosReporter implements Reporter {
           return;
         }
 
-        // Error screenshots are sent to Argos
+        // Error screenshots are sent to Snapvisor
         if (checkIsAutomaticScreenshot(attachment)) {
           const metadata = await getMetadataFromTestCase(test, result);
           const name = getAutomaticScreenshotName(test, result);
@@ -253,7 +253,7 @@ class ArgosReporter implements Reporter {
     debug("ArgosReporter:onEnd");
     const rootUploadDir = await this.getRootUploadDirectory();
     if (!this.uploadToArgos) {
-      debug("Not uploading to Argos because uploadToArgos is false.");
+      debug("Not uploading to Snapvisor because uploadToArgos is false.");
       debug(`Upload directory: ${rootUploadDir}`);
       return;
     }
@@ -287,7 +287,7 @@ class ArgosReporter implements Reporter {
     try {
       if (checkIsDynamicBuildName(buildNameConfig)) {
         debug(
-          `Dynamic build names, uploading to Argos for each build name: ${buildNameConfig.values.join()}`,
+          `Dynamic build names, uploading to Snapvisor for each build name: ${buildNameConfig.values.join()}`,
         );
         const directories = await readdir(rootUploadDir);
         // Check if the buildName.values are consistent with the directories created
@@ -304,7 +304,7 @@ class ArgosReporter implements Reporter {
         for (const buildName of iteratesOnBuildNames) {
           const uploadDir = join(rootUploadDir, buildName);
           await createDirectory(uploadDir);
-          debug(`Uploading to Argos for build: ${buildName}`);
+          debug(`Uploading to Snapvisor for build: ${buildName}`);
           const res = await upload({
             ...uploadOptions,
             root: uploadDir,
@@ -312,12 +312,12 @@ class ArgosReporter implements Reporter {
           });
           console.log(
             chalk.green(
-              `✅ Argos "${buildName}" build created: ${res.build.url}`,
+              `✅ Snapvisor "${buildName}" build created: ${res.build.url}`,
             ),
           );
         }
       } else {
-        debug("Uploading to Argos");
+        debug("Uploading to Snapvisor");
         const uploadDir = buildNameConfig
           ? join(rootUploadDir, buildNameConfig)
           : rootUploadDir;
@@ -326,10 +326,12 @@ class ArgosReporter implements Reporter {
           root: uploadDir,
           buildName: buildNameConfig ?? undefined,
         });
-        console.log(chalk.green(`✅ Argos build created: ${res.build.url}`));
+        console.log(
+          chalk.green(`✅ Snapvisor build created: ${res.build.url}`),
+        );
       }
     } catch (error) {
-      console.error(chalk.red(`❌ Error while creating the Argos build`));
+      console.error(chalk.red(`❌ Error while creating the Snapvisor build`));
       console.error(error);
       if (!this.config.ignoreUploadFailures) {
         return { status: "failed" as const };

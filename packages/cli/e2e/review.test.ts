@@ -87,7 +87,7 @@ describe("argos review create", () => {
       { ARGOS_TOKEN: "", HOME: noTokenHome },
     );
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("creates an approved review in JSON mode", () => {

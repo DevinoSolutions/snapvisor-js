@@ -230,7 +230,7 @@ async function fetchMergeBaseRef(input: {
       );
     } else {
       console.warn(
-        `Argos failed to fetch "${input.ref}" from origin, falling back to the local history to find the merge base.`,
+        `Snapvisor failed to fetch "${input.ref}" from origin, falling back to the local history to find the merge base.`,
       );
       debug(`git fetch failed for "${input.ref}"`, getGitErrorOutput(error));
     }
