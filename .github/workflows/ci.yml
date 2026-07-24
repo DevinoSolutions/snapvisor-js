@@ -73,8 +73,6 @@ jobs:
 
   e2e-core:
     timeout-minutes: 5
-    # TODO: re-enable once snapvisor prod has seeded e2e fixture data + a USER_ACCESS_TOKEN secret (upstream-account-bound suite)
-    if: false
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
@@ -99,13 +97,12 @@ jobs:
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           USER_ACCESS_TOKEN: ${{ secrets.USER_ACCESS_TOKEN }}
+          ARGOS_BUILD_NUMBER: "101"
           NODE_VERSION: ${{ matrix.node-version }}
           OS: ${{ matrix.os }}
 
   e2e-core-oidc:
     timeout-minutes: 5
-    # TODO: re-enable once GitHub-Actions OIDC exchange is configured against snapvisor prod
-    if: false
     runs-on: ubuntu-latest
 
     permissions:
@@ -130,8 +127,6 @@ jobs:
 
   e2e-core-tokenless:
     timeout-minutes: 5
-    # TODO: re-enable once GitHub-Actions OIDC exchange is configured against snapvisor prod
-    if: false
     runs-on: ubuntu-latest
 
     steps:

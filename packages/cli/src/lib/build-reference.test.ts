@@ -33,6 +33,18 @@ describe("parseBuildReference", () => {
     });
   });
 
+  it("parses a snapvisor production build URL", () => {
+    expect(
+      parseBuildReference(
+        "https://app.snapvisor.io/devino/snapvisor-js-e2e/builds/101",
+      ),
+    ).toEqual({
+      owner: "devino",
+      project: "snapvisor-js-e2e",
+      buildNumber: 101,
+    });
+  });
+
   it("parses a build URL with a trailing path, query, or hash", () => {
     expect(
       parseBuildReference(

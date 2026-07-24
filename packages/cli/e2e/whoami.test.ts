@@ -32,14 +32,19 @@ describe("argos whoami", () => {
       ["whoami", "--token", userAccessToken, "--json"],
       baseEnv,
     );
-    const user = JSON.parse(output.stdout);
-    expect(user.id).toBeDefined();
-    expect(user.slug).toBeDefined();
+    // The /me payload is { user: { id, name, email }, accounts: [{ slug, ... }] }
+    // (api-client `Me` schema): the user id lives under `user`, and slug is an
+    // account-level field. Assert against that real shape.
+    const me = JSON.parse(output.stdout);
+    expect(me.user.id).toBeDefined();
+    expect(me.accounts[0]?.slug).toBeDefined();
   });
 
   test("prints human-readable user data", () => {
     const output = run(["whoami", "--token", userAccessToken], baseEnv);
+    // `formatMe` prints identity + the account slugs on an "Accounts:" line
+    // (there is no per-user slug — slug is account-scoped).
     expect(output.stdout).toContain("Logged in to Argos as");
-    expect(output.stdout).toContain("Slug:");
+    expect(output.stdout).toContain("Accounts:");
   });
 });

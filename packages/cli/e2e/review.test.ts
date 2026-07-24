@@ -37,8 +37,9 @@ beforeAll(() => {
     run(["build", "get", buildNumber, "--json"], baseEnv).stdout,
   );
   buildUrl = build.url;
+  // Fork: accept snapvisor hosts alongside upstream argos hosts (upstream merge may re-break this).
   const match = buildUrl.match(
-    /app\.argos-ci\.(?:com|dev(?::\d+)?)\/([^/?#]+)\/([^/?#]+)\/builds\//,
+    /app\.(?:argos-ci\.(?:com|dev(?::\d+)?)|snapvisor\.io)\/([^/?#]+)\/([^/?#]+)\/builds\//,
   );
   if (!match) {
     throw new Error(`Could not parse project from build URL: ${buildUrl}`);
