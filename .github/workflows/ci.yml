@@ -73,6 +73,8 @@ jobs:
 
   e2e-core:
     timeout-minutes: 5
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
@@ -91,7 +93,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/core --filter=@argos-ci/cli
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/core --filter=@snapvisor/cli
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           USER_ACCESS_TOKEN: ${{ secrets.USER_ACCESS_TOKEN }}
@@ -100,6 +102,8 @@ jobs:
 
   e2e-core-oidc:
     timeout-minutes: 5
+    # TODO: re-enable once GitHub-Actions OIDC exchange is configured against snapvisor prod
+    if: false
     runs-on: ubuntu-latest
 
     permissions:
@@ -114,16 +118,18 @@ jobs:
         uses: ./.github/actions/setup-deps
 
       - name: Build
-        run: pnpm exec -- turbo run build --filter=@argos-ci/cli
+        run: pnpm exec -- turbo run build --filter=@snapvisor/cli
 
       - name: Run OIDC upload e2e
-        run: pnpm --filter=@argos-ci/cli run e2e-oidc
+        run: pnpm --filter=@snapvisor/cli run e2e-oidc
         env:
           NODE_VERSION: current
           OS: ubuntu-latest
 
   e2e-core-tokenless:
     timeout-minutes: 5
+    # TODO: re-enable once GitHub-Actions OIDC exchange is configured against snapvisor prod
+    if: false
     runs-on: ubuntu-latest
 
     steps:
@@ -134,16 +140,18 @@ jobs:
         uses: ./.github/actions/setup-deps
 
       - name: Build
-        run: pnpm exec -- turbo run build --filter=@argos-ci/cli
+        run: pnpm exec -- turbo run build --filter=@snapvisor/cli
 
       - name: Run tokenless upload e2e
-        run: pnpm --filter=@argos-ci/cli run e2e-tokenless
+        run: pnpm --filter=@snapvisor/cli run e2e-tokenless
         env:
           NODE_VERSION: current
           OS: ubuntu-latest
 
   e2e-cypress:
     timeout-minutes: 5
+    # private package — not published by this fork
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -162,7 +170,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/cypress
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/cypress
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
@@ -170,6 +178,8 @@ jobs:
 
   e2e-playwright:
     timeout-minutes: 5
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
@@ -188,7 +198,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/playwright
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/playwright
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
@@ -196,6 +206,8 @@ jobs:
 
   e2e-puppeteer:
     timeout-minutes: 5
+    # private package — not published by this fork
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -214,7 +226,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/puppeteer
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/puppeteer
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
@@ -222,6 +234,8 @@ jobs:
 
   e2e-webdriverio:
     timeout-minutes: 5
+    # private package — not published by this fork
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -240,7 +254,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/webdriverio
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/webdriverio
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
@@ -248,6 +262,8 @@ jobs:
 
   e2e-storybook:
     timeout-minutes: 5
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
@@ -266,7 +282,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Serve Storybook and run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/storybook
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/storybook
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
@@ -274,6 +290,8 @@ jobs:
 
   e2e-vitest:
     timeout-minutes: 5
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
@@ -292,7 +310,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run integration tests
-        run: pnpm exec -- turbo run e2e --filter=@argos-ci/vitest
+        run: pnpm exec -- turbo run e2e --filter=@snapvisor/vitest
         env:
           ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
