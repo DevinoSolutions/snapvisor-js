@@ -11,6 +11,7 @@ on:
         options:
           - normal
           - canary
+          - from-package
 
 permissions:
   contents: write
@@ -49,11 +50,12 @@ jobs:
       - name: Publish
         run: |
           if [ "${{ github.event.inputs.release_type }}" = "canary" ]; then
-            npm run release-canary -- --yes
+            NPM_CONFIG_PROVENANCE=true npm run release-canary -- --yes
+          elif [ "${{ github.event.inputs.release_type }}" = "from-package" ]; then
+            npx lerna publish from-package --yes
           else
-            npm run release -- --yes
+            NPM_CONFIG_PROVENANCE=true npm run release -- --yes
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"

@@ -1,6 +1,5 @@
 {
   "name": "@snapvisor/puppeteer",
-  "private": true,
   "description": "Puppeteer SDK for visual testing with Argos.",
   "version": "6.0.23",
   "author": "Smooth Code",
