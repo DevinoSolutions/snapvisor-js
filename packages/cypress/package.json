@@ -1,6 +1,5 @@
 {
   "name": "@snapvisor/cypress",
-  "private": true,
   "description": "Cypress SDK for visual testing with Argos.",
   "version": "7.0.22",
   "author": "Smooth Code",

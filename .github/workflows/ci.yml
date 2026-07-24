@@ -152,7 +152,7 @@ jobs:
 
   e2e-cypress:
     timeout-minutes: 5
-    # private package — not published by this fork
+    # TODO: re-enable — package now published; needs e2e verification against snapvisor prod first
     if: false
     strategy:
       fail-fast: false
@@ -208,7 +208,7 @@ jobs:
 
   e2e-puppeteer:
     timeout-minutes: 5
-    # private package — not published by this fork
+    # TODO: re-enable — package now published; needs e2e verification against snapvisor prod first
     if: false
     strategy:
       fail-fast: false
@@ -236,7 +236,7 @@ jobs:
 
   e2e-webdriverio:
     timeout-minutes: 5
-    # private package — not published by this fork
+    # TODO: re-enable — package now published; needs e2e verification against snapvisor prod first
     if: false
     strategy:
       fail-fast: false
