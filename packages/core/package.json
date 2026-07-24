@@ -1,6 +1,6 @@
 {
   "name": "@snapvisor/core",
-  "description": "Node.js SDK for visual testing with Argos.",
+  "description": "Node.js SDK for visual testing with Snapvisor.",
   "version": "6.6.2",
   "type": "module",
   "exports": {

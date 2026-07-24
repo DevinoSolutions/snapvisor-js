@@ -1,6 +1,6 @@
 {
   "name": "@snapvisor/playwright",
-  "description": "Playwright SDK for visual testing with Argos.",
+  "description": "Playwright SDK for visual testing with Snapvisor.",
   "version": "7.3.7",
   "author": "Smooth Code",
   "license": "MIT",

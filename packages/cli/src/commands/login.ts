@@ -129,7 +129,7 @@ function startCallbackServer(): Promise<{
 export function loginCommand(program: Command) {
   program
     .command("login")
-    .description("Log in to Argos by opening your browser")
+    .description("Log in to Snapvisor by opening your browser")
     .action(async () => {
       const state = randomBytes(16).toString("hex");
       const { codeVerifier, codeChallenge } = generatePkce();

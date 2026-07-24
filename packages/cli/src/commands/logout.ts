@@ -6,7 +6,7 @@ import { revokeToken } from "../lib/oauth";
 export function logoutCommand(program: Command) {
   program
     .command("logout")
-    .description("Log out from Argos")
+    .description("Log out from Snapvisor")
     .action(async () => {
       const { legacyToken, oauth } = await getStoredCredentials();
       if (!legacyToken && !oauth) {

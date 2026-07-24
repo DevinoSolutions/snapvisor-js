@@ -14,7 +14,7 @@ export function deployCommand(program: Command) {
     .command("deploy")
     .argument("<directory>", "Directory of the static build to deploy")
     .description(
-      "Deploy a static build (Storybook or any static site) to Argos",
+      "Deploy a static build (Storybook or any static site) to Snapvisor",
     )
     .addOption(tokenOption)
     .addOption(

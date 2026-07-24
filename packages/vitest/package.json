@@ -1,6 +1,6 @@
 {
   "name": "@snapvisor/vitest",
-  "description": "Vitest SDK for visual testing with Argos.",
+  "description": "Vitest SDK for visual testing with Snapvisor.",
   "version": "0.3.2",
   "author": "Smooth Code",
   "license": "MIT",

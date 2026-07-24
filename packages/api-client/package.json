@@ -1,6 +1,6 @@
 {
   "name": "@snapvisor/api-client",
-  "description": "Argos API Client library.",
+  "description": "Snapvisor API Client library.",
   "version": "0.26.0",
   "author": "Smooth Code",
   "license": "MIT",

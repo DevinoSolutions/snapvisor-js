@@ -1,6 +1,6 @@
 {
   "name": "@snapvisor/browser",
-  "description": "Browser utilities to stabilize visual testing with Argos.",
+  "description": "Browser utilities to stabilize visual testing with Snapvisor.",
   "version": "6.4.4",
   "author": "Smooth Code",
   "license": "MIT",

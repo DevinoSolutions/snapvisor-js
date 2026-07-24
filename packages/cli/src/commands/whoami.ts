@@ -13,7 +13,9 @@ type WhoamiOptions = {
 export function whoamiCommand(program: Command) {
   program
     .command("whoami")
-    .description("Display the user authenticated with the current Argos token")
+    .description(
+      "Display the user authenticated with the current Snapvisor token",
+    )
     .addOption(tokenOption)
     .addOption(jsonOption)
     .action(async (options: WhoamiOptions) => {
