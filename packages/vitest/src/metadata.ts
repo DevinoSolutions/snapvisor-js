@@ -30,7 +30,7 @@ function getTitlePath(task: CurrentTask): string[] {
 }
 
 /**
- * Build the Argos `test` metadata from a Vitest test task, mirroring the
+ * Build the Snapvisor `test` metadata from a Vitest test task, mirroring the
  * Playwright SDK.
  *
  * `location.file` is left absolute here; the Node side (the Playwright SDK for
@@ -73,7 +73,7 @@ export function buildTestMetadata(
 }
 
 /**
- * Get the Argos `test` metadata for the current Vitest test, or `null` when not
+ * Get the Snapvisor `test` metadata for the current Vitest test, or `null` when not
  * running inside a test.
  *
  * Runs on the test side (browser or Node) where the test context is available;

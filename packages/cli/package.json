@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
-    "directory": "packages/core"
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
+    "directory": "packages/cli"
   },
-  "homepage": "https://argos-ci.com/docs/reference/argos-command-line-interface-cli",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

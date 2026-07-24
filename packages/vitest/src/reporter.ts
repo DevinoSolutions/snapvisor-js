@@ -6,12 +6,12 @@ import type { ArgosReporterConfig } from "./options";
 export type { ArgosReporterConfig };
 
 /**
- * Derive the Argos parallel configuration from Vitest's shard settings, matching
+ * Derive the Snapvisor parallel configuration from Vitest's shard settings, matching
  * the Playwright reporter.
  *
  * Vitest's `--shard=<index>/<count>` populates `config.shard` as
- * `{ index, count }` (the `index` is 1-based, like the Argos `parallel.index`).
- * When sharding is active, Argos still needs `ARGOS_PARALLEL_NONCE` to group the
+ * `{ index, count }` (the `index` is 1-based, like the Snapvisor `parallel.index`).
+ * When sharding is active, Snapvisor still needs `ARGOS_PARALLEL_NONCE` to group the
  * shards into a single build; the total and index default to the shard values
  * but can be overridden via `ARGOS_PARALLEL_TOTAL` / `ARGOS_PARALLEL_INDEX`.
  */
@@ -36,7 +36,7 @@ async function getParallelFromConfig(config: {
 }
 
 /**
- * Vitest reporter that uploads the screenshots captured during the run to Argos.
+ * Vitest reporter that uploads the screenshots captured during the run to Snapvisor.
  */
 export class ArgosReporter implements Reporter {
   vitest!: Vitest;
@@ -62,7 +62,7 @@ export class ArgosReporter implements Reporter {
     }
     const { ignoreUploadFailures, ...uploadParameters } = this.config;
     try {
-      // Auto-detect `vitest --shard=<index>/<count>` and map it to Argos parallel
+      // Auto-detect `vitest --shard=<index>/<count>` and map it to Snapvisor parallel
       // options, so users only need `ARGOS_PARALLEL_NONCE`.
       const parallel = await getParallelFromConfig(this.vitest.config);
       const res = await upload({
@@ -80,12 +80,12 @@ export class ArgosReporter implements Reporter {
         parallel: parallel ?? undefined,
         ...uploadParameters,
       });
-      console.log(`✅ Argos build created: ${res.build.url}`);
+      console.log(`✅ Snapvisor build created: ${res.build.url}`);
     } catch (error) {
       // Vitest decides the exit code before reporters run `onTestRunEnd`, so
       // an error thrown here would surface as an "Unhandled Error" without
       // failing the run (exit code 0). Report it and fail the run explicitly.
-      console.error(`❌ Error while creating the Argos build`);
+      console.error(`❌ Error while creating the Snapvisor build`);
       console.error(error);
       if (ignoreUploadFailures) {
         console.warn(

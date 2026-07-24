@@ -9,7 +9,7 @@ export { APIError } from "./fetch";
 export type ArgosAPIClient = ReturnType<typeof createClient>;
 
 /**
- * Create Argos API client.
+ * Create Snapvisor API client.
  */
 export function createClient(options?: {
   baseUrl?: string;

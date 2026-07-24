@@ -205,19 +205,19 @@ describe("resolveArgosToken", () => {
     it("throws for an unsupported CI provider", async () => {
       await expect(
         resolveArgosToken({ ...baseConfig, ciProvider: "gitlab-ci" }),
-      ).rejects.toThrow("Missing Argos repository token 'ARGOS_TOKEN'");
+      ).rejects.toThrow("Missing Snapvisor repository token 'ARGOS_TOKEN'");
     });
 
     it("throws when ciProvider is null and no token or OIDC", async () => {
       await expect(
         resolveArgosToken({ ...baseConfig, ciProvider: null }),
-      ).rejects.toThrow("Missing Argos repository token 'ARGOS_TOKEN'");
+      ).rejects.toThrow("Missing Snapvisor repository token 'ARGOS_TOKEN'");
     });
 
     it("throws when ciProvider is circleci (unsupported tokenless)", async () => {
       await expect(
         resolveArgosToken({ ...baseConfig, ciProvider: "circleci" }),
-      ).rejects.toThrow("Missing Argos repository token 'ARGOS_TOKEN'");
+      ).rejects.toThrow("Missing Snapvisor repository token 'ARGOS_TOKEN'");
     });
   });
 });

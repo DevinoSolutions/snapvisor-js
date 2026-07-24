@@ -47,7 +47,7 @@ export async function resolveToken(options: TargetOptions): Promise<string> {
     options.token || process.env["ARGOS_TOKEN"] || (await getAccessToken());
   if (!token) {
     fail(
-      "No Argos token found. Use --token, set ARGOS_TOKEN, or run `argos login`.",
+      "No Snapvisor token found. Use --token, set ARGOS_TOKEN, or run `argos login`.",
     );
   }
   return token;

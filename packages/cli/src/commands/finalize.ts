@@ -16,7 +16,7 @@ type FinalizeOptions = ParallelNonceOption &
 
 const skipIfEmptyOption = new Option(
   "--skip-if-empty",
-  "Create a skipped build when no parallel build matches the nonce.\nUseful when uploads are conditional (e.g. skipped by a CI cache) and Argos is a required status check: the skipped build reports a success status even though nothing was uploaded.",
+  "Create a skipped build when no parallel build matches the nonce.\nUseful when uploads are conditional (e.g. skipped by a CI cache) and Snapvisor is a required status check: the skipped build reports a success status even though nothing was uploaded.",
 );
 
 export function finalizeCommand(program: Command) {

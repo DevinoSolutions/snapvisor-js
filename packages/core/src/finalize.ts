@@ -6,12 +6,12 @@ import { skip } from "./skip";
 
 export type FinalizeParameters = {
   /**
-   * Base URL of the Argos API.
+   * Base URL of the Snapvisor API.
    */
   apiBaseUrl?: string;
 
   /**
-   * Argos token.
+   * Snapvisor token.
    */
   token?: string;
 
@@ -22,7 +22,7 @@ export type FinalizeParameters = {
   /**
    * Create a skipped build when no parallel build matches the nonce.
    * Useful when uploads are conditional (e.g. skipped by a CI cache such as
-   * Turborepo or Nx) and Argos is a required status check: the skipped build
+   * Turborepo or Nx) and Snapvisor is a required status check: the skipped build
    * reports a success status even though nothing was uploaded.
    */
   skipIfEmpty?: boolean;

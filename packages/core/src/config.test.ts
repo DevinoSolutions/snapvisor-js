@@ -24,7 +24,7 @@ describe("#readConfig", () => {
         token: "invalid",
       }),
     ).rejects.toThrow(
-      "token: Invalid Argos repository token (must be 40 characters)",
+      "token: Invalid Snapvisor repository token (must be 40 characters)",
     );
   });
 

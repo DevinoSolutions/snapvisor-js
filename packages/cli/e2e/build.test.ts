@@ -44,7 +44,7 @@ describe("argos build get", () => {
     const error = expectRunToFail(["build", "get", "1"], { ARGOS_TOKEN: "" });
 
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("fails when token is missing for a build URL", () => {
@@ -58,7 +58,7 @@ describe("argos build get", () => {
     );
 
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("fails for an unknown build number", () => {
@@ -72,7 +72,7 @@ describe("argos build get", () => {
     const error = expectRunToFail(["build", "get", "not-a-number"]);
 
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("valid build number or Argos build URL");
+    expect(error.stderr).toContain("valid build number or Snapvisor build URL");
   });
 
   test("returns build details for a build number in JSON mode", () => {
@@ -113,7 +113,7 @@ describe("argos build snapshots", () => {
     });
 
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("prints human-readable snapshot data", () => {

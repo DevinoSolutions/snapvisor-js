@@ -8,7 +8,7 @@ export function registerCommentUnreact(comment: Command) {
   comment
     .command("unreact")
     .description("Remove one of your emoji reactions from a comment")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .argument("<commentId>", "ID of the comment")
     .argument("<emoji>", "Emoji reaction to remove")
     .addOption(tokenOption)

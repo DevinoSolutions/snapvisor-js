@@ -4,11 +4,11 @@ import { createHash, randomBytes } from "node:crypto";
  * OAuth 2.1 client configuration and helpers for the `argos login` flow
  * (Authorization Code + PKCE with a loopback redirect, RFC 8252).
  *
- * The authorization server is the Argos app origin; endpoints and token
- * validation are implemented in the main Argos repo (`apps/backend/src/oauth`).
+ * The authorization server is the Snapvisor app origin; endpoints and token
+ * validation are implemented in the main Snapvisor repo (`apps/backend/src/oauth`).
  */
 
-/** First-party public client id, seeded in the Argos database. */
+/** First-party public client id, seeded in the Snapvisor database. */
 export const OAUTH_CLIENT_ID = "argos-cli";
 
 /**

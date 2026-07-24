@@ -39,14 +39,14 @@ declare module "vitest/browser" {
 }
 
 /**
- * Take an Argos screenshot in a Vitest browser test.
+ * Take an Snapvisor screenshot in a Vitest browser test.
  *
- * Requires the {@link https://www.npmjs.com/package/@snapvisor/vitest Argos Vitest plugin}
+ * Requires the {@link https://www.npmjs.com/package/@snapvisor/vitest Snapvisor Vitest plugin}
  * to be registered in your Vitest config.
  *
- * The `name` is optional: when omitted, Argos generates one automatically from
+ * The `name` is optional: when omitted, Snapvisor generates one automatically from
  * the current test, mimicking {@link https://vitest.dev/guide/snapshot Vitest's
- * snapshot naming}. The name includes the test file path (Argos names are global
+ * snapshot naming}. The name includes the test file path (Snapvisor names are global
  * across the build, unlike Vitest's per-file `.snap`), so names stay unique
  * across files.
  *
@@ -104,18 +104,18 @@ export async function argosScreenshot(
 }
 
 /**
- * Take an Argos snapshot of any serializable value, mimicking
+ * Take an Snapvisor snapshot of any serializable value, mimicking
  * {@link https://vitest.dev/guide/snapshot Vitest snapshots}.
  *
  * Unlike {@link argosScreenshot}, this does not need a browser: it serializes
  * the value (strings verbatim, everything else via `@vitest/pretty-format`) to a
- * file that Argos picks up and diffs across builds. It works both in Vitest
+ * file that Snapvisor picks up and diffs across builds. It works both in Vitest
  * browser tests and in plain Node tests.
  *
- * The name is optional: pass it via `options.name`, or omit it to have Argos
+ * The name is optional: pass it via `options.name`, or omit it to have Snapvisor
  * generate one automatically from the current test, mimicking
  * {@link https://vitest.dev/guide/snapshot Vitest's snapshot naming}. The name
- * includes the test file path (Argos names are global across the build, unlike
+ * includes the test file path (Snapvisor names are global across the build, unlike
  * Vitest's per-file `.snap`), so names stay unique across files.
  *
  * @example

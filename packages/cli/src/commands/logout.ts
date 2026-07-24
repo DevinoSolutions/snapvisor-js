@@ -18,6 +18,6 @@ export function logoutCommand(program: Command) {
         await revokeToken(oauth.refreshToken);
       }
       await clearStoredCredentials();
-      console.log("Logged out from Argos.");
+      console.log("Logged out from Snapvisor.");
     });
 }

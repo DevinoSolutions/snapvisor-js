@@ -24,7 +24,7 @@ describe("argos whoami", () => {
     }
     expect(error).toBeDefined();
     expect(error?.status).not.toBe(0);
-    expect(error?.stderr).toContain("No Argos token found");
+    expect(error?.stderr).toContain("No Snapvisor token found");
   });
 
   test("prints the authenticated user in JSON mode", () => {
@@ -39,7 +39,7 @@ describe("argos whoami", () => {
 
   test("prints human-readable user data", () => {
     const output = run(["whoami", "--token", userAccessToken], baseEnv);
-    expect(output.stdout).toContain("Logged in to Argos as");
+    expect(output.stdout).toContain("Logged in to Snapvisor as");
     expect(output.stdout).toContain("Slug:");
   });
 });

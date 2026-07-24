@@ -88,7 +88,7 @@ export type ArgosScreenshotOptions = {
   threshold?: number;
 
   /**
-   * Folder where the screenshots will be saved if not using the Argos reporter.
+   * Folder where the screenshots will be saved if not using the Snapvisor reporter.
    * @default "./screenshots"
    */
   root?: string;
@@ -112,7 +112,7 @@ export type ArgosScreenshotOptions = {
    */
   beforeScreenshot?: (api: {
     /**
-     * Run Argos stabilization alorithm.
+     * Run Snapvisor stabilization alorithm.
      * Accepts an object to customize the stabilization.
      * Note that this function is independent of the `stabilize` option.
      */

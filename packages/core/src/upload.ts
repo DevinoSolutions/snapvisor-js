@@ -59,7 +59,7 @@ export interface UploadParameters {
   ignore?: string[];
 
   /**
-   * Base URL of the Argos API.
+   * Base URL of the Snapvisor API.
    * @default "https://api.snapvisor.io/v2/"
    */
   apiBaseUrl?: string;
@@ -75,14 +75,14 @@ export interface UploadParameters {
   branch?: string;
 
   /**
-   * Argos repository access token.
+   * Snapvisor repository access token.
    */
   token?: string;
 
   /**
-   * Argos project slug (`account/project`).
+   * Snapvisor project slug (`account/project`).
    * Used to disambiguate tokenless authentication when multiple
-   * Argos projects are linked to the same repository.
+   * Snapvisor projects are linked to the same repository.
    */
   project?: string;
 
@@ -92,7 +92,7 @@ export interface UploadParameters {
   prNumber?: number;
 
   /**
-   * Custom build name. Useful when triggering multiple Argos builds
+   * Custom build name. Useful when triggering multiple Snapvisor builds
    * for the same commit.
    */
   buildName?: string;
@@ -133,7 +133,7 @@ export interface UploadParameters {
 
   /**
    * Diff sensitivity threshold between 0 and 1.
-   * Higher values make Argos less sensitive to differences.
+   * Higher values make Snapvisor less sensitive to differences.
    * @default 0.5
    */
   threshold?: number;
@@ -182,7 +182,7 @@ interface Screenshot {
 }
 
 /**
- * Upload screenshots to Argos.
+ * Upload screenshots to Snapvisor.
  */
 export async function upload(params: UploadParameters): Promise<{
   build: ArgosAPISchema.components["schemas"]["Build"];

@@ -2,7 +2,7 @@ import type { Plugin } from "..";
 import { injectGlobalStyles } from "../util";
 
 /**
- * Inject CSS for Argos helpers.
+ * Inject CSS for Snapvisor helpers.
  */
 export const plugin = {
   name: "argosHelpers" as const,

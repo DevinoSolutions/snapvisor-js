@@ -17,7 +17,7 @@ export function registerReviewCreate(review: Command) {
   review
     .command("create")
     .description("Submit a review on a build")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .addOption(
       new Option("--event <event>", "Review event to apply to the build")
         .choices(Object.keys(events))

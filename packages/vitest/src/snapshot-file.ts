@@ -61,7 +61,7 @@ function normalizeExtension(extension: string): string {
 
 /**
  * Write a serialized snapshot (and its metadata) to disk and return the
- * corresponding Argos attachments.
+ * corresponding Snapvisor attachments.
  *
  * This is the shared Node-side primitive used by both the browser command (which
  * receives the already-serialized string over RPC) and the Node code path.

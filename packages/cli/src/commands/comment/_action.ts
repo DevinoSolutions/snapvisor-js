@@ -28,7 +28,7 @@ export function defineCommentAction(opts: {
     comment
       .command(opts.name)
       .description(opts.description)
-      .argument("<buildReference>", "Build number or Argos build URL")
+      .argument("<buildReference>", "Build number or Snapvisor build URL")
       .argument("<commentId>", "ID of the comment")
       .addOption(tokenOption)
       .addOption(projectPathOption)
