@@ -19,8 +19,8 @@ export function whoamiCommand(program: Command) {
     .action(async (options: WhoamiOptions) => {
       try {
         const client = createApiClient(await resolveToken(options));
-        const user = unwrap(await client.GET("/me"));
-        output(user, options, formatMe);
+        const me = unwrap(await client.GET("/me"));
+        output(me, options, formatMe);
       } catch (error) {
         handleCliError(error, "user");
       }

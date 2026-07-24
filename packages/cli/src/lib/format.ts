@@ -8,6 +8,7 @@ type Change = ArgosAPISchema.components["schemas"]["Change"];
 type BuildReview = ArgosAPISchema.components["schemas"]["BuildReview"];
 type Comment = ArgosAPISchema.components["schemas"]["Comment"];
 type User = ArgosAPISchema.components["schemas"]["User"];
+type Me = ArgosAPISchema.components["schemas"]["Me"];
 type Project = ArgosAPISchema.components["schemas"]["Project"];
 type AccountAnalytics =
   ArgosAPISchema.components["schemas"]["AccountAnalytics"];
@@ -27,12 +28,16 @@ function formatUser(user: User | null | undefined): string {
   return user.name ? `${user.name} (@${user.slug})` : `@${user.slug}`;
 }
 
-export function formatMe(user: User): string {
-  return [
-    `Logged in to Argos as ${formatUser(user)}.`,
-    `Slug: ${user.slug}`,
-    `Name: ${formatValue(user.name)}`,
-  ].join("\n");
+export function formatMe(me: Me): string {
+  const lines = [
+    `Logged in to Argos as ${formatValue(me.user.name)}.`,
+    `Name: ${formatValue(me.user.name)}`,
+    `Email: ${formatValue(me.user.email)}`,
+  ];
+  if (me.accounts.length > 0) {
+    lines.push(`Accounts: ${me.accounts.map((a) => `@${a.slug}`).join(", ")}`);
+  }
+  return lines.join("\n");
 }
 
 export function formatProject(project: Project): string {
