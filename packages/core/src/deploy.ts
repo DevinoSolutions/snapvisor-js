@@ -29,7 +29,7 @@ export interface DeployParameters {
 
   /**
    * Base URL of the Argos API.
-   * @default "https://api.argos-ci.com/v2/"
+   * @default "https://api.snapvisor.io/v2/"
    */
   apiBaseUrl?: string;
 

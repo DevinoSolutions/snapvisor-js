@@ -1,6 +1,22 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { APIError } from "./fetch";
-import { formatAPIError, throwAPIError } from "./index";
+import { createClient, formatAPIError, throwAPIError } from "./index";
+
+describe("createClient", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("defaults the base URL to the Snapvisor API", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response("{}", { status: 200 }));
+    const client = createClient();
+    await client.GET("/me");
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("https://api.snapvisor.io/v2/me");
+  });
+});
 
 describe("formatAPIError", () => {
   it("formats a structured API error", () => {
