@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/webdriverio",
   "description": "WebdriverIO SDK for visual testing with Argos.",
-  "version": "0.7.19",
+  "version": "0.7.20",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
