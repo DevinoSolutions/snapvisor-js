@@ -1,6 +1,6 @@
 {
-  "name": "@argos-ci/vitest",
-  "description": "Vitest SDK for visual testing with Argos.",
+  "name": "@snapvisor/vitest",
+  "description": "Vitest SDK for visual testing with Snapvisor.",
   "version": "0.3.2",
   "author": "Smooth Code",
   "license": "MIT",
@@ -51,10 +51,10 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@argos-ci/browser": "workspace:*",
-    "@argos-ci/core": "workspace:*",
-    "@argos-ci/playwright": "workspace:*",
-    "@argos-ci/util": "workspace:*"
+    "@snapvisor/browser": "workspace:*",
+    "@snapvisor/core": "workspace:*",
+    "@snapvisor/playwright": "workspace:*",
+    "@snapvisor/util": "workspace:*"
   },
   "peerDependencies": {
     "@vitest/browser": ">=4",

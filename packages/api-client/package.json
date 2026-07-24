@@ -1,6 +1,6 @@
 {
-  "name": "@argos-ci/api-client",
-  "description": "Argos API Client library.",
+  "name": "@snapvisor/api-client",
+  "description": "Snapvisor API Client library.",
   "version": "0.26.0",
   "author": "Smooth Code",
   "license": "MIT",
@@ -35,7 +35,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "build-schema-types": "openapi-typescript https://api.argos-ci.com/v2/openapi.yaml -o src/schema.ts",
+    "build-schema-types": "openapi-typescript https://api.snapvisor.io/v2/openapi.yaml -o src/schema.ts",
     "build-schema-types-dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 openapi-typescript https://api.argos-ci.dev:4001/v2/openapi.yaml -o src/schema.ts",
     "build": "tsdown",
     "check-types": "tsc",

@@ -2,7 +2,7 @@ import {
   getGitRepositoryPath,
   readVersionFromPackage,
   type ScreenshotMetadata,
-} from "@argos-ci/util";
+} from "@snapvisor/util";
 import type { TestInfo } from "@playwright/test";
 import type { TestCase, TestResult } from "@playwright/test/reporter";
 import { relative } from "node:path";
@@ -33,7 +33,7 @@ export type MetadataConfig = {
 
 /**
  * Private metadata config storage.
- * Used to inject the metadata from other SDKs like @argos-ci/storybook.
+ * Used to inject the metadata from other SDKs like @snapvisor/storybook.
  */
 const metadataConfigStorage = new AsyncLocalStorage<MetadataConfig>();
 
@@ -82,7 +82,7 @@ async function getAutomationLibraryMetadata(): Promise<
  * Get the version of the Argos Playwright SDK.
  */
 async function getArgosPlaywrightVersion(): Promise<string> {
-  const pkgPath = require.resolve("@argos-ci/playwright/package.json");
+  const pkgPath = require.resolve("@snapvisor/playwright/package.json");
   return readVersionFromPackage(pkgPath);
 }
 
@@ -99,7 +99,7 @@ async function getSdkMetadata(): Promise<ScreenshotMetadata["sdk"]> {
   // Get the SDK metadata from the current SDK.
   const argosPlaywrightVersion = await getArgosPlaywrightVersion();
   return {
-    name: "@argos-ci/playwright",
+    name: "@snapvisor/playwright",
     version: argosPlaywrightVersion,
   };
 }

@@ -24,6 +24,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounts/{accountSlug}/projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List an account's projects
+         * @description List the projects of an account that are visible to the authenticated user, most recently active first. Results are paginated. The token must be scoped to the account.
+         */
+        get: operations["listProjects"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/builds": {
         parameters: {
             query?: never;
@@ -233,7 +253,7 @@ export interface paths {
         };
         /**
          * Get the current user
-         * @description Retrieve the user associated with the personal access token used to authenticate the request.
+         * @description Retrieve the user associated with the personal access token used to authenticate the request, along with their accessible accounts and GitHub linkage.
          */
         get: operations["getMe"];
         put?: never;
@@ -333,9 +353,9 @@ export interface paths {
         };
         /**
          * List a project's builds
-         * @description List the builds of a project, most recent first. Results are paginated. Use `distinctName` to return only the latest build per name and commit.
+         * @description List the builds of a project, most recent first. Results are paginated. Use `search` to match builds by name, branch or commit, and `distinctName` to return only the latest build per name and commit.
          */
-        get: operations["getProjectBuilds"];
+        get: operations["listBuilds"];
         put?: never;
         post?: never;
         delete?: never;
@@ -442,6 +462,22 @@ export interface paths {
          * @description Submit a review on a build to approve or reject the changes it captured.
          */
         post: operations["createReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/commits/{sha}/pulls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getRepoCommitPulls"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -755,7 +791,7 @@ export interface components {
          * @description The build number
          * @example 42
          */
-        BuildNumber: string;
+        BuildNumberParam: string;
         AccountAnalytics: {
             screenshots: {
                 series: {
@@ -817,10 +853,32 @@ export interface components {
                 message: string;
             }[];
         };
+        /** @description Page information */
+        PageInfo: {
+            /** @description Total number of items */
+            total: number;
+            /** @description Current page number */
+            page: number;
+            /** @description Number of items per page */
+            perPage: number;
+        };
+        /** @description Project */
+        Project: {
+            id: string;
+            account: components["schemas"]["Account"];
+            name: string;
+            defaultBaseBranch: string;
+            hasRemoteContentAccess: boolean;
+        };
+        /** @description Account */
+        Account: {
+            id: string;
+            slug: string;
+        };
         /** @description Build */
         Build: {
             id: components["schemas"]["BuildId"];
-            number: components["schemas"]["BuildNumberOutput"];
+            number: components["schemas"]["BuildNumber"];
             /** @description The head reference of the build */
             head: components["schemas"]["BuildGitReference"];
             /** @description The base reference of the build */
@@ -885,6 +943,11 @@ export interface components {
                 url: string;
             } | null;
         };
+        /**
+         * @description The build number
+         * @example 42
+         */
+        BuildNumber: number;
         /** @description Git reference */
         BuildGitReference: {
             /** @description The commit SHA */
@@ -892,33 +955,31 @@ export interface components {
             /** @description The branch name */
             branch: string;
         };
-        /** @description A user. */
-        User: {
+        /** @description Authenticated user, their accessible accounts, and GitHub linkage */
+        Me: {
+            user: components["schemas"]["MeUser"];
+            accounts: components["schemas"]["MeAccount"][];
+            github: components["schemas"]["MeGithub"];
+        };
+        /** @description Authenticated user */
+        MeUser: {
+            id: string;
+            name: string | null;
+            email: string | null;
+        };
+        /** @description Account visible to the authenticated user */
+        MeAccount: {
             id: string;
             slug: string;
             name: string | null;
+            /** @enum {string} */
+            type: "user" | "team";
+            mcpAccessIncluded: boolean;
         };
-        /** @description Project */
-        Project: {
-            id: string;
-            account: components["schemas"]["Account"];
-            name: string;
-            defaultBaseBranch: string;
-            hasRemoteContentAccess: boolean;
-        };
-        /** @description Account */
-        Account: {
-            id: string;
-            slug: string;
-        };
-        /** @description Page information */
-        PageInfo: {
-            /** @description Total number of items */
-            total: number;
-            /** @description Current page number */
-            page: number;
-            /** @description Number of items per page */
-            perPage: number;
+        /** @description GitHub linkage status for the authenticated user's account */
+        MeGithub: {
+            connected: boolean;
+            login: string | null;
         };
         /** @description Snapshot diff */
         SnapshotDiff: {
@@ -1164,7 +1225,14 @@ export interface components {
                 contentType: string;
             } | null;
             test: components["schemas"]["Test"] | null;
-            change: components["schemas"]["Change"] | null;
+            change: {
+                /** @description Unique identifier of the change (a test + fingerprint pair). Use it with the ignore/unignore endpoints. */
+                id: string;
+                /** @description Whether this change is currently ignored. Ignored changes no longer require review and are automatically approved. */
+                ignored: boolean;
+                /** @description Number of times this change has been seen over the metrics period. A high count for a recurring change is a strong flakiness signal. */
+                occurrences: number;
+            } | null;
         };
         /** @description Test associated to a diff, with flakiness metrics to help decide whether a change is worth reviewing. */
         Test: {
@@ -1204,19 +1272,37 @@ export interface components {
         BuildReview: {
             id: string;
             buildId: string;
-            /**
-             * @description State of a build review: approved, rejected, commented (neutral) or pending (an unsubmitted draft).
-             * @enum {string}
-             */
+            /** @enum {string} */
             state: "approved" | "rejected" | "commented" | "pending";
             /** @description The user who submitted the review. */
-            user: components["schemas"]["User"] | null;
+            user: components["schemas"]["BuildReviewUser"] | null;
             /** @description Date the review was dismissed, null if not dismissed. */
             dismissedAt: string | null;
             /** @description The user who dismissed the review, if any. */
-            dismissedBy: components["schemas"]["User"] | null;
+            dismissedBy: components["schemas"]["BuildReviewUser"] | null;
             /** @description Date the review was created. */
             date: string;
+        };
+        /** @description A user */
+        BuildReviewUser: {
+            id: string;
+            slug: string;
+            name: string | null;
+        };
+        /** @description GitHub PR associated with the commit, or null if the commit isn't part of any PR. */
+        PrContext: {
+            number: number;
+            title: string;
+            body: string | null;
+            state: string;
+            url: string;
+            changedFiles: components["schemas"]["PrContextChangedFile"][];
+        } | null;
+        PrContextChangedFile: {
+            filename: string;
+            status: string;
+            additions: number;
+            deletions: number;
         };
         /** @description A comment posted on a build. */
         Comment: {
@@ -1260,11 +1346,12 @@ export interface components {
                 users: components["schemas"]["User"][];
             }[];
         };
-        /**
-         * @description The build number
-         * @example 42
-         */
-        BuildNumberOutput: unknown;
+        /** @description A user. */
+        User: {
+            id: string;
+            slug: string;
+            name: string | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -1333,6 +1420,73 @@ export interface operations {
             };
         };
     };
+    listProjects: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+            };
+            header?: never;
+            path: {
+                /** @description Slug of the account to list projects for. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of projects */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["Project"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     createBuild: {
         parameters: {
             query?: never;
@@ -1369,7 +1523,7 @@ export interface operations {
                     mode?: ("ci" | "monitoring") | null;
                     /** @description The CI provider being used */
                     ciProvider?: string | null;
-                    /** @description The version of the Argos SDK being used */
+                    /** @description The version of the Snapvisor SDK being used */
                     argosSdk?: string | null;
                     /** @description The ID of the current run */
                     runId?: string | null;
@@ -2137,13 +2291,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The authenticated user */
+            /** @description Authenticated user, accounts, and GitHub linkage */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["Me"];
                 };
             };
             /** @description Unauthorized */
@@ -2419,7 +2573,7 @@ export interface operations {
             };
         };
     };
-    getProjectBuilds: {
+    listBuilds: {
         parameters: {
             query?: {
                 /** @description Number of items per page (max 100) */
@@ -2428,6 +2582,8 @@ export interface operations {
                 page?: string;
                 head?: string;
                 headSha?: components["schemas"]["Sha1Hash"];
+                /** @description Search builds by name, branch (substring) or commit (prefix). */
+                search?: string;
                 /** @description Only return the latest builds created, unique by name and commit. */
                 distinctName?: string;
             };
@@ -2507,7 +2663,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
             };
             cookie?: never;
         };
@@ -2586,7 +2742,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
             };
             cookie?: never;
         };
@@ -2615,6 +2771,15 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2796,7 +2961,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
             };
             cookie?: never;
         };
@@ -2866,7 +3031,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
             };
             cookie?: never;
         };
@@ -2959,6 +3124,76 @@ export interface operations {
             };
         };
     };
+    getRepoCommitPulls: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                repo: string;
+                /** @description SHA1 hash */
+                sha: components["schemas"]["Sha1Hash"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description GitHub PR associated with the commit (or null) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PrContext"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     dismissReview: {
         parameters: {
             query?: never;
@@ -2967,7 +3202,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description The ID of the review */
                 reviewId: string;
             };
@@ -3039,7 +3274,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
             };
             cookie?: never;
         };
@@ -3109,7 +3344,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
             };
             cookie?: never;
         };
@@ -3206,7 +3441,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description The ID of the comment */
                 commentId: string;
             };
@@ -3278,7 +3513,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description The ID of the comment */
                 commentId: string;
             };
@@ -3350,7 +3585,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description The ID of the comment */
                 commentId: string;
             };
@@ -3431,7 +3666,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description The ID of the comment */
                 commentId: string;
             };
@@ -3513,7 +3748,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description The ID of the comment */
                 commentId: string;
             };
@@ -3585,7 +3820,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description ID of any comment in the thread */
                 commentId: string;
             };
@@ -3657,7 +3892,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description ID of any comment in the thread */
                 commentId: string;
             };
@@ -3729,7 +3964,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description ID of any comment in the thread */
                 commentId: string;
             };
@@ -3801,7 +4036,7 @@ export interface operations {
                 owner: string;
                 project: string;
                 /** @description The build number */
-                buildNumber: components["schemas"]["BuildNumber"];
+                buildNumber: components["schemas"]["BuildNumberParam"];
                 /** @description ID of any comment in the thread */
                 commentId: string;
             };

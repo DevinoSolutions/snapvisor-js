@@ -13,9 +13,9 @@
 
 Low-level browser utilities that stabilize the page before a screenshot is taken — waiting for fonts and images to load, hiding scrollbars and text carets, and resolving viewports.
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/browser.svg)](https://www.npmjs.com/package/@argos-ci/browser)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/browser.svg)](https://www.npmjs.com/package/@argos-ci/browser)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/browser.svg)](https://www.npmjs.com/package/@argos-ci/browser)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/browser.svg)](https://www.npmjs.com/package/@snapvisor/browser)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/browser.svg)](https://www.npmjs.com/package/@snapvisor/browser)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/browser.svg)](https://www.npmjs.com/package/@snapvisor/browser)
 
 > This package is an internal building block used by the higher-level Argos SDKs (Playwright, Cypress, Puppeteer, …). You usually don't need to install it directly — pick the integration for your test framework instead.
 

@@ -29,7 +29,7 @@ const cwd = process.cwd();
  * ```ts
  * import { defineConfig } from "vitest/config";
  * import { playwright } from "@vitest/browser-playwright";
- * import { argosVitestPlugin } from "@argos-ci/vitest/plugin";
+ * import { argosVitestPlugin } from "@snapvisor/vitest/plugin";
  *
  * export default defineConfig({
  *   plugins: [argosVitestPlugin({ uploadToArgos: true })],
@@ -51,7 +51,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
   } = options ?? {};
   const root = resolve(cwd, unresolvedRoot);
   return {
-    name: "@argos-ci/vitest",
+    name: "@snapvisor/vitest",
     configureVitest({ vitest }) {
       if (uploadToArgos) {
         vitest.config.reporters.push(
@@ -62,7 +62,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     config() {
       return {
         optimizeDeps: {
-          include: ["@argos-ci/vitest"],
+          include: ["@snapvisor/vitest"],
         },
         test: {
           // Record each test's source location so Argos can attach it to the

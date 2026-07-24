@@ -4,8 +4,8 @@ import type { Page, Locator, Frame } from "@playwright/test";
 import {
   type StabilizationPluginOptions,
   type StabilizationContext,
-} from "@argos-ci/browser";
-import { getMetadataPath, writeMetadata } from "@argos-ci/util";
+} from "@snapvisor/browser";
+import { getMetadataPath, writeMetadata } from "@snapvisor/util";
 import { getAttachmentName, type ArgosAttachment } from "./attachment";
 import {
   attachAttachments,

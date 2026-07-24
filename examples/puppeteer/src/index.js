@@ -1,4 +1,4 @@
-import { argosScreenshot } from "@argos-ci/puppeteer";
+import { argosScreenshot } from "@snapvisor/puppeteer";
 import puppeteer from "puppeteer";
 
 (async () => {

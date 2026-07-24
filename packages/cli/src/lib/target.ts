@@ -1,4 +1,4 @@
-import type { ArgosAPIClient } from "@argos-ci/api-client";
+import type { ArgosAPIClient } from "@snapvisor/api-client";
 import { getAccessToken } from "../auth";
 import { createApiClient, unwrap } from "./api";
 import {

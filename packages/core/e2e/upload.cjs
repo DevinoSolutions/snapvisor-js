@@ -1,4 +1,4 @@
-const { upload } = require("@argos-ci/core");
+const { upload } = require("@snapvisor/core");
 const { runUpload } = require("./run-upload.cjs");
 
 runUpload(

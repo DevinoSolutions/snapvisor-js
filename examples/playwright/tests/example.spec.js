@@ -1,4 +1,4 @@
-import { argosScreenshot } from "@argos-ci/playwright";
+import { argosScreenshot } from "@snapvisor/playwright";
 import { test } from "@playwright/test";
 
 // Read more about streamline page screenshot captures

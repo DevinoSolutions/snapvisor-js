@@ -13,14 +13,14 @@
 
 A typed client for the [Argos API](https://api.argos-ci.com/v2/), built on [openapi-fetch](https://openapi-ts.dev/openapi-fetch/).
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/api-client.svg)](https://www.npmjs.com/package/@argos-ci/api-client)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/api-client.svg)](https://www.npmjs.com/package/@argos-ci/api-client)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/api-client.svg)](https://www.npmjs.com/package/@argos-ci/api-client)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/api-client.svg)](https://www.npmjs.com/package/@snapvisor/api-client)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/api-client.svg)](https://www.npmjs.com/package/@snapvisor/api-client)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/api-client.svg)](https://www.npmjs.com/package/@snapvisor/api-client)
 
 ## Installation
 
 ```sh
-npm install @argos-ci/api-client
+npm install @snapvisor/api-client
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ npm install @argos-ci/api-client
 Create a client and call any endpoint. Requests and responses are fully typed from the Argos OpenAPI schema:
 
 ```ts
-import { createClient } from "@argos-ci/api-client";
+import { createClient } from "@snapvisor/api-client";
 
 const client = createClient({
   authToken: process.env.ARGOS_TOKEN,

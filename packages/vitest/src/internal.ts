@@ -1,6 +1,6 @@
 /**
  * Internal, unstable entry point shared with other Argos SDKs (e.g.
- * `@argos-ci/storybook`). No semver guarantee — do not import directly.
+ * `@snapvisor/storybook`). No semver guarantee — do not import directly.
  */
 export {
   resetTesterScale,

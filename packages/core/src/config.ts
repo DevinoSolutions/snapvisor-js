@@ -108,7 +108,7 @@ convict.addFormat({
 const schema = {
   apiBaseUrl: {
     env: "ARGOS_API_BASE_URL",
-    default: "https://api.argos-ci.com/v2/",
+    default: "https://api.snapvisor.io/v2/",
     format: mustBeApiBaseUrl,
   },
   commit: {
@@ -265,7 +265,7 @@ export interface Config {
   /**
    * Base URL of the Argos API.
    * Use this to target a self-hosted installation.
-   * @default "https://api.argos-ci.com/v2/"
+   * @default "https://api.snapvisor.io/v2/"
    */
   apiBaseUrl: string;
 

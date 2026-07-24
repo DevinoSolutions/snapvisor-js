@@ -2,7 +2,7 @@ import type * as vitest from "vitest";
 import type { ComposedStoryFn } from "storybook/internal/types";
 import type { ArgosScreenshotOptions } from "./utils/screenshot";
 import type { ArgosScreenshotCommandArgs } from "./vitest-plugin";
-import type { ArgosAttachment } from "@argos-ci/playwright";
+import type { ArgosAttachment } from "@snapvisor/playwright";
 import type { StorybookGlobals } from "./utils/parameters";
 import { hasPlay, mergeTags } from "./utils/storyMetadata";
 
@@ -26,7 +26,7 @@ export function setupArgos(api: { afterEach: typeof vitest.afterEach }) {
 
     if (!story) {
       throw new Error(
-        `@argos-ci/storybook/vitest-plugin should be used with @storybook/addon-vitest/vitest-plugin`,
+        `@snapvisor/storybook/vitest-plugin should be used with @storybook/addon-vitest/vitest-plugin`,
       );
     }
 

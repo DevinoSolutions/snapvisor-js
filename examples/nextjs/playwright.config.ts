@@ -22,7 +22,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   // Adds Argos reporter in CI environments
   reporter: process.env.CI
-    ? [["list"], ["@argos-ci/playwright/reporter"]]
+    ? [["list"], ["@snapvisor/playwright/reporter"]]
     : "list",
 
   use: {

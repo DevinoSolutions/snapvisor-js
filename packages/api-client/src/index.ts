@@ -17,7 +17,7 @@ export function createClient(options?: {
 }) {
   const { baseUrl, authToken } = options || {};
   return createFetchClient<paths>({
-    baseUrl: baseUrl || "https://api.argos-ci.com/v2/",
+    baseUrl: baseUrl || "https://api.snapvisor.io/v2/",
     headers: {
       Authorization: authToken ? `Bearer ${authToken}` : undefined,
     },

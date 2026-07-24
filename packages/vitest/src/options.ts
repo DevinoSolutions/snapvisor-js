@@ -1,9 +1,9 @@
-import type { UploadParameters } from "@argos-ci/core";
-import type { ArgosScreenshotOptions as PlaywrightScreenshotOptions } from "@argos-ci/playwright";
+import type { UploadParameters } from "@snapvisor/core";
+import type { ArgosScreenshotOptions as PlaywrightScreenshotOptions } from "@snapvisor/playwright";
 import type {
   ViewportOption,
   StabilizationPluginOptions,
-} from "@argos-ci/browser";
+} from "@snapvisor/browser";
 
 /**
  * Configuration for the Argos Vitest reporter.

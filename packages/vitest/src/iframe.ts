@@ -1,5 +1,5 @@
 import type { BrowserCommandContext } from "vitest/node";
-import type { ViewportSize } from "@argos-ci/browser";
+import type { ViewportSize } from "@snapvisor/browser";
 
 /**
  * Selector of the iframe Vitest renders the test into on the orchestrator page.

@@ -1,5 +1,5 @@
-import type { ArgosAPIClient } from "@argos-ci/api-client";
-import { createClient } from "@argos-ci/api-client";
+import type { ArgosAPIClient } from "@snapvisor/api-client";
+import { createClient } from "@snapvisor/api-client";
 import { Gitlab } from "@gitbeaker/rest";
 
 type GitlabAPIClient = InstanceType<typeof Gitlab>;

@@ -7,7 +7,7 @@
     "puppeteer": "^23.1.0"
   },
   "devDependencies": {
-    "@argos-ci/cli": "^2.3.1",
-    "@argos-ci/puppeteer": "^2.2.1"
+    "@snapvisor/cli": "^2.3.1",
+    "@snapvisor/puppeteer": "^2.2.1"
   }
 }

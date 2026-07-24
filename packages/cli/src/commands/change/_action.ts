@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { ArgosAPISchema, ArgosAPIClient } from "@argos-ci/api-client";
+import type { ArgosAPISchema, ArgosAPIClient } from "@snapvisor/api-client";
 import { formatChange } from "../../lib/format";
 import { handleCliError, output, type BaseCommandOptions } from "../../lib/run";
 import { resolveProjectTarget } from "../../lib/target";

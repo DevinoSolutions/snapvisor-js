@@ -11,9 +11,9 @@
 
 # Official Argos Puppeteer integration
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/puppeteer.svg)](https://www.npmjs.com/package/@argos-ci/puppeteer)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/puppeteer.svg)](https://www.npmjs.com/package/@argos-ci/puppeteer)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/puppeteer.svg)](https://www.npmjs.com/package/@argos-ci/puppeteer)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/puppeteer.svg)](https://www.npmjs.com/package/@snapvisor/puppeteer)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/puppeteer.svg)](https://www.npmjs.com/package/@snapvisor/puppeteer)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/puppeteer.svg)](https://www.npmjs.com/package/@snapvisor/puppeteer)
 
 Capture stable Argos screenshots from your [Puppeteer](https://github.com/puppeteer/puppeteer) tests.
 
@@ -24,7 +24,7 @@ Visit the [Puppeteer SDK documentation](https://argos-ci.com/docs/reference/pupp
 Install the SDK alongside the [Argos CLI](https://argos-ci.com/docs/reference/argos-command-line-interface-cli), which uploads the screenshots to Argos:
 
 ```sh
-npm install --save-dev @argos-ci/puppeteer @argos-ci/cli
+npm install --save-dev @snapvisor/puppeteer @snapvisor/cli
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ Use `argosScreenshot` to stabilize the UI and capture a screenshot:
 
 ```ts
 import puppeteer from "puppeteer";
-import { argosScreenshot } from "@argos-ci/puppeteer";
+import { argosScreenshot } from "@snapvisor/puppeteer";
 
 const browser = await puppeteer.launch();
 const page = await browser.newPage();
@@ -45,7 +45,7 @@ await browser.close();
 Screenshots are saved locally (in `./screenshots/argos` by default). Upload them to Argos with the Argos CLI, usually at the end of your CI job:
 
 ```sh
-npx @argos-ci/cli upload ./screenshots
+npx @snapvisor/cli upload ./screenshots
 ```
 
 ## Links

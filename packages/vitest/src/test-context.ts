@@ -42,7 +42,7 @@ export interface CurrentTask extends CurrentSuite {
  * Vitest >= 4.1 exposes `TestRunner.getCurrentTest()` from the `vitest` entry
  * point; the `vitest/suite` export is deprecated. We prefer the new API and
  * fall back to `vitest/suite` for older 4.x. Both are imported dynamically so
- * importing `@argos-ci/vitest` in a non-Vitest environment does not pull Vitest
+ * importing `@snapvisor/vitest` in a non-Vitest environment does not pull Vitest
  * in — only call this once you know Vitest is available.
  */
 export async function getCurrentTest(): Promise<CurrentTask | undefined> {

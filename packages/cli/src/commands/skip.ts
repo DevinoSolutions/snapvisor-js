@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { skip } from "@argos-ci/core";
+import { skip } from "@snapvisor/core";
 import ora from "ora";
 import {
   buildNameOption,

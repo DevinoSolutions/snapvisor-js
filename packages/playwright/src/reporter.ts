@@ -6,8 +6,8 @@ import type {
   TestResult,
 } from "@playwright/test/reporter";
 import chalk from "chalk";
-import { readConfig, upload } from "@argos-ci/core";
-import type { UploadParameters } from "@argos-ci/core";
+import { readConfig, upload } from "@snapvisor/core";
+import type { UploadParameters } from "@snapvisor/core";
 import { copyFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import {
@@ -19,7 +19,7 @@ import {
 } from "./attachment";
 import { getMetadataFromTestCase } from "./metadata";
 import { debug } from "./debug";
-import { createDirectory, createTemporaryDirectory } from "@argos-ci/util";
+import { createDirectory, createTemporaryDirectory } from "@snapvisor/util";
 import {
   getAutomaticScreenshotName,
   METADATA_EXTENSION,

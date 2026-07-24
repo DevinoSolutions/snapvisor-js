@@ -13,16 +13,16 @@
 
 Node.js SDK for visual testing with Argos. It powers the Argos CLI and the higher-level integrations (Playwright, Cypress, …), and can be used directly to upload screenshots from Node.js.
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/core.svg)](https://www.npmjs.com/package/@argos-ci/core)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/core.svg)](https://www.npmjs.com/package/@argos-ci/core)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/core.svg)](https://www.npmjs.com/package/@argos-ci/core)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/core.svg)](https://www.npmjs.com/package/@snapvisor/core)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/core.svg)](https://www.npmjs.com/package/@snapvisor/core)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/core.svg)](https://www.npmjs.com/package/@snapvisor/core)
 
 Visit the [Node.js SDK documentation](https://argos-ci.com/docs/reference/node.js-sdk) for guides, the API reference, and more.
 
 ## Installation
 
 ```sh
-npm install @argos-ci/core
+npm install @snapvisor/core
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ npm install @argos-ci/core
 Upload a directory of screenshots to Argos and create a build:
 
 ```ts
-import { upload } from "@argos-ci/core";
+import { upload } from "@snapvisor/core";
 
 const { build } = await upload({
   // Directory containing the screenshots.

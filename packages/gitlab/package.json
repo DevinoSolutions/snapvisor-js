@@ -1,5 +1,6 @@
 {
-  "name": "@argos-ci/gitlab",
+  "name": "@snapvisor/gitlab",
+  "private": true,
   "description": "GitLab utilities for visual testing with Argos.",
   "version": "0.7.13",
   "author": "Smooth Code",
@@ -47,7 +48,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@argos-ci/api-client": "workspace:*",
+    "@snapvisor/api-client": "workspace:*",
     "@gitbeaker/rest": "^43.8.0",
     "commander": "^15.0.0"
   },

@@ -1,5 +1,5 @@
 import createDebug from "debug";
 
-const KEY = "@argos-ci/api-client";
+const KEY = "@snapvisor/api-client";
 
 export const debug = createDebug(KEY);

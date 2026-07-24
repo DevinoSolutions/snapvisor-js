@@ -4,6 +4,7 @@ pnpm-workspace.yaml
 package.json
 lerna.json
 CHANGELOG.md
+SYNC.md
 dist
 /packages/*/test-results
 /packages/*/screenshots

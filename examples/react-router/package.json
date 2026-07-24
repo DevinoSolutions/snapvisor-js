@@ -17,7 +17,7 @@
     "react-router": "^7.1.0"
   },
   "devDependencies": {
-    "@argos-ci/playwright": "^2.0.0",
+    "@snapvisor/playwright": "^2.0.0",
     "@playwright/test": "^1.42.1",
     "@react-router/dev": "^7.1.0",
     "@types/node": "^20",

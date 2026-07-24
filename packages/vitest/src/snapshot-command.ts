@@ -1,5 +1,5 @@
 import type { BrowserCommand } from "vitest/node";
-import type { ArgosAttachment } from "@argos-ci/playwright";
+import type { ArgosAttachment } from "@snapvisor/playwright";
 import type { TestMetadata } from "./metadata";
 import type {
   ArgosVitestPluginOptions,

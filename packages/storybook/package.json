@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/storybook",
+  "name": "@snapvisor/storybook",
   "description": "Visual testing for Storybook test runner.",
   "version": "6.1.8",
   "author": "Smooth Code",
@@ -49,14 +49,14 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@argos-ci/core": "workspace:*",
-    "@argos-ci/playwright": "workspace:*",
-    "@argos-ci/util": "workspace:*",
-    "@argos-ci/vitest": "workspace:*"
+    "@snapvisor/core": "workspace:*",
+    "@snapvisor/playwright": "workspace:*",
+    "@snapvisor/util": "workspace:*",
+    "@snapvisor/vitest": "workspace:*"
   },
   "devDependencies": {
-    "@argos-ci/cli": "workspace:*",
-    "@argos-ci/util": "workspace:*",
+    "@snapvisor/cli": "workspace:*",
+    "@snapvisor/util": "workspace:*",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/addon-links": "^10.4.6",
     "@storybook/addon-themes": "^10.4.6",

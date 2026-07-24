@@ -2,7 +2,7 @@ import {
   argosScreenshot as argosPlaywrightScreenshot,
   type ArgosAttachment,
   type ArgosScreenshotOptions as PlaywrightScreenshotOptions,
-} from "@argos-ci/playwright";
+} from "@snapvisor/playwright";
 import type { BrowserCommandContext } from "vitest/node";
 import { fitIframeToContent } from "./iframe";
 
@@ -16,7 +16,7 @@ import { fitIframeToContent } from "./iframe";
  * - wraps `beforeScreenshot` so the content is grown to fit *after* `argosCSS`
  *   (and any user `beforeScreenshot`) has been applied — otherwise wide/tall
  *   content would be clipped;
- * - captures the iframe's `<body>` via `@argos-ci/playwright`.
+ * - captures the iframe's `<body>` via `@snapvisor/playwright`.
  *
  * @param config.fitWidth - Grow the iframe horizontally as well as vertically
  *   to fit the content (used when not capturing a fixed viewport width).

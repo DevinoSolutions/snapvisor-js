@@ -9,7 +9,7 @@ const config: PlaywrightTestConfig = {
     process.env.CI ? ["dot"] : ["list"],
     // Add Argos reporter.
     [
-      "@argos-ci/playwright/reporter",
+      "@snapvisor/playwright/reporter",
       {
         // Enable upload to Argos only when it runs on CI.
         uploadToArgos: !!process.env.CI,

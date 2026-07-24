@@ -1,4 +1,4 @@
-import { APIError } from "@argos-ci/api-client";
+import { APIError } from "@snapvisor/api-client";
 import { CliError } from "./cli-error";
 import {
   resolveBuildTarget,

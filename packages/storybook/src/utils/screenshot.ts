@@ -4,7 +4,7 @@ import {
   type ArgosAttachment,
   type ArgosScreenshotOptions as BaseArgosScreenshotOptions,
   type MetadataConfig,
-} from "@argos-ci/playwright";
+} from "@snapvisor/playwright";
 import type { Frame, Page, ViewportSize } from "playwright";
 import { getArgosStorybookVersion } from "./metadata";
 import { getStoryMetadata } from "./storyMetadata";
@@ -80,7 +80,7 @@ export async function storybookArgosScreenshot<Handler extends Page | Frame>(
   const storyUrl = `http://localhost:6006/?path=/story/${context.story.id}`;
 
   const metadata: MetadataConfig = {
-    sdk: { name: "@argos-ci/storybook", version },
+    sdk: { name: "@snapvisor/storybook", version },
     playwrightLibraries: context.playwrightLibraries,
     url: storyUrl,
     test: context.test,
@@ -199,7 +199,7 @@ async function runStory(args: {
 
       if (!storyFn) {
         throw new Error(
-          "@argos-ci/storybook: Unable to find `__ARGOS_STORYBOOK_STORY`.",
+          "@snapvisor/storybook: Unable to find `__ARGOS_STORYBOOK_STORY`.",
         );
       }
 
@@ -230,7 +230,7 @@ async function runStory(args: {
 
     if (!channel) {
       throw new Error(
-        "@argos-ci/storybook: Unable to find `__STORYBOOK_PREVIEW__`.",
+        "@snapvisor/storybook: Unable to find `__STORYBOOK_PREVIEW__`.",
       );
     }
 
@@ -266,7 +266,7 @@ async function markStoryAsRendered<Handler extends Page | Frame>(
       };
       if (!addons) {
         throw new Error(
-          "@argos-ci/storybook: Unable to find `__STORYBOOK_ADDONS_PREVIEW`.",
+          "@snapvisor/storybook: Unable to find `__STORYBOOK_ADDONS_PREVIEW`.",
         );
       }
       addons.getChannel().emit("storyRendered", storyId);

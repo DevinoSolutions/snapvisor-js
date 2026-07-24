@@ -1,4 +1,4 @@
-import type { ArgosAttachment } from "@argos-ci/playwright";
+import type { ArgosAttachment } from "@snapvisor/playwright";
 import { resolveAutoName } from "./auto-name";
 import { getTestMetadata, type TestMetadata } from "./metadata";
 import type {
@@ -41,7 +41,7 @@ declare module "vitest/browser" {
 /**
  * Take an Argos screenshot in a Vitest browser test.
  *
- * Requires the {@link https://www.npmjs.com/package/@argos-ci/vitest Argos Vitest plugin}
+ * Requires the {@link https://www.npmjs.com/package/@snapvisor/vitest Argos Vitest plugin}
  * to be registered in your Vitest config.
  *
  * The `name` is optional: when omitted, Argos generates one automatically from
@@ -53,7 +53,7 @@ declare module "vitest/browser" {
  * @example
  * ```ts
  * import { render } from "vitest-browser-react";
- * import { argosScreenshot } from "@argos-ci/vitest";
+ * import { argosScreenshot } from "@snapvisor/vitest";
  *
  * test("Button", async () => {
  *   render(<Button>Click me</Button>);
@@ -120,7 +120,7 @@ export async function argosScreenshot(
  *
  * @example
  * ```ts
- * import { argosSnapshot } from "@argos-ci/vitest";
+ * import { argosSnapshot } from "@snapvisor/vitest";
  *
  * test("API response", async () => {
  *   const data = await fetchUser();

@@ -35,6 +35,13 @@ describe("#readConfig", () => {
       ...config,
     });
 
+  it("defaults apiBaseUrl to the Snapvisor API", async () => {
+    delete process.env.ARGOS_API_BASE_URL;
+    expect((await readDummyConfig()).apiBaseUrl).toBe(
+      "https://api.snapvisor.io/v2/",
+    );
+  });
+
   it("validates parallelTotal", async () => {
     process.env.ARGOS_PARALLEL_TOTAL = "";
     expect((await readDummyConfig()).parallelTotal).toBe(null);

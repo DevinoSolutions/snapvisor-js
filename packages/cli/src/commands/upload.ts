@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 import { Option } from "commander";
-import { upload } from "@argos-ci/core";
+import { upload } from "@snapvisor/core";
 import ora from "ora";
 import {
   buildNameOption,
@@ -33,7 +33,7 @@ export function uploadCommand(program: Command) {
   program
     .command("upload")
     .argument("<directory>", "Directory to upload")
-    .description("Upload screenshots to Argos")
+    .description("Upload screenshots to Snapvisor")
     .option(
       "-f, --files <patterns...>",
       "One or more globs matching image file paths to upload",

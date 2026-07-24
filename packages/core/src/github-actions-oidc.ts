@@ -1,4 +1,4 @@
-import { createClient, throwAPIError } from "@argos-ci/api-client";
+import { createClient, throwAPIError } from "@snapvisor/api-client";
 import type { Config } from "./config";
 
 /**

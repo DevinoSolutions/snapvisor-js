@@ -1,5 +1,5 @@
 const { defineConfig } = require("cypress");
-const { registerArgosTask } = require("@argos-ci/cypress/task");
+const { registerArgosTask } = require("@snapvisor/cypress/task");
 
 module.exports = defineConfig({
   video: false,

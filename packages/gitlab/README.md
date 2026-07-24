@@ -13,9 +13,9 @@
 
 GitLab utilities to report Argos build statuses back to your merge requests when running Argos with a self-managed GitLab instance.
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/gitlab.svg)](https://www.npmjs.com/package/@argos-ci/gitlab)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/gitlab.svg)](https://www.npmjs.com/package/@argos-ci/gitlab)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/gitlab.svg)](https://www.npmjs.com/package/@argos-ci/gitlab)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/gitlab.svg)](https://www.npmjs.com/package/@snapvisor/gitlab)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/gitlab.svg)](https://www.npmjs.com/package/@snapvisor/gitlab)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/gitlab.svg)](https://www.npmjs.com/package/@snapvisor/gitlab)
 
 Visit the [GitLab integration documentation](https://argos-ci.com/docs/learn/integrations/gitlab-integration) for the full setup guide.
 
@@ -27,7 +27,7 @@ Run the `argos-gitlab update-statuses` command in your GitLab CI pipeline. It wa
 # .gitlab-ci.yml
 argos-status:
   script:
-    - npx @argos-ci/gitlab update-statuses
+    - npx @snapvisor/gitlab update-statuses
   variables:
     ARGOS_TOKEN: $ARGOS_TOKEN
     ARGOS_GITLAB_TOKEN: $ARGOS_GITLAB_TOKEN

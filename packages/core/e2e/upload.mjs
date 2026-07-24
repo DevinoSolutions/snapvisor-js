@@ -1,4 +1,4 @@
-import { upload } from "@argos-ci/core";
+import { upload } from "@snapvisor/core";
 import { runUpload } from "./run-upload.cjs";
 
 runUpload(

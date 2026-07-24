@@ -28,7 +28,7 @@ export const OAUTH_SCOPES = [
 const EXPIRY_SKEW_MS = 60 * 1000;
 
 export function getAppBaseUrl(): string {
-  return process.env["ARGOS_APP_BASE_URL"] ?? "https://app.argos-ci.com/";
+  return process.env["ARGOS_APP_BASE_URL"] ?? "https://app.snapvisor.io/";
 }
 
 export type OAuthTokenSet = {

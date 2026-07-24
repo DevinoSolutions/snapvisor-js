@@ -1,4 +1,4 @@
-import type { ArgosAPISchema } from "@argos-ci/api-client";
+import type { ArgosAPISchema } from "@snapvisor/api-client";
 import { describe, expect, it } from "vitest";
 import {
   formatBuild,

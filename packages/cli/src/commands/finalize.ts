@@ -1,6 +1,6 @@
 import ora from "ora";
 import { Option, type Command } from "commander";
-import { finalize } from "@argos-ci/core";
+import { finalize } from "@snapvisor/core";
 import {
   buildNameOption,
   parallelNonceOption,

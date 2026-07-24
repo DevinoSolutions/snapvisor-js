@@ -10,14 +10,14 @@ import {
   type ViewportSize,
   type StabilizationPluginOptions,
   type StabilizationContext,
-} from "@argos-ci/browser";
+} from "@snapvisor/browser";
 import {
   type ScreenshotMetadata,
   getScreenshotName,
   readVersionFromPackage,
   validateThreshold,
   writeMetadata,
-} from "@argos-ci/util";
+} from "@snapvisor/util";
 
 const require = createRequire(import.meta.url);
 
@@ -89,7 +89,7 @@ async function getPuppeteerVersion(): Promise<string> {
 }
 
 async function getArgosPuppeteerVersion(): Promise<string> {
-  const pkgPath = require.resolve("@argos-ci/puppeteer/package.json");
+  const pkgPath = require.resolve("@snapvisor/puppeteer/package.json");
   return readVersionFromPackage(pkgPath);
 }
 
@@ -308,7 +308,7 @@ export async function argosScreenshot(
         version: puppeteerVersion,
       },
       sdk: {
-        name: "@argos-ci/puppeteer",
+        name: "@snapvisor/puppeteer",
         version: argosPuppeteerVersion,
       },
     };

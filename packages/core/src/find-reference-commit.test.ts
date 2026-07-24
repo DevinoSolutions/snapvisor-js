@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { ArgosAPISchema } from "@argos-ci/api-client";
+import type { ArgosAPISchema } from "@snapvisor/api-client";
 import {
   findReferenceCommit,
   getCumulativeBatchSizes,

@@ -6,7 +6,7 @@ const { argosScreenshot, setMetadataConfig } = vi.hoisted(() => ({
   setMetadataConfig: vi.fn(),
 }));
 
-vi.mock("@argos-ci/playwright", () => ({
+vi.mock("@snapvisor/playwright", () => ({
   argosScreenshot,
   DO_NOT_USE_setMetadataConfig: setMetadataConfig,
 }));
@@ -83,7 +83,7 @@ describe("createArgosScreenshotCommand", () => {
     expect(setMetadataConfig).toHaveBeenCalled();
     const metadata = setMetadataConfig.mock.calls.at(-1)![0];
     expect(metadata.sdk).toEqual({
-      name: "@argos-ci/vitest",
+      name: "@snapvisor/vitest",
       version: "0.0.0-test",
     });
     expect(metadata.playwrightLibraries).toContain("vitest");

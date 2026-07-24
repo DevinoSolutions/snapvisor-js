@@ -13,4 +13,4 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 // Add support of `argosScreenshot` command
-import "@argos-ci/cypress/support";
+import "@snapvisor/cypress/support";

@@ -11,9 +11,9 @@
 
 # Official Argos Cypress integration
 
-[![npm version](https://img.shields.io/npm/v/@argos-ci/cypress.svg)](https://www.npmjs.com/package/@argos-ci/cypress)
-[![npm dm](https://img.shields.io/npm/dm/@argos-ci/cypress.svg)](https://www.npmjs.com/package/@argos-ci/cypress)
-[![npm dt](https://img.shields.io/npm/dt/@argos-ci/cypress.svg)](https://www.npmjs.com/package/@argos-ci/cypress)
+[![npm version](https://img.shields.io/npm/v/@snapvisor/cypress.svg)](https://www.npmjs.com/package/@snapvisor/cypress)
+[![npm dm](https://img.shields.io/npm/dm/@snapvisor/cypress.svg)](https://www.npmjs.com/package/@snapvisor/cypress)
+[![npm dt](https://img.shields.io/npm/dt/@snapvisor/cypress.svg)](https://www.npmjs.com/package/@snapvisor/cypress)
 
 Capture stable Argos screenshots from your [Cypress](https://www.cypress.io/) tests.
 
@@ -22,7 +22,7 @@ Visit the [Cypress SDK documentation](https://argos-ci.com/docs/reference/cypres
 ## Installation
 
 ```sh
-npm install --save-dev @argos-ci/cypress
+npm install --save-dev @snapvisor/cypress
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ Register the Argos task in your Cypress config:
 ```ts
 // cypress.config.js
 const { defineConfig } = require("cypress");
-const { registerArgosTask } = require("@argos-ci/cypress/task");
+const { registerArgosTask } = require("@snapvisor/cypress/task");
 
 module.exports = defineConfig({
   e2e: {
@@ -52,7 +52,7 @@ Import the command in your support file:
 
 ```ts
 // cypress/support/e2e.js
-import "@argos-ci/cypress/support";
+import "@snapvisor/cypress/support";
 ```
 
 Then capture stable screenshots with `cy.argosScreenshot` in your tests:

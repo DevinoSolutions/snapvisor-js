@@ -24,7 +24,7 @@ const pkg = JSON.parse(rawPkg);
 program
   .name(pkg.name)
   .description(
-    "Interact with and upload screenshots to Argos via command line.",
+    "Interact with and upload screenshots to Snapvisor via command line.",
   )
   .version(pkg.version);
 

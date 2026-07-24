@@ -1,5 +1,6 @@
 {
-  "name": "@argos-ci/webdriverio",
+  "name": "@snapvisor/webdriverio",
+  "private": true,
   "description": "WebdriverIO SDK for visual testing with Argos.",
   "version": "0.7.19",
   "author": "Smooth Code",
@@ -46,7 +47,7 @@
     "sharp": "^0.35.2"
   },
   "devDependencies": {
-    "@argos-ci/cli": "workspace:*",
+    "@snapvisor/cli": "workspace:*",
     "@wdio/cli": "^9.29.0",
     "@wdio/globals": "^9.29.0",
     "@wdio/local-runner": "^9.29.0",

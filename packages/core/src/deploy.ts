@@ -2,7 +2,7 @@ import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import glob from "fast-glob";
 import mime from "mime-types";
-import { createClient, throwAPIError } from "@argos-ci/api-client";
+import { createClient, throwAPIError } from "@snapvisor/api-client";
 import { hashFile } from "./hashing";
 import { uploadFile } from "./s3";
 import { chunk } from "./util/chunk";
@@ -29,7 +29,7 @@ export interface DeployParameters {
 
   /**
    * Base URL of the Argos API.
-   * @default "https://api.argos-ci.com/v2/"
+   * @default "https://api.snapvisor.io/v2/"
    */
   apiBaseUrl?: string;
 

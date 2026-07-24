@@ -41,7 +41,7 @@ describe("writeSnapshotFile", () => {
     const metadata = JSON.parse(
       await readFile(metadataAttachment!.path, "utf-8"),
     );
-    expect(metadata.sdk.name).toBe("@argos-ci/vitest");
+    expect(metadata.sdk.name).toBe("@snapvisor/vitest");
     expect(metadata.automationLibrary.name).toBe("vitest");
   });
 
