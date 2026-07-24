@@ -9,7 +9,7 @@ export interface CurrentSuite {
 
 /**
  * Minimal structural view of the Vitest test task we read metadata from. Only
- * the fields Argos uses are declared; the real object has many more.
+ * the fields Snapvisor uses are declared; the real object has many more.
  */
 export interface CurrentTask extends CurrentSuite {
   id: string;

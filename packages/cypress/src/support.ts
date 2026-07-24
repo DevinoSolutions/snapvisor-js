@@ -184,7 +184,7 @@ Cypress.Commands.add(
 
     Cypress.log({
       name: "argosScreenshot",
-      displayName: `Argos Screenshot`,
+      displayName: `Snapvisor Screenshot`,
       message: name,
     });
 

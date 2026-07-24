@@ -1,15 +1,15 @@
 {
   "name": "@snapvisor/webdriverio",
-  "description": "WebdriverIO SDK for visual testing with Argos.",
+  "description": "WebdriverIO SDK for visual testing with Snapvisor.",
   "version": "0.7.20",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
     "directory": "packages/webdriverio"
   },
-  "homepage": "https://argos-ci.com/docs/reference/webdriverio",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

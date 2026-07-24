@@ -30,7 +30,7 @@ function formatUser(user: User | null | undefined): string {
 
 export function formatMe(me: Me): string {
   const lines = [
-    `Logged in to Argos as ${formatValue(me.user.name)}.`,
+    `Logged in to Snapvisor as ${formatValue(me.user.name)}.`,
     `Name: ${formatValue(me.user.name)}`,
     `Email: ${formatValue(me.user.email)}`,
   ];

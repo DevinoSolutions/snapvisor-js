@@ -33,7 +33,7 @@ function truncate(text: string, length: number): string {
  * several auto-named captures in the same test stay unique.
  *
  * Unlike Vitest — which stores snapshots in a per-file `.snap`, so its keys only
- * need to be unique within a file — Argos names are global across the whole
+ * need to be unique within a file — Snapvisor names are global across the whole
  * build. The name therefore includes the test file path so two tests with the
  * same title in different files do not collide. Vitest's `fullName` already
  * starts with the file path; we prepend it defensively in case that changes.
@@ -65,7 +65,7 @@ export async function resolveAutoName(
   const test = await getCurrentTest();
   if (!test) {
     throw new Error(
-      "Argos could not generate an automatic name because it is not running " +
+      "Snapvisor could not generate an automatic name because it is not running " +
         "inside a Vitest test. Pass an explicit `name` argument.",
     );
   }

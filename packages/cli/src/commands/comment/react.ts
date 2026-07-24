@@ -8,7 +8,7 @@ export function registerCommentReact(comment: Command) {
   comment
     .command("react")
     .description("Add an emoji reaction to a comment")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .argument("<commentId>", "ID of the comment")
     .argument("<emoji>", "Emoji to react with")
     .addOption(tokenOption)

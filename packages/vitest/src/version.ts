@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
 /**
- * Get the version of the Argos Vitest SDK.
+ * Get the version of the Snapvisor Vitest SDK.
  */
 export async function getArgosVitestVersion(): Promise<string> {
   const pkgPath = require.resolve("@snapvisor/vitest/package.json");

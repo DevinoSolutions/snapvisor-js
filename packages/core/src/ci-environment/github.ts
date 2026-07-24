@@ -40,8 +40,8 @@ function getGitHubToken({ env }: Context): string | null {
     if (!env.DISABLE_GITHUB_TOKEN_WARNING) {
       console.log(
         `
-Argos couldn’t find a relevant pull request in the current environment.
-To resolve this, Argos requires a GITHUB_TOKEN to fetch the pull request associated with the head SHA. Please ensure the following environment variable is added:
+Snapvisor couldn’t find a relevant pull request in the current environment.
+To resolve this, Snapvisor requires a GITHUB_TOKEN to fetch the pull request associated with the head SHA. Please ensure the following environment variable is added:
 
 GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
 

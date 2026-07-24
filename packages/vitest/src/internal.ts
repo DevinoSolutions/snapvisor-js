@@ -1,5 +1,5 @@
 /**
- * Internal, unstable entry point shared with other Argos SDKs (e.g.
+ * Internal, unstable entry point shared with other Snapvisor SDKs (e.g.
  * `@snapvisor/storybook`). No semver guarantee — do not import directly.
  */
 export {

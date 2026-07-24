@@ -14,7 +14,7 @@ export function registerCommentEdit(comment: Command) {
   comment
     .command("edit")
     .description("Update the body of a comment (author only)")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .argument("<commentId>", "ID of the comment")
     .option("--body <markdown>", "New Markdown body of the comment")
     .option("--body-file <path>", "Read the new body from a Markdown file")

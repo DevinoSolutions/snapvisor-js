@@ -6,7 +6,7 @@ import type {
 } from "@snapvisor/browser";
 
 /**
- * Configuration for the Argos Vitest reporter.
+ * Configuration for the Snapvisor Vitest reporter.
  * @see https://js-sdk-reference.argos-ci.com/interfaces/UploadParameters.html
  */
 export interface ArgosReporterConfig extends UploadParameters {
@@ -90,7 +90,7 @@ export interface VitestScreenshotOptions {
 /**
  * Options passed when calling `argosSnapshot`.
  *
- * `argosSnapshot` serializes any value to a file that Argos picks up and diffs,
+ * `argosSnapshot` serializes any value to a file that Snapvisor picks up and diffs,
  * mimicking {@link https://vitest.dev/guide/snapshot Vitest snapshots}. Unlike
  * `argosScreenshot`, it does not need a browser and works both in Vitest browser
  * tests and in plain Node tests.
@@ -103,10 +103,10 @@ export interface VitestSnapshotOptions {
   /**
    * Unique name of the snapshot.
    *
-   * When omitted, Argos generates one automatically from the current test,
+   * When omitted, Snapvisor generates one automatically from the current test,
    * mimicking {@link https://vitest.dev/guide/snapshot Vitest's snapshot naming}.
    * The generated name includes the test file path so names stay unique across
-   * files (Argos names are global across the build, unlike Vitest's per-file
+   * files (Snapvisor names are global across the build, unlike Vitest's per-file
    * `.snap`).
    */
   name?: string;
@@ -121,7 +121,7 @@ export interface VitestSnapshotOptions {
   root?: string;
 
   /**
-   * Extension of the snapshot file. It also determines how Argos renders and
+   * Extension of the snapshot file. It also determines how Snapvisor renders and
    * diffs the snapshot (e.g. `.txt`, `.json`, `.yml`, `.html`, `.md`).
    * @default ".txt"
    */
@@ -151,10 +151,10 @@ export type SerializableSnapshotOptions = Omit<
 >;
 
 /**
- * Options for the Argos Vitest plugin.
+ * Options for the Snapvisor Vitest plugin.
  *
  * Accepts every option supported by the Playwright `argosScreenshot` function
- * (including non-serializable ones like `beforeScreenshot`), all Argos upload
+ * (including non-serializable ones like `beforeScreenshot`), all Snapvisor upload
  * parameters, plus the plugin-specific options below. These act as defaults for
  * every screenshot and can be overridden per call with the serializable
  * {@link VitestScreenshotOptions}.
@@ -162,7 +162,7 @@ export type SerializableSnapshotOptions = Omit<
 export interface ArgosVitestPluginOptions
   extends ArgosReporterConfig, PlaywrightScreenshotOptions {
   /**
-   * Upload the report to Argos at the end of the run.
+   * Upload the report to Snapvisor at the end of the run.
    * @default false
    */
   uploadToArgos?: boolean;

@@ -8,7 +8,7 @@ export function registerReviewList(review: Command) {
   review
     .command("list")
     .description("List the reviews submitted on a build")
-    .argument("<buildReference>", "Build number or Argos build URL")
+    .argument("<buildReference>", "Build number or Snapvisor build URL")
     .addOption(tokenOption)
     .addOption(projectPathOption)
     .addOption(jsonOption)

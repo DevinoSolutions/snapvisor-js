@@ -22,7 +22,7 @@ import {
 const require = createRequire(import.meta.url);
 
 /**
- * Inject Argos script into the page.
+ * Inject Snapvisor script into the page.
  */
 async function injectArgos(page: Page) {
   const injected = await page.evaluate(
@@ -35,7 +35,7 @@ async function injectArgos(page: Page) {
 }
 
 /**
- * Accepts all Puppeteer screenshot options and adds Argos-specific options.
+ * Accepts all Puppeteer screenshot options and adds Snapvisor-specific options.
  */
 export type ArgosScreenshotOptions = Omit<
   ScreenshotOptions,
@@ -262,7 +262,7 @@ export async function argosScreenshot(
 
   const [originalViewport] = await Promise.all([
     getViewport(page),
-    // Inject Argos script into the page
+    // Inject Snapvisor script into the page
     injectArgos(page),
   ]);
 

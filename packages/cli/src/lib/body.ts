@@ -10,7 +10,7 @@ export type BodyOptions = {
  * Resolve the Markdown body of a comment or review from the mutually-exclusive
  * `--body` (inline) and `--body-file` (path) options.
  *
- * The Argos API also accepts a rich-text JSON document, but that form is only
+ * The Snapvisor API also accepts a rich-text JSON document, but that form is only
  * needed for `@mentions` (which require user ids); the CLI exposes Markdown
  * only, which the API converts server-side.
  */

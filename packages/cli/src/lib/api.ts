@@ -10,7 +10,7 @@ export function getApiBaseUrl(): string | undefined {
   return process.env["ARGOS_API_BASE_URL"];
 }
 
-/** Create an Argos API client authenticated with the given token. */
+/** Create an Snapvisor API client authenticated with the given token. */
 export function createApiClient(authToken?: string): ArgosAPIClient {
   return createClient({ authToken, baseUrl: getApiBaseUrl() });
 }

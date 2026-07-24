@@ -15,10 +15,10 @@
   "types": "./dist/index.d.mts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
     "directory": "packages/core"
   },
-  "homepage": "https://argos-ci.com/docs/reference/node.js-sdk",
+  "homepage": "https://snapvisor.io/docs",
   "bugs": {
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },

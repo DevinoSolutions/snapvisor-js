@@ -79,7 +79,7 @@ async function getAutomationLibraryMetadata(): Promise<
 }
 
 /**
- * Get the version of the Argos Playwright SDK.
+ * Get the version of the Snapvisor Playwright SDK.
  */
 async function getArgosPlaywrightVersion(): Promise<string> {
   const pkgPath = require.resolve("@snapvisor/playwright/package.json");

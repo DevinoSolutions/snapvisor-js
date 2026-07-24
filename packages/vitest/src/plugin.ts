@@ -23,7 +23,7 @@ const cwd = process.cwd();
 
 /**
  * Vitest plugin that registers the `argosScreenshot` browser command and,
- * optionally, the reporter that uploads the captured screenshots to Argos.
+ * optionally, the reporter that uploads the captured screenshots to Snapvisor.
  *
  * @example
  * ```ts
@@ -65,7 +65,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
           include: ["@snapvisor/vitest"],
         },
         test: {
-          // Record each test's source location so Argos can attach it to the
+          // Record each test's source location so Snapvisor can attach it to the
           // screenshot/snapshot metadata (and link back to the test source).
           includeTaskLocation: true,
           browser: {

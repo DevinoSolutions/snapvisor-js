@@ -23,12 +23,12 @@ export interface DeployParameters {
   root: string;
 
   /**
-   * Argos repository access token.
+   * Snapvisor repository access token.
    */
   token?: string;
 
   /**
-   * Base URL of the Argos API.
+   * Base URL of the Snapvisor API.
    * @default "https://api.snapvisor.io/v2/"
    */
   apiBaseUrl?: string;
@@ -55,7 +55,7 @@ export interface DeployParameters {
 }
 
 /**
- * Deploy a static site (e.g. Storybook) to Argos.
+ * Deploy a static site (e.g. Storybook) to Snapvisor.
  */
 export async function deploy(params: DeployParameters) {
   const { token: _token, ...debugParams } = params;

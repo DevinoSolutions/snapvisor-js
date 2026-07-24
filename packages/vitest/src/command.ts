@@ -25,7 +25,7 @@ export type ArgosScreenshotCommandArgs = [
 ];
 
 /**
- * Create the `argosScreenshot` browser command used to capture Argos
+ * Create the `argosScreenshot` browser command used to capture Snapvisor
  * screenshots from Vitest browser tests.
  *
  * Non-serializable options (`beforeScreenshot`, `afterScreenshot`, a
