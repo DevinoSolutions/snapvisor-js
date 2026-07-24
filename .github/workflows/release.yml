@@ -52,6 +52,7 @@ jobs:
           if [ "${{ github.event.inputs.release_type }}" = "canary" ]; then
             NPM_CONFIG_PROVENANCE=true npm run release-canary -- --yes
           elif [ "${{ github.event.inputs.release_type }}" = "from-package" ]; then
+            npm run build
             npx lerna publish from-package --yes
           else
             NPM_CONFIG_PROVENANCE=true npm run release -- --yes
