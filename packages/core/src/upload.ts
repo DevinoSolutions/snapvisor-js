@@ -1,5 +1,5 @@
-import type { ArgosAPISchema } from "@argos-ci/api-client";
-import { createClient, throwAPIError } from "@argos-ci/api-client";
+import type { ArgosAPISchema } from "@snapvisor/api-client";
+import { createClient, throwAPIError } from "@snapvisor/api-client";
 import { getConfigFromOptions } from "./config";
 import { discoverSnapshots } from "./discovery";
 import { optimizeScreenshot } from "./optimize";
@@ -12,7 +12,7 @@ import {
   getPlaywrightTracePath,
   readMetadata,
   type ScreenshotMetadata,
-} from "@argos-ci/util";
+} from "@snapvisor/util";
 import { getArgosCoreSDKIdentifier } from "./version";
 import { getMergeBaseCommitSha, listAncestorCommits } from "./ci-environment";
 import { resolveBaseline, PARENT_COMMITS_LIMIT } from "./find-reference-commit";

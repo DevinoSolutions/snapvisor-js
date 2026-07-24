@@ -1,5 +1,5 @@
 import createDebug from "debug";
 
-const KEY = "@argos-ci/playwright";
+const KEY = "@snapvisor/playwright";
 
 export const debug = createDebug(KEY);

@@ -4,7 +4,7 @@
     "cypress:open": "cypress open"
   },
   "devDependencies": {
-    "@argos-ci/cypress": "latest",
+    "@snapvisor/cypress": "latest",
     "cypress": "latest"
   }
 }

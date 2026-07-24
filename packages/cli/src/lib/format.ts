@@ -1,4 +1,4 @@
-import type { ArgosAPISchema } from "@argos-ci/api-client";
+import type { ArgosAPISchema } from "@snapvisor/api-client";
 
 type Build = ArgosAPISchema.components["schemas"]["Build"];
 type SnapshotDiff = ArgosAPISchema.components["schemas"]["SnapshotDiff"];

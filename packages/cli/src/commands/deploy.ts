@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import type { Command } from "commander";
 import { Option } from "commander";
-import { deploy } from "@argos-ci/core";
+import { deploy } from "@snapvisor/core";
 import ora from "ora";
 import { tokenOption, type TokenOption } from "../options";
 

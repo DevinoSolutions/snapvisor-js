@@ -13,12 +13,12 @@ import type { Frame } from "playwright";
 import {
   ArgosReporter,
   type ArgosReporterConfig,
-} from "@argos-ci/vitest/plugin";
+} from "@snapvisor/vitest/plugin";
 import {
   resetTesterScale,
   setIframeViewportSize,
   fitIframeToContent,
-} from "@argos-ci/vitest/internal";
+} from "@snapvisor/vitest/internal";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -125,7 +125,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     "./vitest-setup-file.mjs",
   );
   return {
-    name: "@argos-ci/storybook/vitest-plugin",
+    name: "@snapvisor/storybook/vitest-plugin",
     configureVitest({ vitest, project }) {
       project.config.setupFiles.push(setupFile);
 
@@ -138,7 +138,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     config() {
       return {
         optimizeDeps: {
-          include: ["@argos-ci/storybook/internal/vitest-setup-file"],
+          include: ["@snapvisor/storybook/internal/vitest-setup-file"],
         },
         test: {
           browser: {

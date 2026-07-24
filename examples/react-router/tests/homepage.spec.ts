@@ -1,4 +1,4 @@
-import { argosScreenshot } from "@argos-ci/playwright";
+import { argosScreenshot } from "@snapvisor/playwright";
 import { test } from "@playwright/test";
 
 test("screenshot homepage", async ({ page }) => {

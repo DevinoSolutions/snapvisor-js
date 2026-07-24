@@ -1,4 +1,4 @@
-import { readConfig, upload, type UploadParameters } from "@argos-ci/core";
+import { readConfig, upload, type UploadParameters } from "@snapvisor/core";
 import type { Vitest } from "vitest/node";
 import type { Reporter } from "vitest/reporters";
 import type { ArgosReporterConfig } from "./options";

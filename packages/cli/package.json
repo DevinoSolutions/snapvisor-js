@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/cli",
+  "name": "@snapvisor/cli",
   "description": "Command-line (CLI) for visual testing with Argos.",
   "version": "6.4.1",
   "bin": {
@@ -34,8 +34,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@argos-ci/api-client": "workspace:*",
-    "@argos-ci/core": "workspace:*",
+    "@snapvisor/api-client": "workspace:*",
+    "@snapvisor/core": "workspace:*",
     "commander": "^15.0.0",
     "open": "^11.0.0",
     "ora": "^9.4.0",

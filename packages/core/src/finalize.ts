@@ -1,5 +1,5 @@
-import type { ArgosAPISchema } from "@argos-ci/api-client";
-import { createClient, throwAPIError } from "@argos-ci/api-client";
+import type { ArgosAPISchema } from "@snapvisor/api-client";
+import { createClient, throwAPIError } from "@snapvisor/api-client";
 import { resolveArgosToken } from "./auth";
 import { readConfig } from "./config";
 import { skip } from "./skip";

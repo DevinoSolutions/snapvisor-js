@@ -1,6 +1,6 @@
 import { writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import { getSnapshotMimeType } from "@argos-ci/core";
+import { getSnapshotMimeType } from "@snapvisor/core";
 import {
   createDirectory,
   getGitRepositoryPath,
@@ -8,8 +8,8 @@ import {
   getScreenshotName,
   writeMetadata,
   type ScreenshotMetadata,
-} from "@argos-ci/util";
-import type { ArgosAttachment } from "@argos-ci/playwright";
+} from "@snapvisor/util";
+import type { ArgosAttachment } from "@snapvisor/playwright";
 import type { TestMetadata } from "./metadata";
 import type { SerializableSnapshotOptions } from "./options";
 import { getArgosVitestVersion, getVitestVersion } from "./version";
@@ -97,7 +97,7 @@ export async function writeSnapshotFile(
     // `argosSnapshot` does not rely on a browser, so Vitest itself is the
     // automation library that produced the snapshot.
     automationLibrary: { name: "vitest", version: vitestVersion },
-    sdk: { name: "@argos-ci/vitest", version: sdkVersion },
+    sdk: { name: "@snapvisor/vitest", version: sdkVersion },
     ...(tags ? { tags } : {}),
     ...(resolvedTest ? { test: resolvedTest } : {}),
   };

@@ -1,4 +1,4 @@
-import { getGlobalScript } from "@argos-ci/browser";
+import { getGlobalScript } from "@snapvisor/browser";
 import { createHash } from "node:crypto";
 
 /**

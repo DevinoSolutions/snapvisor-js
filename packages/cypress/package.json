@@ -1,5 +1,6 @@
 {
-  "name": "@argos-ci/cypress",
+  "name": "@snapvisor/cypress",
+  "private": true,
   "description": "Cypress SDK for visual testing with Argos.",
   "version": "7.0.22",
   "author": "Smooth Code",
@@ -44,9 +45,9 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@argos-ci/browser": "workspace:*",
-    "@argos-ci/core": "workspace:*",
-    "@argos-ci/util": "workspace:*",
+    "@snapvisor/browser": "workspace:*",
+    "@snapvisor/core": "workspace:*",
+    "@snapvisor/util": "workspace:*",
     "cypress-wait-until": "^3.0.2"
   },
   "peerDependencies": {

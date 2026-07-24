@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { createArgosReporterOptions } from "@argos-ci/playwright/reporter";
+import { createArgosReporterOptions } from "@snapvisor/playwright/reporter";
 
 export default defineConfig({
   testMatch: ["**/*.spec.ts"],
@@ -21,7 +21,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     [
-      "@argos-ci/playwright/reporter",
+      "@snapvisor/playwright/reporter",
       createArgosReporterOptions({
         buildName: `argos-playwright-e2e-node-${process.env.NODE_VERSION}-${process.env.OS}`,
         uploadToArgos: process.env.UPLOAD_TO_ARGOS === "true",

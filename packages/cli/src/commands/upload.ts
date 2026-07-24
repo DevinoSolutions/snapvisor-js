@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 import { Option } from "commander";
-import { upload } from "@argos-ci/core";
+import { upload } from "@snapvisor/core";
 import ora from "ora";
 import {
   buildNameOption,

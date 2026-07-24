@@ -1,5 +1,6 @@
 {
-  "name": "@argos-ci/puppeteer",
+  "name": "@snapvisor/puppeteer",
+  "private": true,
   "description": "Puppeteer SDK for visual testing with Argos.",
   "version": "6.0.23",
   "author": "Smooth Code",
@@ -42,11 +43,11 @@
     "puppeteer": ">=1"
   },
   "dependencies": {
-    "@argos-ci/browser": "workspace:*",
-    "@argos-ci/util": "workspace:*"
+    "@snapvisor/browser": "workspace:*",
+    "@snapvisor/util": "workspace:*"
   },
   "devDependencies": {
-    "@argos-ci/cli": "workspace:*",
+    "@snapvisor/cli": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "catalog:",
     "expect-puppeteer": "^11.0.0",

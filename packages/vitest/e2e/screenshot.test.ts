@@ -1,12 +1,12 @@
 import { beforeEach, expect, test } from "vitest";
 import { server } from "vitest/browser";
-import { argosScreenshot, argosSnapshot } from "@argos-ci/vitest";
-import type { ArgosAttachment } from "@argos-ci/playwright";
+import { argosScreenshot, argosSnapshot } from "@snapvisor/vitest";
+import type { ArgosAttachment } from "@snapvisor/playwright";
 
 /**
  * These tests run in a real browser (Vitest browser mode + Playwright) and
  * exercise the full screenshot flow: reset the tester scale, resize the iframe,
- * capture the frame body via `@argos-ci/playwright`, and write the screenshots
+ * capture the frame body via `@snapvisor/playwright`, and write the screenshots
  * to `./screenshots`. When `UPLOAD_TO_ARGOS=true`, the reporter uploads them.
  *
  * Files written by the node side are read back through Vitest's built-in
@@ -57,7 +57,7 @@ test("captures a rendered element with the Argos Vitest SDK metadata", async () 
   // and to Vitest as the automation library (proves setMetadataConfig
   // propagated).
   const metadata = await readMetadata(attachments);
-  expect(metadata.sdk.name).toBe("@argos-ci/vitest");
+  expect(metadata.sdk.name).toBe("@snapvisor/vitest");
   expect(metadata.automationLibrary.name).toBe("vitest");
 });
 
@@ -183,7 +183,7 @@ test("writes a value snapshot that the reporter can upload", async () => {
   const metadata = attachments.find((a) => a.path.endsWith(".argos.json"));
   expect(metadata).toBeDefined();
   const parsed = JSON.parse(await server.commands.readFile(metadata!.path));
-  expect(parsed.sdk.name).toBe("@argos-ci/vitest");
+  expect(parsed.sdk.name).toBe("@snapvisor/vitest");
 });
 
 test("attaches the Vitest test metadata to the snapshot", async () => {

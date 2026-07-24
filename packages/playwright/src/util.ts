@@ -11,8 +11,8 @@ import {
   type ArgosGlobal,
   type StabilizationContext,
   type ViewportSize,
-} from "@argos-ci/browser";
-import type { ScreenshotMetadata } from "@argos-ci/util";
+} from "@snapvisor/browser";
+import type { ScreenshotMetadata } from "@snapvisor/util";
 import { dirname, resolve } from "node:path";
 import { mkdir } from "node:fs/promises";
 import type { ArgosAttachment } from "./attachment";
@@ -27,19 +27,19 @@ export function checkIsUsingArgosReporter(testInfo: TestInfo | null): boolean {
     return false;
   }
   // Playwright rewrites every non-builtin reporter id to an absolute resolved
-  // path (e.g. `…/node_modules/@argos-ci/playwright/dist/reporter.mjs`), so we
-  // can't match against the `@argos-ci/playwright/reporter` import specifier.
+  // path (e.g. `…/node_modules/@snapvisor/playwright/dist/reporter.mjs`), so we
+  // can't match against the `@snapvisor/playwright/reporter` import specifier.
   // Match the package directory instead, which is present in both the raw
   // specifier and the resolved path.
   let reporterPath: string | null = null;
   try {
-    reporterPath = require.resolve("@argos-ci/playwright/reporter");
+    reporterPath = require.resolve("@snapvisor/playwright/reporter");
   } catch {
     // Ignore: the reporter entry point might not be resolvable in every setup.
   }
   return testInfo.config.reporter.some(
     (reporter) =>
-      reporter[0].includes("@argos-ci/playwright") ||
+      reporter[0].includes("@snapvisor/playwright") ||
       (reporterPath !== null && reporter[0] === reporterPath),
   );
 }

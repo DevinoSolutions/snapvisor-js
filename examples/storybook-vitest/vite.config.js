@@ -1,7 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { argosVitestPlugin } from '@argos-ci/storybook/vitest-plugin';
+import { argosVitestPlugin } from '@snapvisor/storybook/vitest-plugin';
 
 // https://vite.dev/config/
 import path from 'node:path';

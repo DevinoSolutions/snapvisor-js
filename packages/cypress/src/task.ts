@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
-import { upload } from "@argos-ci/core";
-import type { UploadParameters } from "@argos-ci/core";
+import { upload } from "@snapvisor/core";
+import type { UploadParameters } from "@snapvisor/core";
 import { extname, join, dirname } from "node:path";
 import { NAME_PREFIX } from "./shared";
 import { copyFile } from "node:fs/promises";
@@ -30,7 +30,7 @@ let screenshotsDirectoryPromise: Promise<string> | undefined = undefined;
  * Get the path to the directory where screenshots will be stored.
  */
 async function getScreenshotsDirectory(): Promise<string> {
-  const { createTemporaryDirectory } = await import("@argos-ci/util");
+  const { createTemporaryDirectory } = await import("@snapvisor/util");
 
   if (!screenshotsDirectoryPromise) {
     screenshotsDirectoryPromise = createTemporaryDirectory();
@@ -42,7 +42,7 @@ async function getScreenshotsDirectory(): Promise<string> {
  * Create a directory if it does not exist.
  */
 async function createDirectory(directory: string): Promise<void> {
-  const { createDirectory } = await import("@argos-ci/util");
+  const { createDirectory } = await import("@snapvisor/util");
   await createDirectory(directory);
 }
 

@@ -53,7 +53,7 @@ describe("#upload", () => {
             colorScheme: "light",
             mediaType: "screen",
             sdk: {
-              name: "@argos-ci/playwright",
+              name: "@snapvisor/playwright",
               version: "0.0.7",
             },
             url: "https://localhost:3000/test",

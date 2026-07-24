@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/playwright",
+  "name": "@snapvisor/playwright",
   "description": "Playwright SDK for visual testing with Argos.",
   "version": "7.3.7",
   "author": "Smooth Code",
@@ -47,9 +47,9 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@argos-ci/browser": "workspace:*",
-    "@argos-ci/core": "workspace:*",
-    "@argos-ci/util": "workspace:*",
+    "@snapvisor/browser": "workspace:*",
+    "@snapvisor/core": "workspace:*",
+    "@snapvisor/util": "workspace:*",
     "chalk": "^5.6.2",
     "debug": "^4.4.3"
   },

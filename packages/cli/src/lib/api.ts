@@ -3,7 +3,7 @@ import {
   createClient,
   throwAPIError,
   type ArgosAPIClient,
-} from "@argos-ci/api-client";
+} from "@snapvisor/api-client";
 
 /** Optional override for the API base URL (used in tests and dev). */
 export function getApiBaseUrl(): string | undefined {

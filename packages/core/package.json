@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/core",
+  "name": "@snapvisor/core",
   "description": "Node.js SDK for visual testing with Argos.",
   "version": "6.6.2",
   "type": "module",
@@ -39,8 +39,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@argos-ci/api-client": "workspace:*",
-    "@argos-ci/util": "workspace:*",
+    "@snapvisor/api-client": "workspace:*",
+    "@snapvisor/util": "workspace:*",
     "convict": "^6.2.5",
     "debug": "^4.4.3",
     "fast-glob": "^3.3.3",

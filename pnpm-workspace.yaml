@@ -31,4 +31,4 @@ overrides:
 
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
-  - "@argos-ci/*"
+  - "@snapvisor/*"

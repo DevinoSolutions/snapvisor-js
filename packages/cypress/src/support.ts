@@ -5,14 +5,14 @@ import {
   type StabilizationContext,
   type StabilizationPluginOptions,
   type ViewportOption,
-} from "@argos-ci/browser";
-import { getGlobalScript } from "@argos-ci/browser";
+} from "@snapvisor/browser";
+import { getGlobalScript } from "@snapvisor/browser";
 import {
   getMetadataPath,
   getScreenshotName,
   type ScreenshotMetadata,
   validateThreshold,
-} from "@argos-ci/util/browser";
+} from "@snapvisor/util/browser";
 import { version } from "../package.json";
 import { NAME_PREFIX } from "./shared";
 
@@ -241,7 +241,7 @@ Cypress.Commands.add(
             version: Cypress.version,
           },
           sdk: {
-            name: "@argos-ci/cypress",
+            name: "@snapvisor/cypress",
             version,
           },
         };

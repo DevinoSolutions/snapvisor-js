@@ -194,7 +194,7 @@ describe("checkIsUsingArgosReporter", () => {
   it("detects the reporter from the import specifier", () => {
     const testInfo = createMockTestInfo([
       ["dot"],
-      ["@argos-ci/playwright/reporter", {}],
+      ["@snapvisor/playwright/reporter", {}],
     ]);
     expect(checkIsUsingArgosReporter(testInfo)).toBe(true);
   });
@@ -204,7 +204,7 @@ describe("checkIsUsingArgosReporter", () => {
     // package's dist file, which no longer contains `/reporter`.
     const testInfo = createMockTestInfo([
       ["list"],
-      ["/repo/node_modules/@argos-ci/playwright/dist/reporter.mjs", {}],
+      ["/repo/node_modules/@snapvisor/playwright/dist/reporter.mjs", {}],
     ]);
     expect(checkIsUsingArgosReporter(testInfo)).toBe(true);
   });
@@ -212,7 +212,7 @@ describe("checkIsUsingArgosReporter", () => {
   it("detects the reporter from a pnpm-resolved absolute path", () => {
     const testInfo = createMockTestInfo([
       [
-        "/repo/node_modules/.pnpm/@argos-ci+playwright@7.1.2/node_modules/@argos-ci/playwright/dist/reporter.mjs",
+        "/repo/node_modules/.pnpm/@argos-ci+playwright@7.1.2/node_modules/@snapvisor/playwright/dist/reporter.mjs",
         {},
       ],
     ]);

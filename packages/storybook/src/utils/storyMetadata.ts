@@ -1,4 +1,4 @@
-import type { ScreenshotMetadata } from "@argos-ci/util";
+import type { ScreenshotMetadata } from "@snapvisor/util";
 
 type StoryTag = string | string[] | undefined;
 

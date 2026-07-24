@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/api-client",
+  "name": "@snapvisor/api-client",
   "description": "Argos API Client library.",
   "version": "0.26.0",
   "author": "Smooth Code",

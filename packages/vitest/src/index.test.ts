@@ -79,7 +79,7 @@ it("writes a snapshot from a Node test", async () => {
     const metadata = JSON.parse(
       await readFile(metadataAttachment!.path, "utf-8"),
     );
-    expect(metadata.sdk.name).toBe("@argos-ci/vitest");
+    expect(metadata.sdk.name).toBe("@snapvisor/vitest");
     expect(metadata.test.title).toBe("writes a snapshot from a Node test");
     expect(metadata.test.location.file).toContain("src/index.test.ts");
   } finally {

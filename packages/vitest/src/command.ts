@@ -2,9 +2,9 @@ import type { BrowserCommand } from "vitest/node";
 import {
   DO_NOT_USE_setMetadataConfig,
   type ArgosAttachment,
-} from "@argos-ci/playwright";
-import { resolveViewport, type ViewportSize } from "@argos-ci/browser";
-import { getScreenshotName } from "@argos-ci/util";
+} from "@snapvisor/playwright";
+import { resolveViewport, type ViewportSize } from "@snapvisor/browser";
+import { getScreenshotName } from "@snapvisor/util";
 import type {
   ArgosVitestPluginOptions,
   VitestScreenshotOptions,
@@ -49,7 +49,7 @@ export const createArgosScreenshotCommand = (
       const version = await getArgosVitestVersion();
       const setMetadata = (viewport?: ViewportSize) => {
         DO_NOT_USE_setMetadataConfig({
-          sdk: { name: "@argos-ci/vitest", version },
+          sdk: { name: "@snapvisor/vitest", version },
           // Report Vitest as the automation library (not the underlying
           // `@vitest/browser-playwright` provider), so screenshots match the
           // `vitest` automation library used by `argosSnapshot`.

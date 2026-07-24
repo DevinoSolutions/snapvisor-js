@@ -11,14 +11,14 @@ import {
   resolveViewport,
   type StabilizationPluginOptions,
   type StabilizationContext,
-} from "@argos-ci/browser";
+} from "@snapvisor/browser";
 import {
   getMetadataPath,
   getScreenshotName,
   validateThreshold,
   writeMetadata,
   type ScreenshotMetadata,
-} from "@argos-ci/util";
+} from "@snapvisor/util";
 import { getAttachmentName, type ArgosAttachment } from "./attachment";
 import {
   attachAttachments,

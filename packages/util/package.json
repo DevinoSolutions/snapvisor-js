@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/util",
+  "name": "@snapvisor/util",
   "description": "Set of utilities used across all Argos SDKs.",
   "version": "4.0.4",
   "author": "Smooth Code",

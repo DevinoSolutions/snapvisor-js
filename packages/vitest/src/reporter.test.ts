@@ -5,7 +5,7 @@ const { upload, readConfig } = vi.hoisted(() => ({
   upload: vi.fn(),
   readConfig: vi.fn(),
 }));
-vi.mock("@argos-ci/core", () => ({ upload, readConfig }));
+vi.mock("@snapvisor/core", () => ({ upload, readConfig }));
 
 import { ArgosReporter } from "./reporter";
 

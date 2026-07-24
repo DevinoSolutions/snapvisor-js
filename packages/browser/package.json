@@ -1,5 +1,5 @@
 {
-  "name": "@argos-ci/browser",
+  "name": "@snapvisor/browser",
   "description": "Browser utilities to stabilize visual testing with Argos.",
   "version": "6.4.4",
   "author": "Smooth Code",

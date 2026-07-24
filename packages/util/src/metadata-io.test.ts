@@ -27,7 +27,7 @@ describe("#readMetadata", () => {
       mediaType: "screen",
       browser: { name: "chromium", version: "119.0.6045.9" },
       automationLibrary: { name: "playwright", version: "1.39.0" },
-      sdk: { name: "@argos-ci/playwright", version: "0.0.7" },
+      sdk: { name: "@snapvisor/playwright", version: "0.0.7" },
       transient: {
         threshold: 0.2,
       },
