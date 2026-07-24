@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* allow other playwright reporters report to console ([dc60bb9](https://github.com/DevinoSolutions/snapvisor-js/commit/dc60bb933b8f54abf4c552a5457c1c7b5b9ff8c8))
+* disable loadImageSrcset if not using the viewport option ([0ea7677](https://github.com/DevinoSolutions/snapvisor-js/commit/0ea7677419fc3239b355e396e1984746017bef44))
+* fix image size restoration ([28d1834](https://github.com/DevinoSolutions/snapvisor-js/commit/28d1834a08d9a88c0e1f7b01c61035bbfc190d3e))
+* **playwright:** allow to override parallel config ([3678a85](https://github.com/DevinoSolutions/snapvisor-js/commit/3678a85f6f1eba72bb89ac0a36502f1534194659)), closes [#213](https://github.com/DevinoSolutions/snapvisor-js/issues/213)
+* **playwright:** avoid absolute screenshot path when project name is empty ([7fd6d54](https://github.com/DevinoSolutions/snapvisor-js/commit/7fd6d54054f5634dd52d3d8739a0e10089dd0f5a))
+* **playwright:** detect the Argos reporter from its resolved path ([7f8fce0](https://github.com/DevinoSolutions/snapvisor-js/commit/7f8fce00ff7c23118acc2269339baca0b5d72c1b))
+* **playwright:** fix automatic screenshot names too long ([ec5831d](https://github.com/DevinoSolutions/snapvisor-js/commit/ec5831dfc9987c2736ddd22ece603eae8b17d75c)), closes [#245](https://github.com/DevinoSolutions/snapvisor-js/issues/245)
+* **playwright:** fix automation library detection ([7830600](https://github.com/DevinoSolutions/snapvisor-js/commit/78306000393d098500909f2a288a40ad1c73edac))
+* **playwright:** fix copyFile error ([#104](https://github.com/DevinoSolutions/snapvisor-js/issues/104)) ([047b76f](https://github.com/DevinoSolutions/snapvisor-js/commit/047b76f137b65476f2c60327ef209d095956c8cd))
+* **playwright:** fix error in `argosScreenshot` ([ee2e163](https://github.com/DevinoSolutions/snapvisor-js/commit/ee2e163560061d92e385a30bbe7db2c669cd4e74))
+* **playwright:** fix failed screenshot detection ([e880839](https://github.com/DevinoSolutions/snapvisor-js/commit/e880839d103844fcfa2385b5c683171eb2eb231e))
+* **playwright:** fix missing exports from `@argos-ci/playwright` in CJS ([a62b95a](https://github.com/DevinoSolutions/snapvisor-js/commit/a62b95a0b34b5dee9f2a8e5654053d2aaff7ed06)), closes [#250](https://github.com/DevinoSolutions/snapvisor-js/issues/250)
+* **playwright:** fix package size ([5ffe466](https://github.com/DevinoSolutions/snapvisor-js/commit/5ffe466bd435db5231c59261bde1508ba682e5a7))
+* **playwright:** fix screenshot metadata in reporter ([f8a6552](https://github.com/DevinoSolutions/snapvisor-js/commit/f8a65523ff8d5c11c9b892c4fdb8a41bdf56154c))
+* **playwright:** fix types to accept a locator ([d434f05](https://github.com/DevinoSolutions/snapvisor-js/commit/d434f05414fec00e1cc35ca8d008ad5643a431d0))
+* **playwright:** fix upload by reporter ([#102](https://github.com/DevinoSolutions/snapvisor-js/issues/102)) ([5e3980f](https://github.com/DevinoSolutions/snapvisor-js/commit/5e3980fd555f26ee331528849f2d0181471e150e))
+* **playwright:** fix upload dir creation ([507a833](https://github.com/DevinoSolutions/snapvisor-js/commit/507a833f5896421f24fa83a6b1338ca565b06da8))
+* **playwright:** make getCSPScriptHash synchronous ([86f3ee3](https://github.com/DevinoSolutions/snapvisor-js/commit/86f3ee3de937b6a1b58c078e9eba12da4f935028))
+* **playwright:** prepend the project name in the screenshot name ([533802c](https://github.com/DevinoSolutions/snapvisor-js/commit/533802c483a477635aa0b7332cda1a137cc49563))
+* **playwright:** properly return stabilization failure reasons ([f76da0c](https://github.com/DevinoSolutions/snapvisor-js/commit/f76da0ce38ef31fd0b42fcb8af107f35adc5fa4f))
+* **playwright:** support slashes in screenshot name ([284dca7](https://github.com/DevinoSolutions/snapvisor-js/commit/284dca7501912f594e8ca01f93bf21506f3070ee))
+* **playwright:** upload nested screenshots ([6c9dbeb](https://github.com/DevinoSolutions/snapvisor-js/commit/6c9dbebbeecc80825a9eb828ef6c10d26d6c5618))
+* **playwright:** upload report by default ([d6d8f94](https://github.com/DevinoSolutions/snapvisor-js/commit/d6d8f947c7e4222399a3fb1ead6eb78bda28fdeb))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* **stabilization:** wait for aria-busy on svg elements ([96e69da](https://github.com/DevinoSolutions/snapvisor-js/commit/96e69da4e0f3f6fedaf451cc67cf08c1d709ebc1))
+* **storybook:** fix metadata ([dd992aa](https://github.com/DevinoSolutions/snapvisor-js/commit/dd992aac34192b5f8326714caa96323995421710))
+* wait for viewport resize (puppeteer, playwright) ([#151](https://github.com/DevinoSolutions/snapvisor-js/issues/151)) ([a07f529](https://github.com/DevinoSolutions/snapvisor-js/commit/a07f5295203a85620110c7a432f872c000442383))
+
+
+### Features
+
+* add "__argos__" class on root tag ([3949b94](https://github.com/DevinoSolutions/snapvisor-js/commit/3949b94fc7744326db3f968893ac8b2d11d442ba))
+* add argosCSS option to inject custom CSS ([9ab7efd](https://github.com/DevinoSolutions/snapvisor-js/commit/9ab7efd9b7573657a92d73010e2d5bbddfced353))
+* add tags support ([63d21fa](https://github.com/DevinoSolutions/snapvisor-js/commit/63d21fa8728cc5131ec1302bd17db939b15e34f5))
+* add waitForBackgroundImages stabilization plugin ([8d05229](https://github.com/DevinoSolutions/snapvisor-js/commit/8d0522959ec70eeffd0cc1ffe0f321cd5f1181eb)), closes [#1943](https://github.com/DevinoSolutions/snapvisor-js/issues/1943)
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to disable every stabilization plugin ([60245ab](https://github.com/DevinoSolutions/snapvisor-js/commit/60245ab90a22ce2abd309761de6ac14fa5293e2d))
+* allow to specify a threshold to control diff sensitivity ([820bb30](https://github.com/DevinoSolutions/snapvisor-js/commit/820bb3090c72607588d2f5c0829aa50f9a947de3))
+* **browser:** add pauseGifs stabilization plugin ([2a4b8aa](https://github.com/DevinoSolutions/snapvisor-js/commit/2a4b8aa560b1ca5e5e6653f48b5db0b6746e24ab))
+* **browser:** detect GIFs flagged with data-image-type="gif" ([6bfd0f7](https://github.com/DevinoSolutions/snapvisor-js/commit/6bfd0f731a561b512484b5247d49ade9739c0aaf))
+* **browser:** enable waitForBackgroundImages by default via opt-in attribute ([997348e](https://github.com/DevinoSolutions/snapvisor-js/commit/997348e60bf007596c1199be45e7d5a1569b03f4))
+* **ci:** support running on "deployment_status" event ([#105](https://github.com/DevinoSolutions/snapvisor-js/issues/105)) ([893636f](https://github.com/DevinoSolutions/snapvisor-js/commit/893636f8ea9626a06344dc4cd02771a41527142c))
+* collect test report infos in cypress and playwright ([bc275a2](https://github.com/DevinoSolutions/snapvisor-js/commit/bc275a2ad1230bfd9a1aba9d85f86b780333f4a9))
+* compatibility to granular GitHub Actions jobs retries ([ac954dc](https://github.com/DevinoSolutions/snapvisor-js/commit/ac954dc896b538efe4a73db70a5320de9fed0a4a))
+* **cypress:** simplify setup ([de75af6](https://github.com/DevinoSolutions/snapvisor-js/commit/de75af62ba57a7cb9512435dd4c494fbfa42c927))
+* enable traces for non-failure screenshots ([fcad44c](https://github.com/DevinoSolutions/snapvisor-js/commit/fcad44cee3cfb39f865d352b63e1e2f8cdcb6939))
+* expose `getCSPScriptHash` in `@argos-ci/playwright` ([ec8e439](https://github.com/DevinoSolutions/snapvisor-js/commit/ec8e439d788cafcfacdfcfb0b69686b8439cd13f))
+* **metadata:** add test info ([#64](https://github.com/DevinoSolutions/snapvisor-js/issues/64)) ([ff4dd4c](https://github.com/DevinoSolutions/snapvisor-js/commit/ff4dd4c4d5cc458a7a3966ddf2eb36e3ea3fb5db))
+* **playwright:** add `beforeScreenshot` and `afterScreenshot` hooks ([772ebcc](https://github.com/DevinoSolutions/snapvisor-js/commit/772ebcc4dbcfb41561c6c181dcd3cc93a0ceb15a))
+* **playwright:** add `disableHover` option by default ([ed941ea](https://github.com/DevinoSolutions/snapvisor-js/commit/ed941eadc54773352a874da9ff14cecf9864994c))
+* **playwright:** add reporter ([265498e](https://github.com/DevinoSolutions/snapvisor-js/commit/265498e356265a24017706a3a3992d54b2402f1f))
+* **playwright:** allow to customize screenshots root folder ([#153](https://github.com/DevinoSolutions/snapvisor-js/issues/153)) ([27dba65](https://github.com/DevinoSolutions/snapvisor-js/commit/27dba6548cb1ebb3302212c7312b68cc6c181a75))
+* **playwright:** allow to ignore upload failures ([479d30f](https://github.com/DevinoSolutions/snapvisor-js/commit/479d30fa2c3b763ed25020a833c43eb2c9417653))
+* **playwright:** dynamic build names ([6166051](https://github.com/DevinoSolutions/snapvisor-js/commit/6166051d9348bb19513a6ef4afa5e9e4c69236e1))
+* **playwright:** improve `beforeScreenshot` by allowing to run stabilization in it ([7ae1fa3](https://github.com/DevinoSolutions/snapvisor-js/commit/7ae1fa3c3c3a9e16c39ef9a4c0c43b156a71b0f8))
+* **playwright:** sharding support ([a495905](https://github.com/DevinoSolutions/snapvisor-js/commit/a49590517e9668ae007dca486302f79bca37ed28))
+* **playwright:** support aria snapshots ([06fe7df](https://github.com/DevinoSolutions/snapvisor-js/commit/06fe7df8f2080146c1c3c01085fe7712555e3cd5))
+* **playwright:** support playwright trace ([d194e04](https://github.com/DevinoSolutions/snapvisor-js/commit/d194e0449cff224b4b9f984ca9ac0bdb8c130394))
+* **playwright:** support test annotations ([e454086](https://github.com/DevinoSolutions/snapvisor-js/commit/e454086fbe408f7087cc0c7e07bbdb8f65429be5))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* reset argos changes after screenshot ([23c4a3d](https://github.com/DevinoSolutions/snapvisor-js/commit/23c4a3d60c8d3b1d8357847d5589d3765be241a9))
+* send metadata along screenshots ([#62](https://github.com/DevinoSolutions/snapvisor-js/issues/62)) ([8a2e9db](https://github.com/DevinoSolutions/snapvisor-js/commit/8a2e9db6427071708c3d701a3230f228b1216893))
+* simplify playwright setup ([1dc45b9](https://github.com/DevinoSolutions/snapvisor-js/commit/1dc45b91a231a8bd12a56a36367f2f5bc5cebaa6))
+* split stabilization into plugins ([982e4e0](https://github.com/DevinoSolutions/snapvisor-js/commit/982e4e081fa30b83ff80d5d58c1644f4d10bbb8f))
+* stabilize image sizes ([1c2ed33](https://github.com/DevinoSolutions/snapvisor-js/commit/1c2ed33563f04b142d1895199240d7ad046f9dea))
+* stabilize sticky & fixed elements in full page ([5f01dd9](https://github.com/DevinoSolutions/snapvisor-js/commit/5f01dd962a3a7a010eb2df8340d37e9d720c250b))
+* **storybook:** add Storybook SDK ([c42b95c](https://github.com/DevinoSolutions/snapvisor-js/commit/c42b95c4a2f20434fe1a0f4cd9f9ff0e227234cf))
+* **storybook:** extract story metadata ([1939699](https://github.com/DevinoSolutions/snapvisor-js/commit/1939699dbc470305297a1f9b21975de9e5b8b051))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/DevinoSolutions/snapvisor-js/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/DevinoSolutions/snapvisor-js/issues/239)
+* support GitHub Actions OIDC authentication ([#296](https://github.com/DevinoSolutions/snapvisor-js/issues/296)) ([a8956ce](https://github.com/DevinoSolutions/snapvisor-js/commit/a8956ce7a9ff37f3ccbc3440b811083ada675daf))
+* support no node_modules folder ([#109](https://github.com/DevinoSolutions/snapvisor-js/issues/109)) ([66aa120](https://github.com/DevinoSolutions/snapvisor-js/commit/66aa120b94a8990b3ce549d101ad733ac9bfd929))
+* support Playwright --repeat-each option ([3a7087f](https://github.com/DevinoSolutions/snapvisor-js/commit/3a7087f5ff208e5d8a7e503005352cc0f5210ee7))
+* support preview URL ([cb541de](https://github.com/DevinoSolutions/snapvisor-js/commit/cb541de9b1d75fcb797066578cc3cfe6e8d1d886))
+* support viewports option ([44df307](https://github.com/DevinoSolutions/snapvisor-js/commit/44df30748cb09af3325bc7f8b4df3e641d986476))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+
+
+### Performance Improvements
+
+* avoid multiple script injection ([12e0748](https://github.com/DevinoSolutions/snapvisor-js/commit/12e074816fe14e24e0ecdfd673b2908e060713ca))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* Node.js v20 or higher is now required
+* `options.stabilize` has changed and now accepts any stabilization plugin
+* Node.js v18 or higher is required.
+* **playwright:** All screenshots taken with `argosScreenshot` from `@argos-ci/playwright` will
+get a new name that prepends the Playwright project.
+
+It allows to support multiple Playwright projects.
+
+
+
+
+
 ## [7.3.7](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/playwright@7.3.6...@argos-ci/playwright@7.3.7) (2026-07-23)
 
 **Note:** Version bump only for package @argos-ci/playwright

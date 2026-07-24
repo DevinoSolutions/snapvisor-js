@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/webdriverio",
   "description": "WebdriverIO SDK for visual testing with Snapvisor.",
-  "version": "0.7.20",
+  "version": "0.8.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {

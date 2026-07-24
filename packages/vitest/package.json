@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/vitest",
   "description": "Vitest SDK for visual testing with Snapvisor.",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {

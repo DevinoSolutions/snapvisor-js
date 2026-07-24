@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/playwright",
   "description": "Playwright SDK for visual testing with Snapvisor.",
-  "version": "7.3.7",
+  "version": "8.0.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {

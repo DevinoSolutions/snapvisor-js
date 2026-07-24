@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* build before from-package publish and bump cypress/puppeteer/webdriverio ([017f5f5](https://github.com/DevinoSolutions/snapvisor-js/commit/017f5f50519d2b3562650e57d0b369d711a55cbb))
+* disable loadImageSrcset if not using the viewport option ([0ea7677](https://github.com/DevinoSolutions/snapvisor-js/commit/0ea7677419fc3239b355e396e1984746017bef44))
+* fix image size restoration ([28d1834](https://github.com/DevinoSolutions/snapvisor-js/commit/28d1834a08d9a88c0e1f7b01c61035bbfc190d3e))
+* **puppeteer:** expose types ([63a465e](https://github.com/DevinoSolutions/snapvisor-js/commit/63a465e78fb24683f26f1f42ad6da26316b00744))
+* **puppeteer:** fix puppeteer integration ([0ba239b](https://github.com/DevinoSolutions/snapvisor-js/commit/0ba239b47a393be923f2f2c330d252b5569a05e9))
+* **puppeteer:** fix puppeteer missing files ([0556f34](https://github.com/DevinoSolutions/snapvisor-js/commit/0556f34a05c98753b206b3a183927471d95c451f))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* wait for viewport resize (puppeteer, playwright) ([#151](https://github.com/DevinoSolutions/snapvisor-js/issues/151)) ([a07f529](https://github.com/DevinoSolutions/snapvisor-js/commit/a07f5295203a85620110c7a432f872c000442383))
+
+
+### Features
+
+* add argosCSS option to inject custom CSS ([9ab7efd](https://github.com/DevinoSolutions/snapvisor-js/commit/9ab7efd9b7573657a92d73010e2d5bbddfced353))
+* add tags support ([63d21fa](https://github.com/DevinoSolutions/snapvisor-js/commit/63d21fa8728cc5131ec1302bd17db939b15e34f5))
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to disable every stabilization plugin ([60245ab](https://github.com/DevinoSolutions/snapvisor-js/commit/60245ab90a22ce2abd309761de6ac14fa5293e2d))
+* allow to specify a threshold to control diff sensitivity ([820bb30](https://github.com/DevinoSolutions/snapvisor-js/commit/820bb3090c72607588d2f5c0829aa50f9a947de3))
+* **cypress:** simplify setup ([de75af6](https://github.com/DevinoSolutions/snapvisor-js/commit/de75af62ba57a7cb9512435dd4c494fbfa42c927))
+* **gitlab:** gitlab status updater ([#124](https://github.com/DevinoSolutions/snapvisor-js/issues/124)) ([b62e4bb](https://github.com/DevinoSolutions/snapvisor-js/commit/b62e4bbe0c3b6cedca5cf1c2f18e510f27b17159))
+* **metadata:** add test info ([#64](https://github.com/DevinoSolutions/snapvisor-js/issues/64)) ([ff4dd4c](https://github.com/DevinoSolutions/snapvisor-js/commit/ff4dd4c4d5cc458a7a3966ddf2eb36e3ea3fb5db))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* **puppeteer:** add `disableHover` option by default ([d285fb9](https://github.com/DevinoSolutions/snapvisor-js/commit/d285fb914665f38683a9149bf65b8ddf4f39595f))
+* **puppeteer:** add metadata ([#63](https://github.com/DevinoSolutions/snapvisor-js/issues/63)) ([98da0af](https://github.com/DevinoSolutions/snapvisor-js/commit/98da0af21c65530c167313ec6ed4dfffe3752798))
+* **puppeteer:** allow to specify the full path of screenshot ([#103](https://github.com/DevinoSolutions/snapvisor-js/issues/103)) ([d118088](https://github.com/DevinoSolutions/snapvisor-js/commit/d118088fa7284be516b3f9871036e108ed175801))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* reset argos changes after screenshot ([23c4a3d](https://github.com/DevinoSolutions/snapvisor-js/commit/23c4a3d60c8d3b1d8357847d5589d3765be241a9))
+* send metadata along screenshots ([#62](https://github.com/DevinoSolutions/snapvisor-js/issues/62)) ([8a2e9db](https://github.com/DevinoSolutions/snapvisor-js/commit/8a2e9db6427071708c3d701a3230f228b1216893))
+* split stabilization into plugins ([982e4e0](https://github.com/DevinoSolutions/snapvisor-js/commit/982e4e081fa30b83ff80d5d58c1644f4d10bbb8f))
+* stabilize image sizes ([1c2ed33](https://github.com/DevinoSolutions/snapvisor-js/commit/1c2ed33563f04b142d1895199240d7ad046f9dea))
+* stabilize sticky & fixed elements in full page ([5f01dd9](https://github.com/DevinoSolutions/snapvisor-js/commit/5f01dd962a3a7a010eb2df8340d37e9d720c250b))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/DevinoSolutions/snapvisor-js/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/DevinoSolutions/snapvisor-js/issues/239)
+* support GitHub Actions OIDC authentication ([#296](https://github.com/DevinoSolutions/snapvisor-js/issues/296)) ([a8956ce](https://github.com/DevinoSolutions/snapvisor-js/commit/a8956ce7a9ff37f3ccbc3440b811083ada675daf))
+* support no node_modules folder ([#109](https://github.com/DevinoSolutions/snapvisor-js/issues/109)) ([66aa120](https://github.com/DevinoSolutions/snapvisor-js/commit/66aa120b94a8990b3ce549d101ad733ac9bfd929))
+* support Playwright --repeat-each option ([3a7087f](https://github.com/DevinoSolutions/snapvisor-js/commit/3a7087f5ff208e5d8a7e503005352cc0f5210ee7))
+* support viewports option ([44df307](https://github.com/DevinoSolutions/snapvisor-js/commit/44df30748cb09af3325bc7f8b4df3e641d986476))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+
+
+### Performance Improvements
+
+* avoid multiple script injection ([12e0748](https://github.com/DevinoSolutions/snapvisor-js/commit/12e074816fe14e24e0ecdfd673b2908e060713ca))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* Node.js v20 or higher is now required
+* `options.stabilize` has changed and now accepts any stabilization plugin
+* Node.js v18 or higher is required.
+
+
+
+
+
 ## [6.0.23](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/puppeteer@6.0.22...@argos-ci/puppeteer@6.0.23) (2026-07-23)
 
 **Note:** Version bump only for package @argos-ci/puppeteer

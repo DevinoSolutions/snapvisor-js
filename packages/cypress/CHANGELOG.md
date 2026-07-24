@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* address Cypress `require.resolve` issue ([7aae22b](https://github.com/DevinoSolutions/snapvisor-js/commit/7aae22bec58db5d61628e359e59f8fc6eea6ec26))
+* build before from-package publish and bump cypress/puppeteer/webdriverio ([017f5f5](https://github.com/DevinoSolutions/snapvisor-js/commit/017f5f50519d2b3562650e57d0b369d711a55cbb))
+* **cypress:** compatibility with esm bundlers ([fbf3d91](https://github.com/DevinoSolutions/snapvisor-js/commit/fbf3d91fc988de69d89513b088ef5d9aabf83fae))
+* **cypress:** correct ESM `/task` import ([#295](https://github.com/DevinoSolutions/snapvisor-js/issues/295)) ([80da601](https://github.com/DevinoSolutions/snapvisor-js/commit/80da601d0c8c0e340fc16e6ac714f9047bcffeab))
+* **cypress:** fix invalid retries ([28aa0fb](https://github.com/DevinoSolutions/snapvisor-js/commit/28aa0fba18e105e0552c0f5745908fba17a12cb4))
+* **cypress:** fix issue when running cypress in docker on GA ([597eea2](https://github.com/DevinoSolutions/snapvisor-js/commit/597eea2d679ec6540201e7629b8a20403b0acefb))
+* **cypress:** fix types ([640fc63](https://github.com/DevinoSolutions/snapvisor-js/commit/640fc6339f64f9d31a8ae161e5d5d4f4bcf2763a))
+* **cypress:** fix typescript ([0a6f598](https://github.com/DevinoSolutions/snapvisor-js/commit/0a6f598ac3cc37a7693f5841547de44757d34cee))
+* **cypress:** fix undefined name ([a781652](https://github.com/DevinoSolutions/snapvisor-js/commit/a7816521d4f4092208d33bed9f721d704ad4c1f6))
+* **cypress:** improve compatibility with bundlers ([366b39c](https://github.com/DevinoSolutions/snapvisor-js/commit/366b39c374f9297cab53fb3919f63808cd13fcce))
+* **cypress:** rename screenshots with retries ([0bf532b](https://github.com/DevinoSolutions/snapvisor-js/commit/0bf532bde63a4972a2bcd5158c946e6e2c4e1445))
+* **cypress:** support Cypress v15 ([f72d614](https://github.com/DevinoSolutions/snapvisor-js/commit/f72d61478e2cb3477e56a04e68fd6201b53fce21))
+* **cypress:** use Argos name as screenshot name ([3107e90](https://github.com/DevinoSolutions/snapvisor-js/commit/3107e904e3caa683273313e5a2a9154fa829b4f2))
+* disable loadImageSrcset if not using the viewport option ([0ea7677](https://github.com/DevinoSolutions/snapvisor-js/commit/0ea7677419fc3239b355e396e1984746017bef44))
+* fix image size restoration ([28d1834](https://github.com/DevinoSolutions/snapvisor-js/commit/28d1834a08d9a88c0e1f7b01c61035bbfc190d3e))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+
+
+### Features
+
+* add argosCSS option to inject custom CSS ([9ab7efd](https://github.com/DevinoSolutions/snapvisor-js/commit/9ab7efd9b7573657a92d73010e2d5bbddfced353))
+* add tags support ([63d21fa](https://github.com/DevinoSolutions/snapvisor-js/commit/63d21fa8728cc5131ec1302bd17db939b15e34f5))
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to disable every stabilization plugin ([60245ab](https://github.com/DevinoSolutions/snapvisor-js/commit/60245ab90a22ce2abd309761de6ac14fa5293e2d))
+* allow to specify a threshold to control diff sensitivity ([820bb30](https://github.com/DevinoSolutions/snapvisor-js/commit/820bb3090c72607588d2f5c0829aa50f9a947de3))
+* collect test report infos in cypress and playwright ([bc275a2](https://github.com/DevinoSolutions/snapvisor-js/commit/bc275a2ad1230bfd9a1aba9d85f86b780333f4a9))
+* **cypress:** expose individual event handlers ([66e476f](https://github.com/DevinoSolutions/snapvisor-js/commit/66e476fe1bf063d9fae958097f3bc6c0869411e6))
+* **cypress:** improve stability debugging ([98f8996](https://github.com/DevinoSolutions/snapvisor-js/commit/98f8996c54fde0a9cbd0e4d9200b2769a97d92f4)), closes [#133](https://github.com/DevinoSolutions/snapvisor-js/issues/133)
+* **cypress:** simplify setup ([de75af6](https://github.com/DevinoSolutions/snapvisor-js/commit/de75af62ba57a7cb9512435dd4c494fbfa42c927))
+* **cypress:** support Cypress v14 ([2c92690](https://github.com/DevinoSolutions/snapvisor-js/commit/2c926901e61b599cd9cda9b9dbeff5ebf120ec3f)), closes [#176](https://github.com/DevinoSolutions/snapvisor-js/issues/176)
+* **cypress:** track retries ([070d380](https://github.com/DevinoSolutions/snapvisor-js/commit/070d38094f3e20afa7ef7c0a28c94364f51a4eac))
+* **metadata:** add test info ([#64](https://github.com/DevinoSolutions/snapvisor-js/issues/64)) ([ff4dd4c](https://github.com/DevinoSolutions/snapvisor-js/commit/ff4dd4c4d5cc458a7a3966ddf2eb36e3ea3fb5db))
+* **playwright:** add reporter ([265498e](https://github.com/DevinoSolutions/snapvisor-js/commit/265498e356265a24017706a3a3992d54b2402f1f))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* reset argos changes after screenshot ([23c4a3d](https://github.com/DevinoSolutions/snapvisor-js/commit/23c4a3d60c8d3b1d8357847d5589d3765be241a9))
+* send metadata along screenshots ([#62](https://github.com/DevinoSolutions/snapvisor-js/issues/62)) ([8a2e9db](https://github.com/DevinoSolutions/snapvisor-js/commit/8a2e9db6427071708c3d701a3230f228b1216893))
+* split stabilization into plugins ([982e4e0](https://github.com/DevinoSolutions/snapvisor-js/commit/982e4e081fa30b83ff80d5d58c1644f4d10bbb8f))
+* stabilize image sizes ([1c2ed33](https://github.com/DevinoSolutions/snapvisor-js/commit/1c2ed33563f04b142d1895199240d7ad046f9dea))
+* stabilize sticky & fixed elements in full page ([5f01dd9](https://github.com/DevinoSolutions/snapvisor-js/commit/5f01dd962a3a7a010eb2df8340d37e9d720c250b))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/DevinoSolutions/snapvisor-js/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/DevinoSolutions/snapvisor-js/issues/239)
+* support no node_modules folder ([#109](https://github.com/DevinoSolutions/snapvisor-js/issues/109)) ([66aa120](https://github.com/DevinoSolutions/snapvisor-js/commit/66aa120b94a8990b3ce549d101ad733ac9bfd929))
+* support Playwright --repeat-each option ([3a7087f](https://github.com/DevinoSolutions/snapvisor-js/commit/3a7087f5ff208e5d8a7e503005352cc0f5210ee7))
+* support preview URL ([cb541de](https://github.com/DevinoSolutions/snapvisor-js/commit/cb541de9b1d75fcb797066578cc3cfe6e8d1d886))
+* support viewports option ([44df307](https://github.com/DevinoSolutions/snapvisor-js/commit/44df30748cb09af3325bc7f8b4df3e641d986476))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+
+
+### Performance Improvements
+
+* avoid multiple script injection ([12e0748](https://github.com/DevinoSolutions/snapvisor-js/commit/12e074816fe14e24e0ecdfd673b2908e060713ca))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* Node.js v20 or higher is now required
+* **cypress:** Screenshot taken with `@argos/cypress` will change of name after upgrade
+* `options.stabilize` has changed and now accepts any stabilization plugin
+* Node.js v18 or higher is required.
+
+
+
+
+
 ## [7.0.22](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/cypress@7.0.21...@argos-ci/cypress@7.0.22) (2026-07-23)
 
 **Note:** Version bump only for package @argos-ci/cypress

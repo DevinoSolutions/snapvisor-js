@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* add ARGOS_PR_NUMBER, remove --pull-request arg ([362bd57](https://github.com/DevinoSolutions/snapvisor-js/commit/362bd5725334ebaca2ce66a0bfabc3f8206dce74))
+* **cli:** accept build URLs with trailing path segments ([3a7f711](https://github.com/DevinoSolutions/snapvisor-js/commit/3a7f711dcf46ce69ae8eca08e5c254b3734d6a6c))
+* **cli:** don't report transient refresh failures as expired sessions ([92e4aad](https://github.com/DevinoSolutions/snapvisor-js/commit/92e4aad95b6269e51fff24a45db3a971b5853237))
+* **cli:** fall back to a legacy token when OAuth refresh fails ([dd5c012](https://github.com/DevinoSolutions/snapvisor-js/commit/dd5c012e7e31730ebb2bb76c9579f8aa0b250d3b))
+* **cli:** fix --token usage in CLI ([673dda3](https://github.com/DevinoSolutions/snapvisor-js/commit/673dda34da12dacd378ee5035844730094a8667e))
+* **cli:** fix cli binary ([12fe82a](https://github.com/DevinoSolutions/snapvisor-js/commit/12fe82a3c06a24c172d105058b05d6bcb3092843))
+* **cli:** fix error return code ([ef19012](https://github.com/DevinoSolutions/snapvisor-js/commit/ef1901203811aaaa514dbc7a7c7534976bffc3a4))
+* **cli:** gate login colors on the destination stream ([ea834e7](https://github.com/DevinoSolutions/snapvisor-js/commit/ea834e777cea4fb6d456b1378a1742964d6c1be4))
+* **cli:** reject token responses without a refresh token ([ab6bdb9](https://github.com/DevinoSolutions/snapvisor-js/commit/ab6bdb9c31f517747cf3a35dc05bbd4f9d852d8a))
+* **cli:** reject token responses without a valid expiry ([68d6bdc](https://github.com/DevinoSolutions/snapvisor-js/commit/68d6bdc8514d69d2c5ad6d5ad20951073e99bead))
+* **cli:** treat a non-string token as an invalid config ([17b3752](https://github.com/DevinoSolutions/snapvisor-js/commit/17b37529d4ad6f441afdfdd00521b8657012437d))
+* **cli:** use the stored login token for project-auth commands ([4328659](https://github.com/DevinoSolutions/snapvisor-js/commit/43286592393a16508179ca8fff6f5662d0cb2922))
+* **config:** fix setting parallel mode from environment vars ([fc25216](https://github.com/DevinoSolutions/snapvisor-js/commit/fc252168e6886cc47cd0d80fada00e4b39ddb871)), closes [#1825](https://github.com/DevinoSolutions/snapvisor-js/issues/1825)
+* **config:** improve parallel validation ([26d4f35](https://github.com/DevinoSolutions/snapvisor-js/commit/26d4f35ed364457d46afc5fc91225fdeb565c320))
+* don't treat empty ARGOS_SUBSET/ARGOS_PARALLEL env as enabled ([8134950](https://github.com/DevinoSolutions/snapvisor-js/commit/8134950565288a3184adf4279d26674b5089b2d3))
+* fix external dependencies ([8a25fe1](https://github.com/DevinoSolutions/snapvisor-js/commit/8a25fe14be0b393cb9d99bbc55f35a7a00e92449))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* support no finalized build ([d59c831](https://github.com/DevinoSolutions/snapvisor-js/commit/d59c831eae2fbb31914ca9354671f2d89f28b4fe))
+* surface HTTP status and raw body in API errors ([6c465a3](https://github.com/DevinoSolutions/snapvisor-js/commit/6c465a345ae95a3e20240653a4749831f3b94d79))
+* **windows:** use fileUrlToPath ([5304a17](https://github.com/DevinoSolutions/snapvisor-js/commit/5304a1766fe03498be162ea53d08390b0ae45d2d)), closes [#30](https://github.com/DevinoSolutions/snapvisor-js/issues/30)
+
+
+### Features
+
+* add --skip-if-empty option to argos finalize ([#341](https://github.com/DevinoSolutions/snapvisor-js/issues/341)) ([b0c00eb](https://github.com/DevinoSolutions/snapvisor-js/commit/b0c00ebe9f9ad5d7248592bc5b89dc7f52bb72bf))
+* add `subset` option ([191d6ce](https://github.com/DevinoSolutions/snapvisor-js/commit/191d6ce2516e52cc5e94def3ca74e7b86c657147))
+* add finalize command ([53ce57d](https://github.com/DevinoSolutions/snapvisor-js/commit/53ce57d7bec003368575495e05781a31698b2816))
+* add prNumber option ([6ae3824](https://github.com/DevinoSolutions/snapvisor-js/commit/6ae38249c1cbe4901d464925f92982104cbc73df))
+* allow Node.js v14 ([3dff9a8](https://github.com/DevinoSolutions/snapvisor-js/commit/3dff9a8656e24dea5cc9d7fa659a114c6f5f7b29))
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to specify a threshold to control diff sensitivity ([820bb30](https://github.com/DevinoSolutions/snapvisor-js/commit/820bb3090c72607588d2f5c0829aa50f9a947de3))
+* allow to specify ref branch & ref commit ([a6c4ee3](https://github.com/DevinoSolutions/snapvisor-js/commit/a6c4ee3d5eda68c2b224c385f7aaa32c565f2c8f))
+* **cli:** add `analytics` command to fetch account analytics ([2948e9d](https://github.com/DevinoSolutions/snapvisor-js/commit/2948e9d44bc11a2465c1b81d7cd276747f112a9d)), closes [argos-ci/argos#2357](https://github.com/argos-ci/argos/issues/2357)
+* **cli:** add builds commands ([b2fbf3e](https://github.com/DevinoSolutions/snapvisor-js/commit/b2fbf3ec8a44a074fa871de6ada720bad60e37e0))
+* **cli:** add change ignore/unignore and test flakiness in build snapshots ([007a707](https://github.com/DevinoSolutions/snapvisor-js/commit/007a7077dc8b8402af54df26357fb57d7063196b))
+* **cli:** add create-project command ([91a8494](https://github.com/DevinoSolutions/snapvisor-js/commit/91a849409e6910c338bb0def026f5ebdfcd0b674))
+* **cli:** add login command ([add22e0](https://github.com/DevinoSolutions/snapvisor-js/commit/add22e031b04c7ec256902e06ddcdfd75ed8fe61))
+* **cli:** add whoami command ([d864363](https://github.com/DevinoSolutions/snapvisor-js/commit/d8643634645360b2350b22e55e7d95e982792462))
+* **cli:** expose review and comment commands ([dd4df47](https://github.com/DevinoSolutions/snapvisor-js/commit/dd4df47991736be42f2000a8674bf1de5b8f4bf1)), closes [argos-ci/argos#2287](https://github.com/argos-ci/argos/issues/2287)
+* **cli:** fix review comments ([b05fb9b](https://github.com/DevinoSolutions/snapvisor-js/commit/b05fb9bf9279e861f97f30c369a93929d0af54ec))
+* **cli:** log stack when an error occurs ([0c47590](https://github.com/DevinoSolutions/snapvisor-js/commit/0c47590879fbff1ab6ae9ca01390bc14059e3c91))
+* **cli:** review build command ([0712094](https://github.com/DevinoSolutions/snapvisor-js/commit/0712094ba78777498cb0d165a26a0b16d4f92f17))
+* **cli:** setup cli package ([4f589a5](https://github.com/DevinoSolutions/snapvisor-js/commit/4f589a5c7e1355e05f82174424e8d3eab8875a0f))
+* **cli:** use new endpoint in build command ([7617772](https://github.com/DevinoSolutions/snapvisor-js/commit/76177722b78d6531260430fad6e92d9b1b6cf6e3))
+* **cli:** use OAuth 2.1 for argos login (ARG-426) ([848e472](https://github.com/DevinoSolutions/snapvisor-js/commit/848e472e8e06b9498635d908f2c6ab8828d199cf))
+* compatibility to granular GitHub Actions jobs retries ([ac954dc](https://github.com/DevinoSolutions/snapvisor-js/commit/ac954dc896b538efe4a73db70a5320de9fed0a4a))
+* **core:** allow specifying a project for tokenless authentication ([#318](https://github.com/DevinoSolutions/snapvisor-js/issues/318)) ([2fd3b58](https://github.com/DevinoSolutions/snapvisor-js/commit/2fd3b585ce7356e1a43e480243c758a5de2b92f6))
+* **core:** surface S3 error details on upload failure ([#316](https://github.com/DevinoSolutions/snapvisor-js/issues/316)) ([d913ac8](https://github.com/DevinoSolutions/snapvisor-js/commit/d913ac8935d9e54993cef22368cc5f45d3e3204d))
+* default API/app endpoints to snapvisor.io ([16d2908](https://github.com/DevinoSolutions/snapvisor-js/commit/16d2908760cfede3d780fc71fa4c6457982f234b))
+* **deploy:** allow to deploy a static build ([#292](https://github.com/DevinoSolutions/snapvisor-js/issues/292)) ([4f1cfa9](https://github.com/DevinoSolutions/snapvisor-js/commit/4f1cfa9db40cef760779b553b622524abcf6b199))
+* **deploy:** finalize deploy command ([#293](https://github.com/DevinoSolutions/snapvisor-js/issues/293)) ([5d29a15](https://github.com/DevinoSolutions/snapvisor-js/commit/5d29a153a04bdac28310d1f14f90dadbad7a7115))
+* generate api-client schema from api.snapvisor.io ([cfd58cd](https://github.com/DevinoSolutions/snapvisor-js/commit/cfd58cda4db80db2d080a68b866f63c25dfb481d))
+* make GitHub tokenless auth more secure ([#301](https://github.com/DevinoSolutions/snapvisor-js/issues/301)) ([41b62d0](https://github.com/DevinoSolutions/snapvisor-js/commit/41b62d01df05cae2fb5d6145b4f62ccb65aebc4e))
+* **mode:** add "mode" support ([#126](https://github.com/DevinoSolutions/snapvisor-js/issues/126)) ([91a53b6](https://github.com/DevinoSolutions/snapvisor-js/commit/91a53b6732d99eb95807b1b8d20c061e45a87951))
+* modernize project ([43c9975](https://github.com/DevinoSolutions/snapvisor-js/commit/43c9975441ea49038851259db2bec314aa9f1df9))
+* **playwright:** warn when recommended Chromium launch options are missing ([a8f6c55](https://github.com/DevinoSolutions/snapvisor-js/commit/a8f6c556362962da57eb0e6d21f18ee2bf622a09))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* separate skip command ([de8d4cf](https://github.com/DevinoSolutions/snapvisor-js/commit/de8d4cf1dc084eb16812d6f652b201251f9bc7b0))
+* **skip:** allow to mark a build as skipped ([5cd48f3](https://github.com/DevinoSolutions/snapvisor-js/commit/5cd48f3395d784e0fdca1c77850d16b86ae28f70))
+* **storybook:** support Storybook v10 and Vitest 4 ([f988c7e](https://github.com/DevinoSolutions/snapvisor-js/commit/f988c7e4ecafb96a4a00be9389e1add505860df8)), closes [#239](https://github.com/DevinoSolutions/snapvisor-js/issues/239)
+* support GitHub Actions OIDC authentication ([#296](https://github.com/DevinoSolutions/snapvisor-js/issues/296)) ([a8956ce](https://github.com/DevinoSolutions/snapvisor-js/commit/a8956ce7a9ff37f3ccbc3440b811083ada675daf))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+
+
+### BREAKING CHANGES
+
+* **cli:** argos build review --conclusion <approve|request-changes>
+is replaced by argos review create --event <approve|reject|comment> [--body].
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+* Node.js 22+ required
+* - `@argos-ci/cli`: `argos upload --skipped` is now `argos skip`
+- `@argos-ci/core`: `upload` no longer accepts `skipped` option, a new
+  `skip` method has been added instead
+* Node.js v20 or higher is now required
+* Node.js v18 or higher is required.
+* Require Node.js v16
+
+
+
+
+
 ## [6.4.1](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/cli@6.4.0...@argos-ci/cli@6.4.1) (2026-07-23)
 
 **Note:** Version bump only for package @argos-ci/cli

@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/util",
   "description": "Set of utilities used across all Snapvisor SDKs.",
-  "version": "4.0.4",
+  "version": "5.0.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {

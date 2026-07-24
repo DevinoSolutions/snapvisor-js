@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2026-07-24)
+
+
+### Bug Fixes
+
+* **chromium:** reduce text-aliasing issue ([10fa86f](https://github.com/DevinoSolutions/snapvisor-js/commit/10fa86ff97b3a8eef118a64c83ed1d707ec66287))
+* **cypress:** improve compatibility with bundlers ([366b39c](https://github.com/DevinoSolutions/snapvisor-js/commit/366b39c374f9297cab53fb3919f63808cd13fcce))
+* disable loadImageSrcset if not using the viewport option ([0ea7677](https://github.com/DevinoSolutions/snapvisor-js/commit/0ea7677419fc3239b355e396e1984746017bef44))
+* fix image size restoration ([28d1834](https://github.com/DevinoSolutions/snapvisor-js/commit/28d1834a08d9a88c0e1f7b01c61035bbfc190d3e))
+* fix image stabilization ([29fe2be](https://github.com/DevinoSolutions/snapvisor-js/commit/29fe2bed471d80fcfa07905706f70edf2530e1a5))
+* fix image stabilization ([7e6d962](https://github.com/DevinoSolutions/snapvisor-js/commit/7e6d9627d547afe2606249385bbe4745ec8c617d))
+* fix restoration of image sizes ([cddc1f1](https://github.com/DevinoSolutions/snapvisor-js/commit/cddc1f103796753bdd8487bcab8962e4063c6b2d))
+* fix reverting spellcheck stabilization ([#129](https://github.com/DevinoSolutions/snapvisor-js/issues/129)) ([c2aec7d](https://github.com/DevinoSolutions/snapvisor-js/commit/c2aec7d99321e6dab031083aa53fc845b3a114b6))
+* improve loadImageSrcset plugin to work better on Chrome ([4b8219c](https://github.com/DevinoSolutions/snapvisor-js/commit/4b8219c62fa8fa77de2708a6f17aa758e5f75449))
+* rebrand user-facing prose to Snapvisor ([5b2a25e](https://github.com/DevinoSolutions/snapvisor-js/commit/5b2a25ebe90bbd56fe7c581230b54a75f829655d))
+* remove unrelevant code to load images in `waitForAriaBusy` ([c7e6aed](https://github.com/DevinoSolutions/snapvisor-js/commit/c7e6aed4fbf2a9a596aa77f43706ce3493e61ddd))
+* **stabilization:** allow not found images ([baefd88](https://github.com/DevinoSolutions/snapvisor-js/commit/baefd88f2ae13114bcb708830601c552a3b7379e))
+* **stabilization:** bust with hash if possible ([34fa186](https://github.com/DevinoSolutions/snapvisor-js/commit/34fa1861317ddaa855abcdff4835705a23447515))
+* **stabilization:** don't modify IFRAME to avoid reloads ([#155](https://github.com/DevinoSolutions/snapvisor-js/issues/155)) ([02b758a](https://github.com/DevinoSolutions/snapvisor-js/commit/02b758a28ef39c6387a7e797c0f64e54bd2d047a))
+* **stabilization:** fix image stabilization issues ([af15ab0](https://github.com/DevinoSolutions/snapvisor-js/commit/af15ab047a7444c7de733bbd036206929f81c879))
+* **stabilization:** fix stabilization function ([389a012](https://github.com/DevinoSolutions/snapvisor-js/commit/389a012f63e7a23d06d7c0cf945fac5e6feadc39))
+* **stabilization:** fix stabilization on transformed images ([165ed33](https://github.com/DevinoSolutions/snapvisor-js/commit/165ed33f3654dfea04b1ade10cb2f3e48c068809))
+* **stabilization:** override image busting hash ([cdf3047](https://github.com/DevinoSolutions/snapvisor-js/commit/cdf3047ae3024aa894b4332085e41b1683033b90))
+* **stabilization:** safer positionning stabilization ([#127](https://github.com/DevinoSolutions/snapvisor-js/issues/127)) ([2d051d5](https://github.com/DevinoSolutions/snapvisor-js/commit/2d051d518c1cb0c878b21eb39820917d5a839d3e))
+* **stabilization:** wait for aria-busy on svg elements ([96e69da](https://github.com/DevinoSolutions/snapvisor-js/commit/96e69da4e0f3f6fedaf451cc67cf08c1d709ebc1))
+* **types:** fix types in browser package ([#91](https://github.com/DevinoSolutions/snapvisor-js/issues/91)) ([668aeb4](https://github.com/DevinoSolutions/snapvisor-js/commit/668aeb48abfe8204086902779ae1282c91d81d30))
+* wait for viewport resize (puppeteer, playwright) ([#151](https://github.com/DevinoSolutions/snapvisor-js/issues/151)) ([a07f529](https://github.com/DevinoSolutions/snapvisor-js/commit/a07f5295203a85620110c7a432f872c000442383))
+
+
+### Features
+
+* add "__argos__" class on root tag ([3949b94](https://github.com/DevinoSolutions/snapvisor-js/commit/3949b94fc7744326db3f968893ac8b2d11d442ba))
+* add argosCSS option to inject custom CSS ([9ab7efd](https://github.com/DevinoSolutions/snapvisor-js/commit/9ab7efd9b7573657a92d73010e2d5bbddfced353))
+* add waitForBackgroundImages stabilization plugin ([8d05229](https://github.com/DevinoSolutions/snapvisor-js/commit/8d0522959ec70eeffd0cc1ffe0f321cd5f1181eb)), closes [#1943](https://github.com/DevinoSolutions/snapvisor-js/issues/1943)
+* allow to customization stabilization options ([073c081](https://github.com/DevinoSolutions/snapvisor-js/commit/073c081228c6ef8f4bfed84a1caee6b44e6ae642))
+* allow to disable every stabilization plugin ([60245ab](https://github.com/DevinoSolutions/snapvisor-js/commit/60245ab90a22ce2abd309761de6ac14fa5293e2d))
+* better dark mode detection ([ef78eee](https://github.com/DevinoSolutions/snapvisor-js/commit/ef78eeeb8894eacc475a2dcb6e060b59f08de6ae))
+* **browser:** add missing devices in viewports ([73afaf4](https://github.com/DevinoSolutions/snapvisor-js/commit/73afaf461a7f9417e920e86d3ec6b2c377534ab4))
+* **browser:** add pauseGifs stabilization plugin ([2a4b8aa](https://github.com/DevinoSolutions/snapvisor-js/commit/2a4b8aa560b1ca5e5e6653f48b5db0b6746e24ab))
+* **browser:** detect GIFs flagged with data-image-type="gif" ([6bfd0f7](https://github.com/DevinoSolutions/snapvisor-js/commit/6bfd0f731a561b512484b5247d49ade9739c0aaf))
+* **browser:** enable waitForBackgroundImages by default via opt-in attribute ([997348e](https://github.com/DevinoSolutions/snapvisor-js/commit/997348e60bf007596c1199be45e7d5a1569b03f4))
+* **cypress:** simplify setup ([de75af6](https://github.com/DevinoSolutions/snapvisor-js/commit/de75af62ba57a7cb9512435dd4c494fbfa42c927))
+* **gitlab:** gitlab status updater ([#124](https://github.com/DevinoSolutions/snapvisor-js/issues/124)) ([b62e4bb](https://github.com/DevinoSolutions/snapvisor-js/commit/b62e4bbe0c3b6cedca5cf1c2f18e510f27b17159))
+* require Node.js > 20 ([c894a82](https://github.com/DevinoSolutions/snapvisor-js/commit/c894a82c1b51acfced9892b32b31ebbf699282ca))
+* require Node.js v22+ ([460a431](https://github.com/DevinoSolutions/snapvisor-js/commit/460a431ffb003a743bfab8af6e8451da45483bfd))
+* reset argos changes after screenshot ([23c4a3d](https://github.com/DevinoSolutions/snapvisor-js/commit/23c4a3d60c8d3b1d8357847d5589d3765be241a9))
+* send metadata along screenshots ([#62](https://github.com/DevinoSolutions/snapvisor-js/issues/62)) ([8a2e9db](https://github.com/DevinoSolutions/snapvisor-js/commit/8a2e9db6427071708c3d701a3230f228b1216893))
+* split stabilization into plugins ([982e4e0](https://github.com/DevinoSolutions/snapvisor-js/commit/982e4e081fa30b83ff80d5d58c1644f4d10bbb8f))
+* **stability:** handle img with decoding="async" ([871ff56](https://github.com/DevinoSolutions/snapvisor-js/commit/871ff564a907ee737a3c1a75a5541ffa87b395fc))
+* **stability:** improve loadImageSrcset ([a19977e](https://github.com/DevinoSolutions/snapvisor-js/commit/a19977ec8ba501126ef37c4046c6551bdb6cdea0))
+* stabilize image sizes ([1c2ed33](https://github.com/DevinoSolutions/snapvisor-js/commit/1c2ed33563f04b142d1895199240d7ad046f9dea))
+* stabilize sticky & fixed elements in full page ([5f01dd9](https://github.com/DevinoSolutions/snapvisor-js/commit/5f01dd962a3a7a010eb2df8340d37e9d720c250b))
+* support no node_modules folder ([#109](https://github.com/DevinoSolutions/snapvisor-js/issues/109)) ([66aa120](https://github.com/DevinoSolutions/snapvisor-js/commit/66aa120b94a8990b3ce549d101ad733ac9bfd929))
+* support viewports option ([44df307](https://github.com/DevinoSolutions/snapvisor-js/commit/44df30748cb09af3325bc7f8b4df3e641d986476))
+* upgrade dependencies ([dd66e29](https://github.com/DevinoSolutions/snapvisor-js/commit/dd66e29986fab384557e9be74ee5c8e8aad72d82))
+* **viewports:** add more presets ([272d842](https://github.com/DevinoSolutions/snapvisor-js/commit/272d8428d9be13bc89092c74663f9e3567012126))
+
+
+### BREAKING CHANGES
+
+* Node.js 22+ required
+* Node.js v20 or higher is now required
+* `options.stabilize` has changed and now accepts any stabilization plugin
+* **chromium:** if not using "-webkit-font-smoothing: antialiased"
+you may experience differences on text after the update
+* Node.js v18 or higher is required.
+
+
+
+
+
 ## [6.4.4](https://github.com/argos-ci/argos-javascript/compare/@argos-ci/browser@6.4.3...@argos-ci/browser@6.4.4) (2026-07-09)
 
 **Note:** Version bump only for package @argos-ci/browser

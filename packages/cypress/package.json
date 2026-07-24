@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/cypress",
   "description": "Cypress SDK for visual testing with Snapvisor.",
-  "version": "7.0.23",
+  "version": "8.0.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {

@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/browser",
   "description": "Browser utilities to stabilize visual testing with Snapvisor.",
-  "version": "6.4.4",
+  "version": "7.0.0",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
