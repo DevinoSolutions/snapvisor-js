@@ -152,8 +152,8 @@ jobs:
 
   e2e-cypress:
     timeout-minutes: 5
-    # TODO: re-enable — package now published; needs e2e verification against snapvisor prod first
-    if: false
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
@@ -208,8 +208,8 @@ jobs:
 
   e2e-puppeteer:
     timeout-minutes: 5
-    # TODO: re-enable — package now published; needs e2e verification against snapvisor prod first
-    if: false
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
@@ -236,8 +236,8 @@ jobs:
 
   e2e-webdriverio:
     timeout-minutes: 5
-    # TODO: re-enable — package now published; needs e2e verification against snapvisor prod first
-    if: false
+    env:
+      ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
       matrix:
