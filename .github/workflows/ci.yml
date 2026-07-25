@@ -77,6 +77,9 @@ jobs:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
     strategy:
       fail-fast: false
+      # Cap concurrency: 9 simultaneous full-suite jobs share the prod API
+      # rate-limit budget (keyed per Cloudflare edge IP) and exhaust it (429s).
+      max-parallel: 3
       matrix:
         node-version: [22, 24, 26]
         os: [ubuntu-latest, macos-latest, windows-latest]
