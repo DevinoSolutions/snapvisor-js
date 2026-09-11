@@ -23,7 +23,10 @@ overrides:
   esbuild: ^0.25.10
   form-data: ^4.0.6
   follow-redirects: ^1.16.0
+  js-yaml@3: 3.15.2
+  js-yaml@4: 4.3.2
   serialize-javascript: ^7.0.3
+  sharp@<0.35.4: ^0.35.4
   tar: ^7.5.16
   tmp: ^0.2.7
   undici: ^8.5.0

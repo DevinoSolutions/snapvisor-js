@@ -43,7 +43,7 @@
     "webdriverio": "^6 || ^7 || ^8 || ^9"
   },
   "dependencies": {
-    "sharp": "^0.35.2"
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@snapvisor/cli": "workspace:*",
