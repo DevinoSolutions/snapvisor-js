@@ -11,6 +11,119 @@ env:
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 jobs:
+  # Classify the changed files once, so the nine per-package e2e jobs below can
+  # skip themselves when their package was not touched. Filter keys use
+  # underscores: `needs.changes.outputs.e2e-core` would parse as a subtraction.
+  changes:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    outputs:
+      e2e_core: ${{ steps.filter.outputs.e2e_core }}
+      e2e_core_oidc: ${{ steps.filter.outputs.e2e_core_oidc }}
+      e2e_core_tokenless: ${{ steps.filter.outputs.e2e_core_tokenless }}
+      e2e_cypress: ${{ steps.filter.outputs.e2e_cypress }}
+      e2e_playwright: ${{ steps.filter.outputs.e2e_playwright }}
+      e2e_puppeteer: ${{ steps.filter.outputs.e2e_puppeteer }}
+      e2e_storybook: ${{ steps.filter.outputs.e2e_storybook }}
+      e2e_vitest: ${{ steps.filter.outputs.e2e_vitest }}
+      e2e_webdriverio: ${{ steps.filter.outputs.e2e_webdriverio }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Classify changed files
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            e2e_core:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/cli/**"
+              - "packages/core/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_core_oidc:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/cli/**"
+              - "packages/core/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_core_tokenless:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/cli/**"
+              - "packages/core/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_cypress:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/core/**"
+              - "packages/cypress/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_playwright:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/core/**"
+              - "packages/playwright/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_puppeteer:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/core/**"
+              - "packages/puppeteer/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_storybook:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/core/**"
+              - "packages/storybook/**"
+              - "packages/util/**"
+              - "turbo.json"
+            e2e_vitest:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/core/**"
+              - "packages/util/**"
+              - "packages/vitest/**"
+              - "turbo.json"
+            e2e_webdriverio:
+              - ".github/workflows/ci.yml"
+              - "package-lock.json"
+              - "package.json"
+              - "packages/api-client/**"
+              - "packages/core/**"
+              - "packages/util/**"
+              - "packages/webdriverio/**"
+              - "turbo.json"
+
   lint:
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -72,6 +185,8 @@ jobs:
         run: npm run test
 
   e2e-core:
+    needs: changes
+    if: needs.changes.outputs.e2e_core == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
@@ -105,6 +220,8 @@ jobs:
           OS: ${{ matrix.os }}
 
   e2e-core-oidc:
+    needs: changes
+    if: needs.changes.outputs.e2e_core_oidc == 'true'
     timeout-minutes: 5
     runs-on: ubuntu-latest
 
@@ -129,6 +246,8 @@ jobs:
           OS: ubuntu-latest
 
   e2e-core-tokenless:
+    needs: changes
+    if: needs.changes.outputs.e2e_core_tokenless == 'true'
     timeout-minutes: 5
     runs-on: ubuntu-latest
 
@@ -149,6 +268,8 @@ jobs:
           OS: ubuntu-latest
 
   e2e-cypress:
+    needs: changes
+    if: needs.changes.outputs.e2e_cypress == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
@@ -177,6 +298,8 @@ jobs:
           OS: ${{ matrix.os }}
 
   e2e-playwright:
+    needs: changes
+    if: needs.changes.outputs.e2e_playwright == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
@@ -205,6 +328,8 @@ jobs:
           OS: ${{ matrix.os }}
 
   e2e-puppeteer:
+    needs: changes
+    if: needs.changes.outputs.e2e_puppeteer == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
@@ -233,6 +358,8 @@ jobs:
           OS: ${{ matrix.os }}
 
   e2e-webdriverio:
+    needs: changes
+    if: needs.changes.outputs.e2e_webdriverio == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
@@ -261,6 +388,8 @@ jobs:
           OS: ${{ matrix.os }}
 
   e2e-storybook:
+    needs: changes
+    if: needs.changes.outputs.e2e_storybook == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
@@ -289,6 +418,8 @@ jobs:
           OS: ${{ matrix.os }}
 
   e2e-vitest:
+    needs: changes
+    if: needs.changes.outputs.e2e_vitest == 'true'
     timeout-minutes: 5
     env:
       ARGOS_API_BASE_URL: https://api.snapvisor.io/v2/
