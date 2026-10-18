@@ -32,7 +32,7 @@ export interface ArgosVitestPluginOptions
   extends ArgosReporterConfig, ArgosScreenshotOptions {
   /**
    * Upload the report to Snapvisor.
-   * @default true
+   * @default false
    */
   uploadToArgos?: boolean;
 }
