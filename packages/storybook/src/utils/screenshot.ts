@@ -70,10 +70,10 @@ export async function storybookArgosScreenshot<Handler extends Page | Frame>(
   const argosOptions = {
     ...options,
     // Disable aria-busy stabilization by default
-    stabilize: options?.stabilize ?? {
-      waitForAriaBusy: false,
-      ...(typeof options?.stabilize === "object" ? options.stabilize : {}),
-    },
+    stabilize:
+      typeof options?.stabilize === "object"
+        ? { waitForAriaBusy: false, ...options.stabilize }
+        : (options?.stabilize ?? { waitForAriaBusy: false }),
   };
 
   const version = await getArgosStorybookVersion();
