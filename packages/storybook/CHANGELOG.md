@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/storybook@7.0.0...@snapvisor/storybook@7.0.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **storybook:** merge user stabilize options over the aria-busy default ([#12](https://github.com/DevinoSolutions/snapvisor-js/issues/12)) ([de05ef7](https://github.com/DevinoSolutions/snapvisor-js/commit/de05ef7e30526221a9fa12bd1af733cdc5287f5b))
+
+
+
+
+
 # 7.0.0 (2026-07-24)
 
 
