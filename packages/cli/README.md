@@ -43,12 +43,13 @@ ARGOS_TOKEN="<your-argos-token>" npx @snapvisor/cli upload ./screenshots --wait 
 
 | Build state                                                | Exit code |
 | ---------------------------------------------------------- | --------- |
-| `accepted` (approved, or auto-approved) / `no-changes`     | `0`       |
-| `changes-detected` (needs review)                          | `1`       |
+| `accepted` / `no-changes`                                  | `0`       |
+| `changes-detected` on a reference build (auto-approved)    | `0`       |
+| `changes-detected` awaiting review                         | `1`       |
 | `rejected`, `expired`, `aborted`, `error`                  | `1`       |
 | Still running after `--wait-timeout` seconds (default 600) | `1`       |
 
-The build URL and final state are printed either way. `--wait` polls the Snapvisor API, so it needs a token it can read the build with (`--token`, `ARGOS_TOKEN` or `argos login`): GitHub Actions OIDC and tokenless uploads are not supported. It cannot be combined with `--parallel`, because a parallel build only finishes once it is finalized.
+The exit code always agrees with the build's commit status: success is exit 0, pending review or failure is exit 1. A `429` from the API is retried until the timeout. The build URL and final state are printed either way. `--wait` polls the Snapvisor API, so it needs a token it can read the build with (`--token` or `ARGOS_TOKEN`): GitHub Actions OIDC and tokenless uploads, and `argos login` sessions, are not supported. It cannot be combined with `--parallel`, because a parallel build only finishes once it is finalized.
 
 The CLI also exposes commands to `deploy` a static build, inspect and `review` builds, post a `comment`, and more. List them all with:
 

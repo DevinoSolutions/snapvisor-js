@@ -110,7 +110,7 @@ export function uploadCommand(program: Command) {
     .addOption(
       new Option(
         "--wait",
-        "Wait for the build to finish, then exit 0 if it is accepted or has no changes, and exit 1 if it needs review, is rejected, expired, aborted or errored, or if the wait times out.\nRequires a token (--token, ARGOS_TOKEN or `argos login`) and cannot be combined with --parallel.",
+        "Wait for the build to finish, then exit 0 if it is accepted or has no changes, and exit 1 if it needs review, is rejected, expired, aborted or errored, or if the wait times out.\nRequires a token (--token, ARGOS_TOKEN) and cannot be combined with --parallel.",
       ),
     )
     .addOption(

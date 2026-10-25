@@ -1,8 +1,8 @@
+import { readConfig } from "@snapvisor/core";
 import type { ArgosAPIClient, ArgosAPISchema } from "@snapvisor/api-client";
 import { InvalidArgumentError } from "commander";
 import { unwrap } from "./api";
 import { fail } from "./cli-error";
-import { resolveToken } from "./target";
 
 type Build = ArgosAPISchema.components["schemas"]["Build"];
 type BuildStatus = Build["status"];
@@ -37,17 +37,23 @@ export async function prepareWait(options: {
     }
     return null;
   }
-  const parallelFromEnv = ["true", "1"].includes(
-    (process.env["ARGOS_PARALLEL"] ?? "").toLowerCase(),
-  );
-  if (options.parallel || parallelFromEnv) {
+  // Same parsing as the upload itself (convict Boolean), so `--wait` refuses
+  // exactly the environments that would run a parallel build.
+  if (options.parallel || (await readConfig()).parallel) {
     fail(
       "--wait cannot be combined with --parallel (or ARGOS_PARALLEL): a parallel build only finishes once every shard is uploaded and the build is finalized, so waiting on one shard would time out.",
     );
   }
-  // Tokenless / OIDC uploads authenticate inside the upload and expose no token
-  // to poll with, so fail now rather than after the build was created.
-  return resolveToken({ token: options.token });
+  // Only the project token the upload itself uses (--token / ARGOS_TOKEN) is
+  // accepted: tokenless / OIDC uploads and `argos login` sessions give us no
+  // token the upload and the poll would share. Fail now, before the build is created.
+  const token = options.token || process.env["ARGOS_TOKEN"];
+  if (!token) {
+    fail(
+      "--wait needs a project token to read the build back: pass --token or set ARGOS_TOKEN (GitHub Actions OIDC / tokenless uploads and `argos login` are not supported with --wait).",
+    );
+  }
+  return token;
 }
 
 const POLL_INTERVAL_MS = 5_000;
@@ -77,9 +83,12 @@ function isFinalStatus(status: BuildStatus): status is FinalBuildStatus {
 /**
  * Map a build that reached a final status to a pass/fail outcome.
  *
- * Passes: `accepted` (reviewed or auto-approved) and `no-changes`. Everything
- * else fails, `changes-detected` included — that build is waiting for a human
- * review, which is exactly what `--wait` exists to surface to CI.
+ * Passes: `accepted`, `no-changes`, and a `changes-detected` build whose commit
+ * status is already `success` (a reference-branch build is auto-approved but
+ * keeps the `changes-detected` API status). Everything else fails: a
+ * `changes-detected` build with a pending status is waiting for a human review,
+ * which is exactly what `--wait` exists to surface to CI, so the exit code
+ * always agrees with the commit status.
  */
 export function evaluateFinalBuild(build: Build): BuildOutcome {
   if (!isFinalStatus(build.status)) {
@@ -95,6 +104,12 @@ export function evaluateFinalBuild(build: Build): BuildOutcome {
     case "no-changes":
       return { ok: true, summary: `${label} has no changes` };
     case "changes-detected":
+      if (build.notification?.github.state === "success") {
+        return {
+          ok: true,
+          summary: `${label} has changes but its commit status is success (auto-approved)`,
+        };
+      }
       return {
         ok: false,
         summary: `${label} needs review (changes-detected)`,
@@ -124,7 +139,19 @@ export function parseBuildUrl(url: string): {
   project: string;
   buildNumber: string;
 } {
-  const segments = new URL(url).pathname.split("/").filter(Boolean).slice(-4);
+  const segments = new URL(url).pathname
+    .split("/")
+    .filter(Boolean)
+    .slice(-4)
+    .map((segment) => {
+      try {
+        return decodeURIComponent(segment);
+      } catch (error) {
+        fail(
+          `Cannot wait for build: malformed build URL "${url}" (${error instanceof Error ? error.message : String(error)}).`,
+        );
+      }
+    });
   const [owner, project, builds, buildNumber] = segments;
   if (!owner || !project || builds !== "builds" || !buildNumber) {
     fail(
@@ -145,10 +172,39 @@ const realClock: WaitClock = {
   sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
 };
 
+const MAX_RATE_LIMIT_BACKOFF_MS = 60_000;
+
+/**
+ * How long to wait before retrying a 429: the `Retry-After` header (seconds or
+ * HTTP date) when present and valid, else exponential backoff from the poll interval.
+ */
+export function rateLimitDelayMs(
+  response: Response,
+  attempt: number,
+  pollIntervalMs: number,
+  nowMs: number,
+): number {
+  const header = response.headers.get("retry-after");
+  if (header) {
+    const seconds = Number(header);
+    if (Number.isFinite(seconds) && seconds >= 0) {
+      return seconds * 1000;
+    }
+    const date = Date.parse(header);
+    if (!Number.isNaN(date)) {
+      return Math.max(0, date - nowMs);
+    }
+  }
+  return Math.min(MAX_RATE_LIMIT_BACKOFF_MS, pollIntervalMs * 2 ** attempt);
+}
+
 /**
  * Poll a build until it reaches a final status and return its pass/fail
  * outcome. Throws a {@link CliError} when `timeoutSeconds` elapses first, and
- * lets API failures propagate — a build we cannot read must not look green.
+ * lets API failures (401, 404, network errors, ...) propagate — a build we
+ * cannot read must not look green. A 429 is retried (honouring `Retry-After`)
+ * for as long as the deadline allows. Each request is aborted at the deadline,
+ * so the wait never overshoots `timeoutSeconds` by a whole request.
  */
 export async function waitForBuild(opts: {
   client: ArgosAPIClient;
@@ -168,24 +224,63 @@ export async function waitForBuild(opts: {
   } = opts;
   const { owner, project, buildNumber } = parseBuildUrl(buildUrl);
   const deadline = clock.now() + timeoutSeconds * 1000;
+  let lastStatus: string = "not yet read";
+  let rateLimitAttempt = 0;
+
+  const getBuild = (signal: AbortSignal) =>
+    client.GET("/projects/{owner}/{project}/builds/{buildNumber}", {
+      params: { path: { owner, project, buildNumber } },
+      signal,
+    });
+
+  const timeout = (): never =>
+    fail(
+      `Timed out after ${timeoutSeconds}s waiting for build #${buildNumber} to finish (last status: ${lastStatus}). ${buildUrl}`,
+    );
 
   for (;;) {
-    const build = unwrap(
-      await client.GET("/projects/{owner}/{project}/builds/{buildNumber}", {
-        params: { path: { owner, project, buildNumber } },
-      }),
-    );
+    const remainingMs = deadline - clock.now();
+    if (remainingMs <= 0) {
+      timeout();
+    }
+    const signal = AbortSignal.timeout(remainingMs);
+    let result: Awaited<ReturnType<typeof getBuild>>;
+    try {
+      result = await getBuild(signal);
+    } catch (error) {
+      if (signal.aborted) {
+        timeout();
+      }
+      throw error;
+    }
+
+    if (result.response.status === 429) {
+      const delayMs = rateLimitDelayMs(
+        result.response,
+        rateLimitAttempt++,
+        pollIntervalMs,
+        clock.now(),
+      );
+      lastStatus = "rate limited by the API (HTTP 429)";
+      if (delayMs >= deadline - clock.now()) {
+        timeout();
+      }
+      await clock.sleep(delayMs);
+      continue;
+    }
+    rateLimitAttempt = 0;
+
+    const build = unwrap(result);
+    lastStatus = build.status;
     if (isFinalStatus(build.status)) {
       return evaluateFinalBuild(build);
     }
     onPoll?.(build);
-    const remainingMs = deadline - clock.now();
-    if (remainingMs <= 0) {
-      fail(
-        `Timed out after ${timeoutSeconds}s waiting for build #${build.number} to finish (last status: ${build.status}). ${buildUrl}`,
-      );
+    const untilDeadlineMs = deadline - clock.now();
+    if (untilDeadlineMs <= 0) {
+      timeout();
     }
-    // Never sleep past the deadline, so the last poll lands right on it.
-    await clock.sleep(Math.min(pollIntervalMs, remainingMs));
+    // Never sleep past the deadline.
+    await clock.sleep(Math.min(pollIntervalMs, untilDeadlineMs));
   }
 }
