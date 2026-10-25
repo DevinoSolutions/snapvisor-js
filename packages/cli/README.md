@@ -33,6 +33,23 @@ Upload a directory of screenshots to Argos. Authenticate with your project token
 ARGOS_TOKEN="<your-argos-token>" npx @snapvisor/cli upload ./screenshots
 ```
 
+### Failing CI when a build needs review
+
+By default `upload` exits right after the build is created, so a build with unreviewed changes does not fail the job (the commit status does). Pass `--wait` to make the command wait for the build to finish and report the result through its exit code:
+
+```sh
+ARGOS_TOKEN="<your-argos-token>" npx @snapvisor/cli upload ./screenshots --wait --wait-timeout 300
+```
+
+| Build state                                                | Exit code |
+| ---------------------------------------------------------- | --------- |
+| `accepted` (approved, or auto-approved) / `no-changes`     | `0`       |
+| `changes-detected` (needs review)                          | `1`       |
+| `rejected`, `expired`, `aborted`, `error`                  | `1`       |
+| Still running after `--wait-timeout` seconds (default 600) | `1`       |
+
+The build URL and final state are printed either way. `--wait` polls the Snapvisor API, so it needs a token it can read the build with (`--token`, `ARGOS_TOKEN` or `argos login`): GitHub Actions OIDC and tokenless uploads are not supported. It cannot be combined with `--parallel`, because a parallel build only finishes once it is finalized.
+
 The CLI also exposes commands to `deploy` a static build, inspect and `review` builds, post a `comment`, and more. List them all with:
 
 ```sh

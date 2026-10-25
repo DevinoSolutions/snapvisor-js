@@ -2,6 +2,14 @@ import type { Command } from "commander";
 import { Option } from "commander";
 import { upload } from "@snapvisor/core";
 import ora from "ora";
+import { createApiClient } from "../lib/api";
+import { handleCliError } from "../lib/run";
+import {
+  DEFAULT_WAIT_TIMEOUT_SECONDS,
+  parseWaitTimeout,
+  prepareWait,
+  waitForBuild,
+} from "../lib/wait-for-build";
 import {
   buildNameOption,
   parallelNonceOption,
@@ -27,6 +35,8 @@ type UploadOptions = BuildNameOption &
     referenceCommit?: string | undefined;
     threshold?: number | undefined;
     subset?: boolean | undefined;
+    wait?: boolean | undefined;
+    waitTimeout?: number | undefined;
   };
 
 export function uploadCommand(program: Command) {
@@ -97,8 +107,32 @@ export function uploadCommand(program: Command) {
         "Whether this build contains only a subset of screenshots.\nThis is useful when a build is created from an incomplete test suite where some tests are skipped.\nCan also be set via the ARGOS_SUBSET environment variable.",
       ),
     )
+    .addOption(
+      new Option(
+        "--wait",
+        "Wait for the build to finish, then exit 0 if it is accepted or has no changes, and exit 1 if it needs review, is rejected, expired, aborted or errored, or if the wait times out.\nRequires a token (--token, ARGOS_TOKEN or `argos login`) and cannot be combined with --parallel.",
+      ),
+    )
+    .addOption(
+      new Option(
+        "--wait-timeout <seconds>",
+        `Maximum time to wait for the build when --wait is set. Defaults to ${DEFAULT_WAIT_TIMEOUT_SECONDS}.`,
+      ).argParser(parseWaitTimeout),
+    )
     .action(async (directory: string, options: UploadOptions) => {
+      let waitToken: string | null;
+      try {
+        waitToken = await prepareWait({
+          wait: options.wait,
+          waitTimeout: options.waitTimeout,
+          parallel: options.parallel,
+          token: options.token,
+        });
+      } catch (error) {
+        handleCliError(error);
+      }
       const spinner = ora("Uploading screenshots").start();
+      let buildUrl: string;
       try {
         const parallel = (() => {
           if (!options.parallel) {
@@ -132,13 +166,38 @@ export function uploadCommand(program: Command) {
           threshold: options.threshold,
           subset: options.subset,
         });
-        spinner.succeed(`Build created: ${result.build.url}`);
+        buildUrl = result.build.url;
+        spinner.succeed(`Build created: ${buildUrl}`);
       } catch (error) {
         if (error instanceof Error) {
           spinner.fail(`Build failed: ${error.message}`);
           console.error(error.stack);
         }
         process.exit(1);
+      }
+
+      if (waitToken === null) {
+        return;
+      }
+      const waitSpinner = ora("Waiting for the build to finish").start();
+      try {
+        const outcome = await waitForBuild({
+          client: createApiClient(waitToken),
+          buildUrl,
+          timeoutSeconds: options.waitTimeout ?? DEFAULT_WAIT_TIMEOUT_SECONDS,
+          onPoll: (build) => {
+            waitSpinner.text = `Waiting for the build to finish (status: ${build.status})`;
+          },
+        });
+        if (outcome.ok) {
+          waitSpinner.succeed(`${outcome.summary}: ${buildUrl}`);
+        } else {
+          waitSpinner.fail(`${outcome.summary}: ${buildUrl}`);
+          process.exit(1);
+        }
+      } catch (error) {
+        waitSpinner.fail("Waiting for the build failed");
+        handleCliError(error);
       }
     });
 }
