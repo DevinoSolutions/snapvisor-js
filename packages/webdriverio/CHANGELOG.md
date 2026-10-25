@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/webdriverio@0.8.0...@snapvisor/webdriverio@0.8.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* **deps:** patch the sharp advisory and js-yaml ([#9](https://github.com/DevinoSolutions/snapvisor-js/issues/9)) ([0048179](https://github.com/DevinoSolutions/snapvisor-js/commit/0048179cee08da7713eeb56008f2724231ba1785))
+
+
+
+
+
 # 0.8.0 (2026-07-24)
 
 

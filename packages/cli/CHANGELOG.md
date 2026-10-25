@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/cli@7.0.0...@snapvisor/cli@7.1.0) (2026-10-25)
+
+
+### Features
+
+* **cli:** add upload --wait to fail the job when the build needs review ([#14](https://github.com/DevinoSolutions/snapvisor-js/issues/14)) ([ba87b17](https://github.com/DevinoSolutions/snapvisor-js/commit/ba87b173b34660ae906e4540cb246950b0769bce))
+
+
+
+
+
 # 7.0.0 (2026-07-24)
 
 

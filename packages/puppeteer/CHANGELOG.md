@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/puppeteer@7.0.0...@snapvisor/puppeteer@7.0.1) (2026-10-25)
+
+**Note:** Version bump only for package @snapvisor/puppeteer
+
+
+
+
+
 # 7.0.0 (2026-07-24)
 
 
