@@ -8,6 +8,10 @@ export const config: Options.Testrunner & {
   // ====================
   // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: "local",
+  // Chrome runs with --headless, so no virtual display is needed. @wdio/xvfb 9.x wraps workers in
+  // xvfb-run, which does not keep the IPC fd on Ubuntu 26.04 (ubuntu-latest): every worker dies with
+  // "write EINVAL" (webdriverio/webdriverio#15685).
+  autoXvfb: false,
 
   //
   // ==================
