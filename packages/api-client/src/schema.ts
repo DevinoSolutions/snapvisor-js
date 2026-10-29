@@ -4,6 +4,30 @@
  */
 
 export interface paths {
+    "/accounts/{accountSlug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an account
+         * @description Retrieve an account with its plan and current-period usage. Use it to watch screenshot consumption against the plan before it runs over.
+         */
+        get: operations["getAccount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a team's defaults
+         * @description Change the role given to users that join a team through its invite link or a verified email domain. Requires administrator access to the team. Use it when a team administrator wants new joiners to start with a different role.
+         */
+        patch: operations["updateAccount"];
+        trace?: never;
+    };
     "/accounts/{accountSlug}/analytics": {
         parameters: {
             query?: never;
@@ -13,7 +37,7 @@ export interface paths {
         };
         /**
          * Get account analytics
-         * @description Retrieve build and screenshot metrics for an account. The personal access token must be scoped to the account.
+         * @description Retrieve build and screenshot metrics for an account. The personal access token must be scoped to the account. Use it when asked how many builds or screenshots an account produced over a period, or how that usage is trending.
          */
         get: operations["getAccountAnalytics"];
         put?: never;
@@ -33,12 +57,416 @@ export interface paths {
         };
         /**
          * List an account's projects
-         * @description List the projects of an account that are visible to the authenticated user, most recently active first. Results are paginated. The token must be scoped to the account.
+         * @description List the projects of an account that are visible to the authenticated user, most recently active first. Results are paginated. The token must be scoped to the account. Use it to find the project names of an account before calling the project, build or test tools.
+         *
+         *     Use the `name` field of each project as the `{project}` path parameter in project-scoped endpoints like `createBuildForProject` and `listBuilds`.
          */
         get: operations["listProjects"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a team's members
+         * @description List the members of a team, with their role. Requires administrator access to the team. Use it when you need to know who belongs to a team or which role each member holds.
+         */
+        get: operations["listAccountMembers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/members/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove a member
+         * @description Remove a user from a team. Requires administrator access to the team. The last member of a team cannot be removed; removing the second-to-last one promotes the remaining member to owner. Use it when a team administrator explicitly asks to take a user off the team.
+         */
+        delete: operations["removeAccountMember"];
+        options?: never;
+        head?: never;
+        /**
+         * Change a member's role
+         * @description Change the role of an existing team member. Requires administrator access to the team. Use it when a team administrator asks to promote or demote an existing member.
+         */
+        patch: operations["setAccountMemberLevel"];
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List pending invites
+         * @description List the pending invitations to join a team, most recent first. Requires administrator access to the team. Use it to check who has been invited to a team but has not joined yet.
+         */
+        get: operations["listAccountInvites"];
+        put?: never;
+        /**
+         * Invite members
+         * @description Invite people by email to join a team as members. Each invited address receives an email with a link to join. Re-inviting an address that already has a pending invite refreshes it. Requires administrator access to the team. Use it when a team administrator asks to invite people to the team by email address.
+         */
+        post: operations["createAccountInvites"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/invites/{inviteId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Cancel an invite
+         * @description Cancel a pending invitation, invalidating its link. Requires administrator access to the team. Use it when a pending invitation was sent by mistake or should no longer be accepted.
+         */
+        delete: operations["cancelAccountInvite"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/domains": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a team's email domains
+         * @description List the email domains a team is open to. Requires administrator access to the team. Use it to check which email domains let people join a team automatically.
+         */
+        get: operations["listTeamDomains"];
+        put?: never;
+        /**
+         * Open a team to an email domain
+         * @description Add an email domain to a team, so anyone signing up with a verified address on it joins automatically. Requires administrator access to the team, and you must yourself hold a verified address on the domain — a team can only be opened to a domain its administrator demonstrably belongs to. Public email providers are refused. Use it when a team administrator wants everyone with a company email address to join the team automatically.
+         */
+        post: operations["addTeamDomain"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/domains/{domain}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Close a team to an email domain
+         * @description Remove an email domain from a team. New sign-ups on it no longer join automatically; members who already joined stay. Requires administrator access to the team. Use it when a team should stop admitting new sign-ups from an email domain.
+         */
+        delete: operations["removeTeamDomain"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/invite-link/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset the invite link
+         * @description Rotate the team's shared invite link, invalidating the previous one. Anyone holding the old link can no longer use it to join. Requires administrator access to the team. Use it when the shared invite link has leaked or has been shared too widely.
+         */
+        post: operations["resetAccountInviteLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a media upload
+         * @description Register a standalone image or video and receive a signed target to upload it to.
+         *
+         *     Uploading takes three calls:
+         *
+         *     1. `POST /media` — declare the file and get back an `upload` target.
+         *     2. `POST` the file to `upload.url` as `multipart/form-data`, appending every entry of `upload.fields` **before** the `file` part. When `upload.multipart` is set and the file is larger than `upload.multipart.partSize`, upload it in parts there instead: the edge in front of the API refuses any single request over 100 MB.
+         *     3. `POST /media/{mediaId}/finalize` — confirm the bytes landed.
+         *
+         *     When `upload` comes back `null`, Snapvisor already holds this exact file and steps 2 and 3 are unnecessary.
+         *
+         *     Pass `prNumber` when the pull request already exists, or `branch` when it does not. A media uploaded against a branch is **staged**: it has its share URL immediately, and the moment a pull request opens for that branch Snapvisor attaches it and posts the comment — nothing has to come back and connect the two.
+         *
+         *     Use it when you have a standalone screenshot or screen recording, outside a CI build, to attach to a branch or pull request.
+         */
+        post: operations["createMedia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a media
+         * @description Retrieve a single media by its ID, including its share URL and ready-to-paste Markdown. Use it when you have a media ID and need its share URL, Markdown embed or upload state.
+         */
+        get: operations["getMedia"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a media
+         * @description Delete a media and the files behind it. Any share link or pull request embed pointing at it stops working immediately. Use it when the user asks to remove an uploaded image or video permanently.
+         */
+        delete: operations["deleteMedia"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a staged media
+         * @description Change a staged media's name, description or branch.
+         *
+         *     Staged media only. A media's name and branch are its identity — what decides whether the next upload of that name is a new version or a new media, and which pull request will publish it — and once it is published that identity is what the pull request comment is built from and what a reviewer's comments hang off. Editing it there would rewrite history rather than correct a staged media.
+         *
+         *     Omitted fields are left alone. `description` and `branch` accept `null` to clear them; `name` is required and has no cleared state. Clearing a staged media's branch leaves it attached to nothing, so no pull request will ever publish it.
+         *
+         *     Use it to correct a staged media's name, description or branch before a pull request publishes it.
+         */
+        patch: operations["updateMedia"];
+        trace?: never;
+    };
+    "/media/{mediaId}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a media's versions
+         * @description List a media's most recent uploaded versions, newest first, up to 100.
+         *
+         *     A separate call because it is rarely needed: a media usually has one version, and the media itself already carries the newest one flattened onto it. Check `versionCount` first — at 1 there is nothing here you do not already have.
+         *
+         *     Use it when a comment carries a `mediaVersionId` older than the media's current version. A pin describes a spot on *those* bytes, so feedback written on an earlier upload has to be read against that upload — match the id here to get its file.
+         */
+        get: operations["listMediaVersions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}/finalize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finalize a media upload
+         * @description Confirm that a media version's bytes have been uploaded. Snapvisor reads the object back to check the file is what it claims to be, records an image's dimensions, bills it to the screenshot meter, and updates the managed pull request comment. There is no processing step: the media is usable the moment this returns. Use it right after uploading the file to the target returned by createMedia.
+         */
+        post: operations["finalizeMedia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the comments on a media
+         * @description List the comments on an uploaded media, oldest first. A comment may carry an `anchor` pinning it to a point on the image, which is how reviewers mark up a screenshot. Use it to read the review discussion on an uploaded image or video.
+         */
+        get: operations["listMediaComments"];
+        put?: never;
+        /**
+         * Post a comment (or reply) on a media
+         * @description Post a comment on an uploaded media. Start a new thread, or reply to an existing one with `threadId`. Pass an `anchor` to pin the comment to a point on the image — normalized coordinates, so it survives any scaling — which is how a reviewer marks up a screenshot. Use it when the user wants to leave feedback on an uploaded image or video.
+         */
+        post: operations["createMediaComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}/comments/{commentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a single comment on a media
+         * @description Retrieve a single comment on a media by its ID. Use it when you have a comment ID and need its full content.
+         */
+        get: operations["getMediaComment"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a comment on a media
+         * @description Delete a comment on a media. Only the comment's author can delete it. Use it when the author asks to remove their own comment.
+         */
+        delete: operations["deleteMediaComment"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a comment on a media
+         * @description Update the body of a comment on a media. Only the comment's author can edit it. Use it when the author wants to correct or reword their own comment.
+         */
+        patch: operations["updateMediaComment"];
+        trace?: never;
+    };
+    "/media/{mediaId}/comments/{commentId}/reactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add an emoji reaction to a comment on a media
+         * @description Add an emoji reaction to a comment on a media, on behalf of the authenticated user. Use it to acknowledge a comment with an emoji rather than a reply.
+         */
+        post: operations["addMediaCommentReaction"];
+        /**
+         * Remove an emoji reaction from a comment on a media
+         * @description Remove an emoji reaction previously added by the authenticated user from a comment on a media. Use it to take back an emoji reaction added by mistake.
+         */
+        delete: operations["removeMediaCommentReaction"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}/comments/{commentId}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a media comment thread as resolved
+         * @description Mark a comment thread on a media as resolved. Use it when the feedback in a thread has been addressed.
+         */
+        post: operations["resolveMediaCommentThread"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}/comments/{commentId}/unresolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reopen a resolved media comment thread
+         * @description Reopen a previously resolved comment thread on a media. Use it when a resolved thread needs more discussion.
+         */
+        post: operations["unresolveMediaCommentThread"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{mediaId}/comments/{commentId}/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Subscribe to a media comment thread's notifications
+         * @description Subscribe the authenticated user to a comment thread on a media to receive notifications about new replies. Use it when the user wants to follow replies to a thread they have not taken part in.
+         */
+        post: operations["subscribeMediaCommentThread"];
+        /**
+         * Unsubscribe from a media comment thread's notifications
+         * @description Unsubscribe the authenticated user from a media comment thread's notifications. Use it when the user no longer wants notifications for a thread.
+         */
+        delete: operations["unsubscribeMediaCommentThread"];
         options?: never;
         head?: never;
         patch?: never;
@@ -55,9 +483,129 @@ export interface paths {
         put?: never;
         /**
          * Create a build
-         * @description Create a build and receive signed upload targets for its screenshots and Playwright traces. The response lists, for every file Argos doesn't already have, a secure `postUrl` with `fields` (or a legacy `putUrl`) to upload it to. Supports single and parallel builds.
+         * @description Create a build and receive signed upload targets for its screenshots and Playwright traces. The response lists, for every file Snapvisor doesn't already have, a secure `postUrl` with `fields` (or a legacy `putUrl`) to upload it to. Supports single and parallel builds.
          */
         post: operations["createBuild"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tools/image-diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Compare two images (free, no key)
+         * @description Diffs two screenshots with the engine every Snapvisor build uses (odiff, two passes) and answers whether the pair counts as a visual change. No account or key; 20 requests a day per address; images up to 5 MB and 16 million pixels each, nothing stored. Answers JSON, or Markdown with `Accept: text/markdown`; errors are RFC 9457 problem details.
+         */
+        post: operations["diffImagesTool"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uploads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a file to a proxied upload target
+         * @description Receives one file for an upload target returned by `createBuild` (`postUrl` + `fields`) or `createMedia` (`upload.url` + `upload.fields`) when the object store does not implement S3 presigned POST (e.g. Backblaze B2); on other stores the URL points at the store itself and this route is not used. Behaves like an S3 POST-object endpoint: send the `fields` as form fields, then the file. No bearer token: the signed `policy` field is the authorization.
+         */
+        post: operations["uploadObject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uploads/multipart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start a multipart upload
+         * @description Exchange the `upload.fields` of a proxied `createMedia` target for a multipart upload session. Part of the multipart variant of the proxied upload, for a file larger than `upload.multipart.partSize` returned by `createMedia`: start, send each part, complete. No bearer token: the signed policy, then the signed session, is the authorization.
+         */
+        post: operations["startMultipartUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uploads/multipart/parts/{partNumber}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload one part of a multipart upload
+         * @description Store one part. The body is the part's raw bytes and must be exactly `partSize` long, except the last part, which holds the remainder (400 when shorter, 413 when longer). Re-sending a part replaces it. Part of the multipart variant of the proxied upload, for a file larger than `upload.multipart.partSize` returned by `createMedia`: start, send each part, complete. No bearer token: the signed policy, then the signed session, is the authorization.
+         */
+        put: operations["uploadMultipartPart"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uploads/multipart/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete a multipart upload
+         * @description Assemble every uploaded part into the object. Finalize the media afterwards, exactly as after a single upload. Part of the multipart variant of the proxied upload, for a file larger than `upload.multipart.partSize` returned by `createMedia`: start, send each part, complete. No bearer token: the signed policy, then the signed session, is the authorization.
+         */
+        post: operations["completeMultipartUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uploads/multipart/abort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Abort a multipart upload
+         * @description Discard an unfinished multipart upload and every part stored for it. Aborting an upload that no longer exists succeeds. Part of the multipart variant of the proxied upload, for a file larger than `upload.multipart.partSize` returned by `createMedia`: start, send each part, complete. No bearer token: the signed policy, then the signed session, is the authorization.
+         */
+        post: operations["abortMultipartUpload"];
         delete?: never;
         options?: never;
         head?: never;
@@ -75,7 +623,7 @@ export interface paths {
         put?: never;
         /**
          * Create a deployment
-         * @description Create a deployment and receive signed upload URLs for the files Argos doesn't already store. Files already present (matched by content hash) are reused and omitted from `uploadFiles`. The environment is inferred from the branch when omitted.
+         * @description Create a deployment and receive signed upload URLs for the files Snapvisor doesn't already store. Files already present (matched by content hash) are reused and omitted from `uploadFiles`. The environment is inferred from the branch when omitted.
          */
         post: operations["createDeployment"];
         delete?: never;
@@ -115,7 +663,7 @@ export interface paths {
         put?: never;
         /**
          * Finalize a deployment
-         * @description Mark a deployment as ready once all of its files have been uploaded. Argos assigns the deployment's aliases and starts serving it.
+         * @description Mark a deployment as ready once all of its files have been uploaded. Snapvisor assigns the deployment's aliases and starts serving it.
          */
         post: operations["finalizeDeployment"];
         delete?: never;
@@ -155,7 +703,7 @@ export interface paths {
         put?: never;
         /**
          * Finalize parallel builds
-         * @description Mark every parallel shard sharing the given `parallelNonce` as complete. Once finalized, Argos compares the aggregated screenshots and starts processing the build.
+         * @description Mark every parallel shard sharing the given `parallelNonce` as complete. Once finalized, Snapvisor compares the aggregated screenshots and starts processing the build.
          */
         post: operations["finalizeBuilds"];
         delete?: never;
@@ -175,7 +723,7 @@ export interface paths {
         put?: never;
         /**
          * Find an eligible baseline from a list of commits
-         * @description Find the build eligible to be used as a baseline among a list of commits. Useful when no Git provider is connected: the CLI can send the candidate ancestor commits and let Argos pick the closest one that has an eligible (complete, valid, approved and not rejected) baseline build.
+         * @description Find the build eligible to be used as a baseline among a list of commits. Useful when no Git provider is connected: the CLI can send the candidate ancestor commits and let Snapvisor pick the closest one that has an eligible (complete, valid, approved and not rejected) baseline build.
          */
         post: operations["findBaseline"];
         delete?: never;
@@ -214,8 +762,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Exchange a GitHub Actions OIDC token for an Argos token
-         * @description Called by GitHub Actions to exchange an OIDC token for a short-lived Argos project token.
+         * Exchange a GitHub Actions OIDC token for a Snapvisor token
+         * @description Called by GitHub Actions to exchange an OIDC token for a short-lived Snapvisor project token.
          */
         post: operations["exchangeGitHubActionsOidcToken"];
         delete?: never;
@@ -234,8 +782,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Exchange a tokenless GitHub Actions token for an Argos token
-         * @description Called by GitHub Actions to exchange a tokenless bearer token for a short-lived Argos project token. The provided commit and branch must match the GitHub workflow run.
+         * Exchange a tokenless GitHub Actions token for a Snapvisor token
+         * @description Called by GitHub Actions to exchange a tokenless bearer token for a short-lived Snapvisor project token. The provided commit and branch must match the GitHub workflow run.
          */
         post: operations["exchangeGitHubActionsTokenlessToken"];
         delete?: never;
@@ -253,12 +801,94 @@ export interface paths {
         };
         /**
          * Get the current user
-         * @description Retrieve the user associated with the personal access token used to authenticate the request, along with their accessible accounts and GitHub linkage.
+         * @description Retrieve the user associated with the token used to authenticate the request, along with their accessible accounts (organizations) and GitHub linkage. Use it first in a conversation to learn which accounts, and so which owner slugs, this connection can reach.
+         *
+         *     **Start here.** Call `getMe` first to discover which accounts (the `slug` field) the token can act on — `slug` is the `{owner}` path parameter used by every project-scoped endpoint. Then call `listProjects` with that owner to find the projects you can work with.
          */
         get: operations["getMe"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/deletion-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request deletion of your account
+         * @description Email a confirmation link for deleting the authenticated user's personal account. Nothing is deleted until the person opens the link and confirms in the web app, so this call is safe to retry. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
+         */
+        post: operations["requestAccountDeletion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/app-store-purchase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check that a team can buy Pro in the iOS app
+         * @description Before the iOS app offers an in-app purchase, check that the team can take it and get the RevenueCat app user id to buy under. The caller must administer the team. Refused with 409 when the team already has a live subscription (a team has exactly one billing source), and with 503 while in-app purchase is not switched on or its RevenueCat key is not configured. Writes nothing, so it is safe to repeat. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
+         */
+        post: operations["startAppStorePurchase"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/devices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Register a push device
+         * @description Register the Snapvisor iOS app's APNs device token for the authenticated user, so builds that need their review reach the phone. Safe to repeat: the same token registered again moves to the caller and refreshes its environment. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
+         */
+        post: operations["registerDevice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/devices/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Unregister a push device
+         * @description Stop sending pushes to an APNs device token registered by the authenticated user, as when they sign out of the iOS app. Removing a token that is not registered, or that belongs to someone else, changes nothing and still succeeds. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
+         */
+        delete: operations["unregisterDevice"];
         options?: never;
         head?: never;
         patch?: never;
@@ -315,7 +945,7 @@ export interface paths {
         put?: never;
         /**
          * Create a project
-         * @description Create a new project in an account you administer. The authenticated personal access token must be scoped to the target account, and the acting user must be an administrator of it.
+         * @description Create a new project in an account you administer. The authenticated personal access token must be scoped to the target account, and the acting user must be an administrator of it. Use it when the user wants to start visual testing for a new app or repository.
          */
         post: operations["createProject"];
         delete?: never;
@@ -333,9 +963,169 @@ export interface paths {
         };
         /**
          * Get a project
-         * @description Retrieve a project by its owner (account slug) and project name.
+         * @description Retrieve a project by its owner (account slug) and project name. Requires view access to the project. Use it when you need a project's details or settings, for example before changing them. Returns the project's settings including default base branch and auto-approve globs — useful for understanding how baselines are selected.
          */
         get: operations["getProject"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a project
+         * @description Update a project's settings. Only the fields present in the request are changed. Requires administrator access to the project. Use it when a project administrator asks to change a project's settings.
+         */
+        patch: operations["updateProject"];
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/automation-rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a project's automation rules
+         * @description List the automation rules of a project, most recent first. Requires administrator access to the project. Use it to see which actions, such as Slack messages, a project runs automatically on build events.
+         */
+        get: operations["listAutomationRules"];
+        put?: never;
+        /**
+         * Create an automation rule
+         * @description Create an automation rule on a project. Requires administrator access to the project. Action targets must belong to the project's account. Use it when the user wants a project to react automatically to build events, for example by posting to Slack.
+         */
+        post: operations["createAutomationRule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/automation-rules/{ruleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an automation rule
+         * @description Retrieve a single automation rule. Requires administrator access to the project. Use it when you need the full definition of one rule, for example before changing it.
+         */
+        get: operations["getAutomationRule"];
+        /**
+         * Update an automation rule
+         * @description Replace an automation rule's definition. Requires administrator access to the project. The whole definition is replaced, so send the events, conditions and actions you want the rule to end up with. Use it when an existing rule should fire on different events, conditions or actions.
+         */
+        put: operations["updateAutomationRule"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/automation-rules/{ruleId}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Deactivate an automation rule
+         * @description Stop a rule from firing. Rules are never deleted — a deactivated one keeps its run history, which is what tells you why something fired. Requires administrator access to the project. Use it when a rule should stop firing but its history should be kept.
+         */
+        post: operations["deactivateAutomationRule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/contributors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a project's contributors
+         * @description List the users explicitly granted access to a project, with their level. Team owners and members are not listed — they reach every project through their team role. The authenticated user comes first when they are one of them. Requires view access to the project. Use it to check who, beyond the team's owners and members, can access a project.
+         */
+        get: operations["listProjectContributors"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/contributors/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Grant a contributor access to a project
+         * @description Grant a user access to a project, or change the level they already hold. Requires administrator access to the project. Only meaningful for team contributors: owners and members already reach every project. Use it when a project administrator asks to give someone access to a single project, or to change that access.
+         */
+        put: operations["setProjectContributor"];
+        post?: never;
+        /**
+         * Revoke a contributor's access
+         * @description Revoke a user's access to a project. Requires administrator access to the project, except when removing yourself — a contributor can always walk away from a project. Use it when someone should lose access to a project, or wants to leave it.
+         */
+        delete: operations["removeProjectContributor"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/transfer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Transfer a project
+         * @description Move a project to another account, optionally renaming it. The token must be scoped to both accounts, and the acting user must administer the project as well as the account receiving it. Use it when a project should move to another team or personal account.
+         */
+        post: operations["transferProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a project's media
+         * @description List the standalone images and videos uploaded to a project, most recent first.
+         *
+         *     `branch` and `prNumber` are what this is usually for: everything uploaded for the work in hand, whether or not a pull request exists yet. `branch` covers both — a media keeps its branch after publishing — so it stays a single query across the moment the pull request opens.
+         *
+         *     Requires view access to the project. Use it to find everything uploaded for a branch or pull request.
+         */
+        get: operations["listMedia"];
         put?: never;
         post?: never;
         delete?: never;
@@ -353,11 +1143,97 @@ export interface paths {
         };
         /**
          * List a project's builds
-         * @description List the builds of a project, most recent first. Results are paginated. Use `search` to match builds by name, branch or commit, and `distinctName` to return only the latest build per name and commit.
+         * @description List the builds of a project, most recent first. Results are paginated. Use `search` to match builds by name, branch or commit, and `distinctName` to return only the latest build per name and commit. Requires view access to the project. Use it to find a build by branch, commit or name, or to see the latest builds of a project.
          */
         get: operations["listBuilds"];
         put?: never;
-        post?: never;
+        /**
+         * Create a build for a project
+         * @description Create a build and receive signed upload targets for its screenshots and Playwright traces. The response lists, for every file the server doesn't already have, a secure `postUrl` with `fields` to upload it to. After uploading, call **updateBuildForProject** to push the screenshot metadata and finalize the build.
+         *
+         *     **Agent workflow:** `createBuildForProject` → upload files to the returned URLs → `updateBuildForProject` (with `final: true`) → poll `getBuild` while `status` is `pending` or `progress` → on `changes-detected`, `listBuildDiffs` → `createReview`.
+         *
+         *     **Uploading is not a tool call:** send each file as a `multipart/form-data` POST to its `postUrl`, with every entry of `fields` as a form field and the file itself last, as `file`. That needs an environment that can make HTTP requests and read the screenshot files, such as a coding agent's shell.
+         *
+         *     **No shell?** A client that cannot make that POST can send each screenshot's bytes inline with `uploadScreenshotForProject` (one call per screenshot, base64) and then pass the returned `key`s (each with a `name`) to `updateBuildForProject` — the whole loop runs over tool calls alone, with no multipart upload.
+         *
+         *     **Baseline:** if the project has no connected Git repository, a build that sends no `referenceCommit` and whose `parentCommits` match nothing is compared against the latest approved build on its `referenceBranch` (the default base branch when unset), else the latest completed one. A `referenceCommit` with no build is never replaced: that build is compared against nothing. Simplest: call `findBaselineForProject` first and pass the returned build's `head.sha` as `referenceCommit` (and its branch as `referenceBranch`). The first build has no baseline; approve it and later builds compare against it.
+         *
+         *     Requires reviewer access to the project. Use it to start a visual test build for a project without a CI pipeline.
+         */
+        post: operations["createBuildForProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/captures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Capture screenshots of web pages
+         * @description Create a build from public web pages: Snapvisor opens each address in a browser, takes the screenshot itself and compares it with the previous build. Nothing to upload and no CI needed.
+         *
+         *     **Workflow:** `captureScreenshotsForProject` → poll `getBuild` while `status` is `pending` or `progress` (capturing takes a few seconds per page) → on `changes-detected`, `listBuildDiffs` shows what changed. If `status` is `error`, a page could not be captured: `getBuildCapture` names the page and the reason.
+         *
+         *     **Pages:** only addresses on the public internet; private, local and internal addresses are refused. Give every page a stable `name`: screenshots are compared by name. If one page cannot be captured, nothing is stored for the build.
+         *
+         *     Use it to check how a live or preview website looks when there are no screenshot files or CI pipeline, such as for a site built without code.
+         */
+        post: operations["captureScreenshotsForProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/builds/finalize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finalize parallel builds for a project
+         * @description Mark every parallel shard sharing the given `parallelNonce` as complete. Once finalized, the server compares the aggregated screenshots and starts processing the build.
+         *
+         *     Requires reviewer access to the project. Use it when all shards of a parallel build have been uploaded.
+         */
+        post: operations["finalizeProjectBuilds"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/baseline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find an eligible baseline for a project
+         * @description Find the build eligible to be used as a baseline among a list of ancestor commits. Useful when creating a build without a Git provider: send the candidate ancestor commits and the server picks the closest one with an eligible (complete, approved) baseline build.
+         *
+         *     **Agent workflow:** call this before `createBuildForProject` and pass the returned build's `head.sha` as its `referenceCommit`. Without a connected Git repository, a build that sends no `referenceCommit` and whose `parentCommits` match nothing compares against the latest build on its `referenceBranch`; a `referenceCommit` with no build compares against nothing.
+         *
+         *     Requires reviewer access to the project. Use it to discover which ancestor commit has an approved baseline build.
+         */
+        post: operations["findBaselineForProject"];
         delete?: never;
         options?: never;
         head?: never;
@@ -373,11 +1249,67 @@ export interface paths {
         };
         /**
          * Get a build
-         * @description Retrieve a single build by its number within a project, including its status and metadata.
+         * @description Retrieve a single build by its number within a project, including its status and metadata. Requires view access to the project. Use it when you have a build number and need its status, for example to check whether it still needs review.
+         *
+         *     **Polling for completion:** after creating and finalizing a build, poll this endpoint while `status` is `pending` or `progress` (processing is still running). It then settles on `no-changes` (nothing to review), `changes-detected` (diffs found — review needed), or `error`, `aborted` or `expired`. On `changes-detected`, call `listBuildDiffs` to inspect the individual screenshot diffs. A reviewed build reads `accepted` or `rejected`.
          */
         get: operations["getBuild"];
+        /**
+         * Update a build by number
+         * @description Add screenshots to an existing build and optionally finalize it. Resolves the build by its public number within the project.
+         *
+         *     Set `final: true` on the last request to finalize the build and start diff processing. For parallel builds, use `parallelIndex` and `parallelTotal` to identify shards.
+         *
+         *     Requires reviewer access to the project. Use it after uploading screenshots to push their metadata and close the build.
+         */
+        put: operations["updateBuildForProject"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/builds/{buildNumber}/capture": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the page capture of a build
+         * @description Get the outcome of the page capture behind a build created by `captureScreenshotsForProject`: its status, the reason it failed and which pages were affected, and the hosts that were blocked while loading the pages. Answers 404 for a build that was not created by a page capture.
+         *
+         *     Use it when such a build has `status` `error`, to tell the user which page failed and why, or when a captured page looks incomplete.
+         */
+        get: operations["getBuildCapture"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/builds/{buildNumber}/screenshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a screenshot's bytes to a build
+         * @description Add one screenshot to a build by sending its bytes inline, base64-encoded, in the request — no separate upload step and no shell. The server hashes the bytes, stores them, and returns the content hash as `key`.
+         *
+         *     Decoded size must be at most 700 KB; a larger image is rejected with 413.
+         *
+         *     Use it when an agent has a screenshot but no way to run a multipart upload: create a build with createBuildForProject, call this once per screenshot, then pass each returned `key` (with a `name`) to updateBuildForProject with `final: true` to run the diff.
+         */
+        post: operations["uploadScreenshotForProject"];
         delete?: never;
         options?: never;
         head?: never;
@@ -393,7 +1325,9 @@ export interface paths {
         };
         /**
          * List a build's screenshot diffs
-         * @description List the screenshot diffs of a build, with pagination. Each diff compares a baseline screenshot to the one captured by the build. Each diff also carries its test's flakiness metrics and, when it is a change, its ignore state and occurrence count — so you can tell whether a change is worth reviewing or is just a flaky one. Use `needsReview` to return only the diffs that require review.
+         * @description List the screenshot diffs of a build, with pagination. Each diff compares a baseline screenshot to the one captured by the build. Each diff also carries its test's flakiness metrics and, when it is a change, its ignore state and occurrence count — so you can tell whether a change is worth reviewing or is just a flaky one. Use `needsReview` to return only the diffs that require review. Requires view access to the project. Use it to see what visually changed in a build before reviewing it.
+         *
+         *     **Agent workflow:** call this after `getBuild` reports `changes-detected`. Inspect the diffs, then call `createReview` with `APPROVE` or `REJECT`.
          */
         get: operations["listBuildDiffs"];
         put?: never;
@@ -435,7 +1369,7 @@ export interface paths {
         put?: never;
         /**
          * Unignore a test change
-         * @description Stop ignoring a test change so its diffs require review again on future builds.
+         * @description Stop ignoring a test change so its diffs require review again on future builds. Use it when a change that was silenced should be reviewed again.
          */
         post: operations["unignoreChange"];
         delete?: never;
@@ -453,13 +1387,15 @@ export interface paths {
         };
         /**
          * List the reviews submitted on a build
-         * @description List the reviews submitted on a build, with pagination.
+         * @description List the reviews submitted on a build, with pagination. Use it to see who approved or rejected a build, and when. Also useful after `createReview` to verify a review was recorded, or to check if a build has already been reviewed before submitting a duplicate.
          */
         get: operations["listReviews"];
         put?: never;
         /**
          * Create a review on a build
-         * @description Submit a review on a build to approve or reject the changes it captured.
+         * @description Submit a review on a build to approve or reject the changes it captured. Use `APPROVE` to accept all changes as the new baseline, or `REJECT` to flag them for rework. Optionally pass per-screenshot decisions in `snapshots`. Confirm with the user first: the decision is reported to GitHub or GitLab, where it can unblock or block a merge.
+         *
+         *     Use it after reviewing diffs to approve or reject a build.
          */
         post: operations["createReview"];
         delete?: never;
@@ -475,10 +1411,90 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Get the GitHub pull request for a commit
+         * @description Look up, on GitHub, the pull request that contains a commit of a repository connected to Snapvisor, with its number, title, state, link and changed files. Use it when you have a commit SHA, for example from a build, and need the pull request it belongs to. Accepts a personal access token only; OAuth connections are refused.
+         */
         get: operations["getRepoCommitPulls"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/builds/{buildNumber}/reviewers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a build's requested reviewers
+         * @description List the users currently requested to review a build. Requires view access to the project. Use it to check who has been asked to review a build. Check this before `addBuildReviewers` to avoid redundant requests.
+         */
+        get: operations["listBuildReviewers"];
+        put?: never;
+        /**
+         * Request reviewers on a build
+         * @description Ask users to review a build. Each newly-requested reviewer is notified. Idempotent: users already requested are left untouched and not notified again. Users without access to the project are ignored, and you cannot request yourself. Use it when the user wants specific teammates to review a build.
+         */
+        post: operations["addBuildReviewers"];
+        /**
+         * Cancel review requests on a build
+         * @description Cancel the review requests standing on a build. Removing a user that was not requested is a no-op. Use it when a review request is no longer needed.
+         */
+        delete: operations["removeBuildReviewers"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/builds/{buildNumber}/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Subscribe to a build
+         * @description Start receiving notifications about a build — new comments, reviews, and status changes. Clears a previous explicit unsubscription. Use it when the user wants to follow a build they are not already notified about.
+         */
+        post: operations["subscribeBuild"];
+        /**
+         * Unsubscribe from a build
+         * @description Stop receiving notifications about a build. Recorded as an intentional unsubscription, so Snapvisor will not auto-subscribe you to it again. Use it when the user no longer wants notifications about a build.
+         */
+        delete: operations["unsubscribeBuild"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Subscribe to a test
+         * @description Start receiving notifications about a test — new comments and the changes it produces. Clears a previous explicit unsubscription. Use it when the user wants to follow a test they are not already notified about.
+         */
+        post: operations["subscribeTest"];
+        /**
+         * Unsubscribe from a test
+         * @description Stop receiving notifications about a test. Recorded as an intentional unsubscription, so Snapvisor will not auto-subscribe you to it again. Use it when the user no longer wants notifications about a test.
+         */
+        delete: operations["unsubscribeTest"];
         options?: never;
         head?: never;
         patch?: never;
@@ -495,7 +1511,7 @@ export interface paths {
         put?: never;
         /**
          * Dismiss a submitted review on a build
-         * @description Dismiss a previously submitted review on a build, clearing its effect on the build's review status.
+         * @description Dismiss a previously submitted review on a build, clearing its effect on the build's review status. Use it when a review was submitted by mistake or no longer reflects the build.
          */
         post: operations["dismissReview"];
         delete?: never;
@@ -513,15 +1529,15 @@ export interface paths {
         };
         /**
          * List the comments on a build
-         * @description List the comments on a build, with pagination.
+         * @description List the comments on a build. Use it to read the review discussion on a build.
          */
-        get: operations["listComments"];
+        get: operations["listBuildComments"];
         put?: never;
         /**
          * Post a comment (or reply) on a build
-         * @description Post a comment on a build. Start a new thread, reply to an existing one with `threadId`, optionally anchor the comment to a screenshot diff, or attach it to your pending review with `addToReview`.
+         * @description Post a comment on a build. Start a new thread, reply to an existing one with `threadId`, optionally anchor the comment to a screenshot diff, or attach it to your pending review with `addToReview`. Use it when the user wants to leave feedback on a build or on a specific screenshot diff.
          */
-        post: operations["createComment"];
+        post: operations["createBuildComment"];
         delete?: never;
         options?: never;
         head?: never;
@@ -537,23 +1553,23 @@ export interface paths {
         };
         /**
          * Get a single comment on a build
-         * @description Retrieve a single comment on a build by its ID.
+         * @description Retrieve a single comment on a build by its ID. Use it when you have a comment ID and need its full content.
          */
-        get: operations["getComment"];
+        get: operations["getBuildComment"];
         put?: never;
         post?: never;
         /**
          * Delete a comment on a build
-         * @description Delete a comment on a build. Only the comment's author can delete it.
+         * @description Delete a comment on a build. Only the comment's author can delete it. Use it when the author asks to remove their own comment.
          */
-        delete: operations["deleteComment"];
+        delete: operations["deleteBuildComment"];
         options?: never;
         head?: never;
         /**
          * Update a comment on a build
-         * @description Update the body of a comment on a build. Only the comment's author can edit it.
+         * @description Update the body of a comment on a build. Only the comment's author can edit it. Use it when the author wants to correct or reword their own comment.
          */
-        patch: operations["updateComment"];
+        patch: operations["updateBuildComment"];
         trace?: never;
     };
     "/projects/{owner}/{project}/builds/{buildNumber}/comments/{commentId}/reactions": {
@@ -566,15 +1582,15 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Add an emoji reaction to a comment
-         * @description Add an emoji reaction to a comment on behalf of the authenticated user.
+         * Add an emoji reaction to a comment on a build
+         * @description Add an emoji reaction to a comment on a build, on behalf of the authenticated user. Use it to acknowledge a comment with an emoji rather than a reply.
          */
-        post: operations["addCommentReaction"];
+        post: operations["addBuildCommentReaction"];
         /**
-         * Remove an emoji reaction from a comment
-         * @description Remove an emoji reaction previously added by the authenticated user from a comment.
+         * Remove an emoji reaction from a comment on a build
+         * @description Remove an emoji reaction previously added by the authenticated user from a comment on a build. Use it to take back an emoji reaction added by mistake.
          */
-        delete: operations["removeCommentReaction"];
+        delete: operations["removeBuildCommentReaction"];
         options?: never;
         head?: never;
         patch?: never;
@@ -590,10 +1606,10 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Mark a comment thread as resolved
-         * @description Mark a comment thread as resolved.
+         * Mark a build comment thread as resolved
+         * @description Mark a comment thread on a build as resolved. Use it when the feedback in a thread has been addressed.
          */
-        post: operations["resolveCommentThread"];
+        post: operations["resolveBuildCommentThread"];
         delete?: never;
         options?: never;
         head?: never;
@@ -610,10 +1626,10 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Reopen a resolved comment thread
-         * @description Reopen a previously resolved comment thread.
+         * Reopen a resolved build comment thread
+         * @description Reopen a previously resolved comment thread on a build. Use it when a resolved thread needs more discussion.
          */
-        post: operations["unresolveCommentThread"];
+        post: operations["unresolveBuildCommentThread"];
         delete?: never;
         options?: never;
         head?: never;
@@ -630,15 +1646,279 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Subscribe to a comment thread's notifications
-         * @description Subscribe the authenticated user to a comment thread to receive notifications about new replies.
+         * Subscribe to a build comment thread's notifications
+         * @description Subscribe the authenticated user to a comment thread on a build to receive notifications about new replies. Use it when the user wants to follow replies to a thread they have not taken part in.
          */
-        post: operations["subscribeCommentThread"];
+        post: operations["subscribeBuildCommentThread"];
         /**
-         * Unsubscribe from a comment thread's notifications
-         * @description Unsubscribe the authenticated user from a comment thread's notifications.
+         * Unsubscribe from a build comment thread's notifications
+         * @description Unsubscribe the authenticated user from a build comment thread's notifications. Use it when the user no longer wants notifications for a thread.
          */
-        delete: operations["unsubscribeCommentThread"];
+        delete: operations["unsubscribeBuildCommentThread"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a project's tests
+         * @description List the tests currently running in a project, flakiest first. A test is listed when it appeared in the latest reference build of its build name — tests that were deleted, renamed or skipped drop out. Requires view access to the project. Use it to find what to stabilise: the first page is the project's flakiness backlog.
+         */
+        get: operations["listTests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/deployments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a project's deployments
+         * @description List a project's deployments, most recent first. Use `environment` to keep only the production ones — the deployments that answer "what is live right now?". Requires view access to the project. Use it to find what is deployed for a project, or the address of a deployment.
+         */
+        get: operations["listProjectDeployments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/domain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a project's deployment domain
+         * @description Retrieve the domain the project's production deployments are served on. Requires view access to the project. Use it to find the address a project's production deployments are served on.
+         */
+        get: operations["getProjectDomain"];
+        /**
+         * Set a project's deployment domain
+         * @description Set the domain the project's production deployments are served on. Requires administrator access to the project. Only domains under the Snapvisor deployments domain are accepted, and reserved slugs are refused. Use it when a project administrator asks to change that address.
+         */
+        put: operations["updateProjectDomain"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/ignored-changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a project's ignored changes
+         * @description List the changes currently ignored in a project, most recently ignored first. Requires view access to the project. Use it to audit what has been silenced and to unignore anything that should be reviewed again.
+         */
+        get: operations["listIgnoredChanges"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a test and its flakiness metrics
+         * @description Get a test with its flakiness metrics over a period: how many builds ran it, how many times it changed, and how stable and consistent those changes were. The metrics also come bucketed over time, so you can tell a test that has always been flaky from one that started recently. Pair it with `listTestChanges` to see what actually keeps changing. Requires view access to the project. Use it when asked whether a test is flaky, or since when.
+         */
+        get: operations["getTest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List a test's changes
+         * @description List the distinct changes a test produced over a period, the ones that came back most often first. Each change is one exact visual difference, with how many times it reappeared, whether it is ignored, and the diff of its latest occurrence — so you can look at what moved. A change that keeps reappearing while nothing in the UI changed is a flaky one: fix what makes it unstable, or silence it with `ignoreChange`. Requires view access to the project. Use it to see what keeps changing in a flaky test.
+         */
+        get: operations["listTestChanges"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the comments on a test
+         * @description List the comments on a test. Use it to read the review discussion on a test.
+         */
+        get: operations["listTestComments"];
+        put?: never;
+        /**
+         * Post a comment (or reply) on a test
+         * @description Post a comment on a test. Start a new thread, or reply to an existing one with `threadId`. Use it when the user wants to leave feedback on a test.
+         */
+        post: operations["createTestComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/comments/{commentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a single comment on a test
+         * @description Retrieve a single comment on a test by its ID. Use it when you have a comment ID and need its full content.
+         */
+        get: operations["getTestComment"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a comment on a test
+         * @description Delete a comment on a test. Only the comment's author can delete it. Use it when the author asks to remove their own comment.
+         */
+        delete: operations["deleteTestComment"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a comment on a test
+         * @description Update the body of a comment on a test. Only the comment's author can edit it. Use it when the author wants to correct or reword their own comment.
+         */
+        patch: operations["updateTestComment"];
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/comments/{commentId}/reactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add an emoji reaction to a comment on a test
+         * @description Add an emoji reaction to a comment on a test, on behalf of the authenticated user. Use it to acknowledge a comment with an emoji rather than a reply.
+         */
+        post: operations["addTestCommentReaction"];
+        /**
+         * Remove an emoji reaction from a comment on a test
+         * @description Remove an emoji reaction previously added by the authenticated user from a comment on a test. Use it to take back an emoji reaction added by mistake.
+         */
+        delete: operations["removeTestCommentReaction"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/comments/{commentId}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a test comment thread as resolved
+         * @description Mark a comment thread on a test as resolved. Use it when the feedback in a thread has been addressed.
+         */
+        post: operations["resolveTestCommentThread"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/comments/{commentId}/unresolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reopen a resolved test comment thread
+         * @description Reopen a previously resolved comment thread on a test. Use it when a resolved thread needs more discussion.
+         */
+        post: operations["unresolveTestCommentThread"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/tests/{testId}/comments/{commentId}/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Subscribe to a test comment thread's notifications
+         * @description Subscribe the authenticated user to a comment thread on a test to receive notifications about new replies. Use it when the user wants to follow replies to a thread they have not taken part in.
+         */
+        post: operations["subscribeTestCommentThread"];
+        /**
+         * Unsubscribe from a test comment thread's notifications
+         * @description Unsubscribe the authenticated user from a test comment thread's notifications. Use it when the user no longer wants notifications for a thread.
+         */
+        delete: operations["unsubscribeTestCommentThread"];
         options?: never;
         head?: never;
         patch?: never;
@@ -648,6 +1928,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * @description Role given to users that join a team through its invite link or a verified email domain.
+         * @enum {string}
+         */
+        TeamDefaultUserLevel: "member" | "contributor";
+        /**
+         * @description Role of a user on a team. Owners administer the team, members see every project, contributors only the projects they are added to.
+         * @enum {string}
+         */
+        TeamUserLevel: "owner" | "member" | "contributor";
+        /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+        CommentId: string;
+        /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+        ThreadCommentId: string;
         /** @description SHA1 hash */
         Sha1Hash: string;
         GitBranch: string;
@@ -659,6 +1953,48 @@ export interface components {
             /** @description Content type of the snapshot file */
             contentType: string;
         };
+        /** @description An S3 POST-object style form: the fields, then one file part named `file`. Before the file part, more than 20 fields or a value over 4096 bytes is a 400, and so is a first file part with another name. Fields and extra file parts sent after the file part are ignored. */
+        UploadObjectRequest: {
+            /** @description The `Content-Type` value from the `fields` returned by `createBuild` or `createMedia`. Must equal the content type the policy was signed for (the proxied analogue of S3 POST-object's `eq $Content-Type` condition), otherwise 400. */
+            "Content-Type": string;
+            /** @description The opaque, HMAC-signed `policy` token from the same `fields`. It pins the destination key, content type, maximum size and expiry, and is the only authorization this route checks: missing, expired or wrongly signed is a 403, structurally malformed a 400. A policy works once: a second upload with it is a 409. */
+            policy: string;
+            /**
+             * Format: binary
+             * @description The file bytes, sent as the last part. Between 1 byte (an empty file is a 400) and the maximum size pinned in the policy (a 413 above it). The part's own Content-Type header is not checked.
+             */
+            file: string;
+        };
+        /** @description The `upload.fields` returned by `createMedia`, plus the size of the file. */
+        StartMultipartUploadRequest: {
+            /** @description The `Content-Type` value from the `upload.fields` returned by `createMedia`. Must equal the content type the policy was signed for, otherwise 400. */
+            "Content-Type": string;
+            /** @description The signed `policy` from the same `upload.fields`. It is the only authorization: wrongly signed or expired is a 403, structurally malformed a 400. */
+            policy: string;
+            /** @description Total size of the file in bytes. Must equal the `size` declared to `createMedia` (400 otherwise) and stay within the plan's maximum file size (413 above it). */
+            size: number;
+        };
+        /** @description Assemble the uploaded parts into the object. */
+        CompleteMultipartUploadRequest: {
+            /** @description The signed `session` token returned when the multipart upload was started. */
+            session: string;
+            /** @description Every part response, in order from part 1 to `partCount`. A missing or out-of-order part is a 400. */
+            parts: components["schemas"]["UploadedMultipartPart"][];
+        };
+        /** @description One stored part. Send it back unchanged when completing the upload. */
+        UploadedMultipartPart: {
+            /** @description 1-based number of the part. */
+            partNumber: number;
+            /** @description The part's ETag, as returned when it was uploaded. */
+            etag: string;
+            /** @description The part's checksum, as returned when it was uploaded (`null` when the store computed none). */
+            checksumCRC32: string | null;
+        };
+        /** @description Discard an unfinished multipart upload and its parts. */
+        AbortMultipartUploadRequest: {
+            /** @description The signed `session` token returned when the multipart upload was started. */
+            session: string;
+        };
         /**
          * @description A unique identifier for the build
          * @example 12345
@@ -668,12 +2004,20 @@ export interface components {
         ScreenshotInput: {
             key: string;
             name: string;
-            baseName?: string | null;
+            /**
+             * @description Name(s) to compare this screenshot against, instead of its own name. An array is tried in order: the first name that exists in the baseline wins, which lets a new screenshot fall back to an existing one.
+             * @example home.png
+             * @example [
+             *       "home-variant-b.png",
+             *       "home.png"
+             *     ]
+             */
+            baseName?: (string | string[]) | null;
             parentName?: string | null;
             metadata?: {
                 /**
                  * @description Ignored. Can be set to get completions, validations and documentation in some editors.
-                 * @example https://api.argos-ci.com/v2/screenshot-metadata.json
+                 * @example https://api.snapvisor.io/v2/screenshot-metadata.json
                  */
                 $schema?: string;
                 /** @description The URL of the page that was screenshotted */
@@ -744,11 +2088,11 @@ export interface components {
                     /** @description The version of the automation library */
                     version: string;
                 };
-                /** @description The Argos SDK that generated the screenshot */
+                /** @description The SDK that generated the screenshot */
                 sdk: {
-                    /** @description The name of the Argos SDK */
+                    /** @description The name of the SDK */
                     name: string;
-                    /** @description The version of the Argos SDK */
+                    /** @description The version of the SDK */
                     version: string;
                 };
                 /** @description Storybook story metadata */
@@ -788,10 +2132,157 @@ export interface components {
             };
         };
         /**
+         * @description When to post the summary check on a pull request: `always`, `never`, or `auto` (only once the project has a baseline).
+         * @enum {string}
+         */
+        SummaryCheck: "always" | "never" | "auto";
+        /**
+         * @description Access level given to team members that are not explicit contributors on the project. `null` means they get no access.
+         * @enum {string}
+         */
+        ProjectUserLevel: "admin" | "reviewer" | "viewer";
+        /** @description How flaky changes are ignored on a project. */
+        IgnoreConfig: {
+            /** @description Whether changes can be ignored on this project. */
+            enabled: boolean;
+            /** @description Auto-ignore settings, `null` when auto-ignore is off. */
+            autoIgnore: {
+                /** @description Number of times a change must reappear before it is ignored automatically. */
+                changes: number;
+            } | null;
+        };
+        /**
+         * @description Who can reach the project's deployments: anyone (`public`), anyone with the domain (`domain-private`), or team members only (`private`, teams only).
+         * @enum {string}
+         */
+        DeploymentAuth: "public" | "domain-private" | "private";
+        /**
+         * @description An event an automation rule can react to.
+         * @enum {string}
+         */
+        AutomationEvent: "build.completed" | "build.reviewed";
+        /** @description A condition narrowing when a rule fires. Conditions are combined with AND; wrap one in `{ not: … }` to negate it, or `{ glob: … }` to match a branch by pattern. */
+        AutomationCondition: (({
+            /** @constant */
+            type: "build-branch";
+            value: string;
+        } | {
+            /** @constant */
+            type: "build-conclusion";
+            value: ("no-changes" | "changes-detected") | null;
+        } | {
+            /** @constant */
+            type: "build-mode";
+            value: ("ci" | "monitoring") | null;
+        } | {
+            /** @constant */
+            type: "build-name";
+            value: string;
+        } | {
+            /** @constant */
+            type: "build-type";
+            value: ("reference" | "check" | "orphan" | "skipped") | null;
+        }) | {
+            glob: {
+                /** @constant */
+                type: "build-branch";
+                value: string;
+            };
+        }) | {
+            not: ({
+                /** @constant */
+                type: "build-branch";
+                value: string;
+            } | {
+                /** @constant */
+                type: "build-conclusion";
+                value: ("no-changes" | "changes-detected") | null;
+            } | {
+                /** @constant */
+                type: "build-mode";
+                value: ("ci" | "monitoring") | null;
+            } | {
+                /** @constant */
+                type: "build-name";
+                value: string;
+            } | {
+                /** @constant */
+                type: "build-type";
+                value: ("reference" | "check" | "orphan" | "skipped") | null;
+            }) | {
+                glob: {
+                    /** @constant */
+                    type: "build-branch";
+                    value: string;
+                };
+            };
+        };
+        /** @description An action to run. Slack channels are addressed by `slackId` when known, otherwise by `name`; Teams and Discord by the id of a webhook registered on the project's account. */
+        AutomationActionInput: {
+            /** @constant */
+            type: "sendSlackMessage";
+            payload: {
+                /** @default  */
+                slackId: string;
+                name: string;
+            };
+        } | {
+            /** @constant */
+            type: "sendMsTeamsMessage";
+            payload: {
+                webhookId: string;
+            };
+        } | {
+            /** @constant */
+            type: "sendDiscordMessage";
+            payload: {
+                webhookId: string;
+            };
+        };
+        /**
          * @description The build number
          * @example 42
          */
         BuildNumberParam: string;
+        /**
+         * @description The test identifier, as returned in a diff's `test.id`
+         * @example WEB-xf23d
+         */
+        TestId: string;
+        /** @description An account with its plan and current-period usage, to watch consumption against the plan. */
+        AccountDetails: {
+            id: string;
+            slug: string;
+            name: string | null;
+            /** @enum {string} */
+            type: "user" | "team";
+            /** @description The account's plan, `null` when it has none. */
+            plan: {
+                name: string;
+                includedScreenshots: number;
+            } | null;
+            /** @description Start of the current billing period. */
+            periodStartDate: string | null;
+            /** @description End of the current billing period. */
+            periodEndDate: string | null;
+            /** @description Screenshots used since the start of the current period. */
+            currentPeriodScreenshots: number;
+            /** @description Screenshots included in the plan for a period. */
+            includedScreenshots: number;
+            /** @description Used screenshots over included screenshots. Above `1` the account is over its plan and pays for the extra. */
+            consumptionRatio: number;
+            /** @description Cost accrued so far this period for screenshots beyond the plan, in the subscription's currency. */
+            additionalScreenshotsCost: number;
+            /** @description Role given to users joining through the invite link or a verified domain. `null` on a personal account. */
+            defaultUserLevel: components["schemas"]["TeamDefaultUserLevel"] | null;
+        };
+        /** @description Error response */
+        Error: {
+            error: string;
+            details?: {
+                message: string;
+            }[];
+        };
         AccountAnalytics: {
             screenshots: {
                 series: {
@@ -846,13 +2337,6 @@ export interface components {
                 }[];
             };
         };
-        /** @description Error response */
-        Error: {
-            error: string;
-            details?: {
-                message: string;
-            }[];
-        };
         /** @description Page information */
         PageInfo: {
             /** @description Total number of items */
@@ -869,11 +2353,228 @@ export interface components {
             name: string;
             defaultBaseBranch: string;
             hasRemoteContentAccess: boolean;
+            /** @description Glob matching the branches whose builds are approved automatically. */
+            autoApprovedBranchGlob: string;
+            /** @description Glob matching the branches whose deployments are treated as production. */
+            deploymentProductionBranchGlob: string;
+            /** @description Whether the project is private. Resolved from the linked repository unless overridden. */
+            private: boolean;
+            summaryCheck: components["schemas"]["SummaryCheck"];
+            /** @description Whether the app comments on pull requests. */
+            prCommentEnabled: boolean;
+            /** @description Whether builds can authenticate with a GitHub Actions OIDC token instead of a project token. */
+            githubActionsOidcEnabled: boolean;
+            /** @description Whether builds from forked pull requests can be uploaded without a token. */
+            tokenlessAuthEnabled: boolean;
+            /** @description Whether deployments are served for this project. */
+            deploymentEnabled: boolean;
+            deploymentAuth: components["schemas"]["DeploymentAuth"];
+            defaultUserLevel: components["schemas"]["ProjectUserLevel"] | null;
+            ignoreConfig: components["schemas"]["IgnoreConfigOutput"];
         };
         /** @description Account */
         Account: {
             id: string;
             slug: string;
+        };
+        /** @description A member of a team. */
+        TeamMember: {
+            /** @description Identifier of the membership, not of the user. */
+            id: string;
+            user: components["schemas"]["User"];
+            level: components["schemas"]["TeamUserLevel"];
+        };
+        /** @description A user. */
+        User: {
+            id: string;
+            slug: string;
+            name: string | null;
+        };
+        /** @description A pending invitation to join a team. */
+        TeamInvite: {
+            id: string;
+            /** Format: email */
+            email: string;
+            level: components["schemas"]["TeamUserLevel"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** @description Whether the invite is past its expiry date. Expired invites stay listed until they are cancelled or re-sent. */
+            expired: boolean;
+        };
+        /** @description An email domain the team is open to: anyone signing up with a verified address on it joins automatically, at the team's default role. */
+        TeamDomain: {
+            domain: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        InviteLink: {
+            /**
+             * Format: uri
+             * @description The team's new shared invite link. Anyone with it joins at the team's default role.
+             */
+            inviteLink: string;
+        };
+        /** @description A standalone image or video uploaded to Snapvisor */
+        Media: {
+            /** @description Unique identifier of the media */
+            id: string;
+            /** @description The media's name, and its identity within its pull request. Uploading the same name again adds a version. */
+            name: string;
+            state: ("before" | "after") | null;
+            /** @description Prose shown under the media in the pull request comment. */
+            description: string | null;
+            /**
+             * @description `staged` while the media is only attached to a branch, `published` once a pull request is attached and the media is listed in that pull request's comment. A media attached to neither is `staged`.
+             * @enum {string}
+             */
+            stage: "staged" | "published";
+            /** @description Branch this media was uploaded for. Kept after publishing, as a record of where it came from. */
+            branch: string | null;
+            /** @description Pull request this media is published to, or `null` while it is staged. */
+            prNumber: number | null;
+            /**
+             * Format: uri
+             * @description Share page URL. This is the link to put in a pull request or a chat message, and it keeps working across versions — it always shows the newest one.
+             */
+            url: string;
+            /** @description Ready-to-paste Markdown: the picture — the image itself, or a video's poster frame — embedded from the CDN and linked to the share page. Embed this rather than building your own from `url`: that is an HTML page, and an image embed pointing at it renders as a broken image. */
+            markdown: string;
+            /** @description Which version this response describes: 1 for a first upload, incrementing each time the same name is uploaded again. */
+            version: number;
+            /** @description How many uploaded versions this media has. Above 1, `GET /media/{mediaId}/versions` lists them — which is how a comment's `mediaVersionId` resolves to the file it was written against. */
+            versionCount: number;
+            /**
+             * Format: uri
+             * @description URL of the image or video itself, for an agent that wants to look at it.
+             */
+            fileUrl: string;
+            /** @description Poster frame of a video, derived by the image CDN. Always `null` for images. */
+            posterUrl: string | null;
+            /** @description Content type of the media */
+            contentType: string;
+            /** @description Size of the media, in bytes */
+            sizeBytes: number;
+            /** @description Width, in pixels */
+            width: number | null;
+            /** @description Height, in pixels */
+            height: number | null;
+            /**
+             * @description Who can open the media share page. `team` requires a signed-in session with access to the owning account; `public` only requires the share URL.
+             * @enum {string}
+             */
+            visibility: "team" | "public";
+            /**
+             * @description `pending` until the bytes are uploaded, then `ready`. There is no processing step — Snapvisor serves the bytes it was given.
+             * @enum {string}
+             */
+            status: "pending" | "ready";
+            /** @description When this version is deleted. Set from your plan's retention, counted from the upload rather than from the last view. */
+            expiresAt: string | null;
+            createdAt: string;
+        };
+        /** @description Signed upload target */
+        MediaUploadTarget: {
+            /**
+             * Format: uri
+             * @description URL to POST the file to, as `multipart/form-data`.
+             */
+            url: string;
+            /** @description Form fields that must be appended **before** the file part, in order, for the upload to be accepted. */
+            fields: {
+                [key: string]: string;
+            };
+            /** @description Where to upload a large file in parts instead, or `null` when `url` goes straight to the object store and takes the whole file in one request. */
+            multipart: {
+                /**
+                 * Format: uri
+                 * @description URL to start the multipart upload at: `POST` it the `fields` above plus the file's `size`, as JSON. Then `PUT` each part's raw bytes to `{url}/parts/{partNumber}` with the returned `session` in the `x-upload-session` header, and `POST` the session and every part response, in order, to `{url}/complete` (or the session to `{url}/abort`).
+                 */
+                url: string;
+                /** @description Bytes in every part but the last. A file larger than this must be uploaded in parts: the single `POST` to `url` goes through an edge that refuses request bodies over 100 MB. */
+                partSize: number;
+            } | null;
+        };
+        /** @description One uploaded version of a media */
+        MediaVersion: {
+            /** @description Unique identifier of this version — what a comment's `mediaVersionId` points at. */
+            id: string;
+            /** @description 1-based, and what the UI calls the version. Increments each time the same name is uploaded again. */
+            number: number;
+            /**
+             * Format: uri
+             * @description URL of the image or video as it was at this version.
+             */
+            fileUrl: string;
+            /** @description Poster frame of a video. Always `null` for images. */
+            posterUrl: string | null;
+            contentType: string;
+            sizeBytes: number;
+            width: number | null;
+            height: number | null;
+            /** @description When this version is deleted. Retention applies per version, so an old one ages out while the media and its share URL live on. */
+            expiresAt: string | null;
+            createdAt: string;
+        };
+        /** @description A comment posted on a build or on a test. */
+        Comment: {
+            /** @description Public ID of the comment (e.g. `comment-xf23d`) — the one the app links to, and the one every endpoint taking a comment ID expects. */
+            id: string;
+            /** @description Build this comment is posted on, null when it is posted on a test. */
+            buildId: string | null;
+            /** @description Test this comment is posted on, null when it is posted on a build. */
+            testId: string | null;
+            /** @description Media this comment is posted on, null when it is posted on a build or a test. */
+            mediaId: string | null;
+            /** @description Version of the media the comment was written against. A pin describes a spot on the bytes its author was looking at, so feedback on an older upload has to be read against that upload — match this id against `GET /media/{mediaId}/versions` to get the right file. */
+            mediaVersionId: string | null;
+            /** @description Root comment ID when this comment is a reply. */
+            threadId: string | null;
+            /** @description Rich-text JSON content of the comment. */
+            body: unknown;
+            /** @description Plain-text rendering of the comment content. */
+            text: string;
+            author: components["schemas"]["User"] | null;
+            /** @description The coding agent that posted the comment on the author's behalf. Null when the author posted it directly. */
+            agent: components["schemas"]["Agent"] | null;
+            /** @description Screenshot diff this comment is anchored to, if any. */
+            screenshotDiffId: string | null;
+            /** @description Where the comment points on its screenshot diff. Null means the whole diff. */
+            anchor: ({
+                /** @constant */
+                type: "point";
+                x: number;
+                y: number;
+            } | {
+                /** @constant */
+                type: "lines";
+                from: number;
+                to: number;
+            }) | null;
+            /** @description Whether the comment belongs to a pending (unsubmitted) review and is only visible to its author. */
+            pending: boolean;
+            /** @description Date the thread was resolved, null if not resolved. Only set on a root comment. */
+            resolvedAt: string | null;
+            /** @description Date the comment was last edited, null if never edited. */
+            editedAt: string | null;
+            /** @description Date the comment was posted. */
+            createdAt: string;
+            reactions: {
+                /** @description The emoji used for the reaction. */
+                emoji: string;
+                /** @description Number of users who reacted with this emoji. */
+                count: number;
+                /** @description The users who reacted with this emoji. */
+                users: components["schemas"]["User"][];
+            }[];
+        };
+        /** @description A coding agent acting on behalf of a user. */
+        Agent: {
+            /** @description Stable id of the agent, e.g. `claude-code`. `unknown` when it could not be identified. */
+            id: string;
+            /** @description Name to display, e.g. `Claude Code`. Null for an agent we cannot name. */
+            name: string | null;
         };
         /** @description Build */
         Build: {
@@ -939,6 +2640,11 @@ export interface components {
                     /** @enum {string} */
                     state: "pending" | "running" | "success" | "failed" | "canceled";
                 };
+                origin: {
+                    /** @enum {string} */
+                    status: "queued" | "in_progress" | "completed";
+                    conclusion: ("success" | "failure") | null;
+                };
                 /** Format: uri */
                 url: string;
             } | null;
@@ -954,6 +2660,40 @@ export interface components {
             sha: components["schemas"]["Sha1Hash"];
             /** @description The branch name */
             branch: string;
+        };
+        ImageDiffVerdict: {
+            /** @description True when Snapvisor would flag the pair as a visual change. */
+            changed: boolean;
+            /** @description Share of the pixels that changed, 0 to 1, after the noise floors (0 when unchanged). */
+            score: number;
+            /** @description `score` as a percentage, two decimals. */
+            percentChanged: number;
+            /** @description The sensitivity used, 0 to 1 (lower finds more). */
+            threshold: number;
+            /** @description Width of the canvas both images were compared on. */
+            width: number;
+            height: number;
+            /** @constant */
+            engine: "odiff";
+            docs: string;
+        };
+        /** @description RFC 9457 problem details */
+        Problem: {
+            type: string;
+            title: string;
+            status: number;
+            detail: string;
+        };
+        /** @description A started multipart upload */
+        StartMultipartUploadResponse: {
+            /** @description Signed token for this upload. Send it as the `x-upload-session` header on every part, and in the body of complete or abort. */
+            session: string;
+            /** @description Bytes in every part except the last, which holds the remainder. */
+            partSize: number;
+            /** @description How many parts the file must be sent in. */
+            partCount: number;
+            /** @description When the session stops accepting parts and completion. */
+            expiresAt: string;
         };
         /** @description Authenticated user, their accessible accounts, and GitHub linkage */
         Me: {
@@ -980,6 +2720,78 @@ export interface components {
         MeGithub: {
             connected: boolean;
             login: string | null;
+        };
+        /** @description The account deletion request was accepted */
+        AccountDeletionRequest: {
+            /**
+             * @description Always `true`: the confirmation email was sent. Nothing is deleted until the link in it is opened.
+             * @constant
+             */
+            requested: true;
+        };
+        /** @description The team may buy Snapvisor Pro through the iOS app */
+        AppStorePurchase: {
+            /** @description The RevenueCat app user id the purchase must be made under, so the store sale lands on this team. */
+            appUserId: string;
+            /**
+             * @description The entitlement the purchase grants.
+             * @constant
+             */
+            entitlement: "pro";
+            /** @description The RevenueCat public SDK key (appl_…) of the App Store app, for the app to configure the SDK with. Public by design; delivered here so it never ships in the app binary. */
+            publicApiKey: string;
+        };
+        /** @description A push device registered for the authenticated user */
+        Device: {
+            token: string;
+            /** @enum {string} */
+            environment: "sandbox" | "production";
+        };
+        /** @description A rule that runs actions when a build event matches its conditions. */
+        AutomationRule: {
+            id: string;
+            name: string;
+            /** @description Whether the rule still fires. Deactivated rules keep their run history. */
+            active: boolean;
+            events: components["schemas"]["AutomationEvent"][];
+            conditions: components["schemas"]["AutomationConditionOutput"][];
+            /** @description The actions as stored, with their targets already resolved (a Slack channel id, a webhook id). */
+            actions: {
+                action: string;
+                actionPayload: {
+                    [key: string]: unknown;
+                };
+            }[];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /** @description A contributor explicitly granted access to a project. Team owners and members reach every project without appearing here. */
+        ProjectContributor: {
+            /** @description Identifier of the grant, not of the user. */
+            id: string;
+            user: components["schemas"]["User"];
+            level: components["schemas"]["ProjectUserLevel"];
+        };
+        BuildCapture: {
+            /**
+             * @description `pending` or `progress` while the pages are being captured, `complete` once every screenshot is stored, `error` when no screenshot was stored (see `error`).
+             * @enum {string}
+             */
+            status: "pending" | "progress" | "complete" | "error" | "aborted";
+            /** @description Why the capture failed, naming each page that could not be captured and the reason. Null unless `status` is `error`. */
+            error: string | null;
+            /** @description The pages as requested, defaults filled in. */
+            pages: {
+                name: string;
+                url: string;
+                width: number;
+                height: number;
+                fullPage: boolean;
+            }[];
+            /** @description Hosts the pages tried to load that are not on the public internet and were blocked, such as an analytics or font server on a private address. A page can look incomplete because of them. */
+            refusedHosts: string[];
         };
         /** @description Snapshot diff */
         SnapshotDiff: {
@@ -1008,7 +2820,7 @@ export interface components {
                 metadata: {
                     /**
                      * @description Ignored. Can be set to get completions, validations and documentation in some editors.
-                     * @example https://api.argos-ci.com/v2/screenshot-metadata.json
+                     * @example https://api.snapvisor.io/v2/screenshot-metadata.json
                      */
                     $schema?: string;
                     /** @description The URL of the page that was screenshotted */
@@ -1079,11 +2891,11 @@ export interface components {
                         /** @description The version of the automation library */
                         version: string;
                     };
-                    /** @description The Argos SDK that generated the screenshot */
+                    /** @description The SDK that generated the screenshot */
                     sdk: {
-                        /** @description The name of the Argos SDK */
+                        /** @description The name of the SDK */
                         name: string;
-                        /** @description The version of the Argos SDK */
+                        /** @description The version of the SDK */
                         version: string;
                     };
                     /** @description Storybook story metadata */
@@ -1120,7 +2932,7 @@ export interface components {
                 metadata: {
                     /**
                      * @description Ignored. Can be set to get completions, validations and documentation in some editors.
-                     * @example https://api.argos-ci.com/v2/screenshot-metadata.json
+                     * @example https://api.snapvisor.io/v2/screenshot-metadata.json
                      */
                     $schema?: string;
                     /** @description The URL of the page that was screenshotted */
@@ -1191,11 +3003,11 @@ export interface components {
                         /** @description The version of the automation library */
                         version: string;
                     };
-                    /** @description The Argos SDK that generated the screenshot */
+                    /** @description The SDK that generated the screenshot */
                     sdk: {
-                        /** @description The name of the Argos SDK */
+                        /** @description The name of the SDK */
                         name: string;
-                        /** @description The version of the Argos SDK */
+                        /** @description The version of the SDK */
                         version: string;
                     };
                     /** @description Storybook story metadata */
@@ -1280,6 +3092,8 @@ export interface components {
             dismissedAt: string | null;
             /** @description The user who dismissed the review, if any. */
             dismissedBy: components["schemas"]["BuildReviewUser"] | null;
+            /** @description The coding agent that submitted the review on the reviewer's behalf. Null when they submitted it themselves. */
+            agent: components["schemas"]["Agent"] | null;
             /** @description Date the review was created. */
             date: string;
         };
@@ -1304,53 +3118,189 @@ export interface components {
             additions: number;
             deletions: number;
         };
-        /** @description A comment posted on a build. */
-        Comment: {
+        /** @description The review requests standing on a build. */
+        BuildReviewers: {
+            /** @description The users currently requested to review the build. */
+            reviewers: components["schemas"]["User"][];
+        };
+        /** @description A notification subscription. */
+        NotificationSubscription: {
+            /** @description Whether the authenticated user now receives notifications for this resource. */
+            subscribed: boolean;
+        };
+        /** @description A test with its flakiness metrics over the requested period. Fetch the test itself for its history and the changes behind the score. */
+        TestSummary: components["schemas"]["Test"];
+        /** @description A project's production deployment domain. */
+        ProjectDomain: {
+            /** @description The project's production deployment domain, `null` when deployments are disabled or no domain is set. */
+            domain: string | null;
+        };
+        /** @description A change currently ignored in a project: it no longer requires review and is approved automatically. */
+        IgnoredChange: {
+            /** @description Identifier of the ignored change, accepted by the unignore endpoint. */
             id: string;
-            buildId: string;
-            /** @description Root comment ID when this comment is a reply. */
-            threadId: string | null;
-            /** @description Rich-text JSON content of the comment. */
-            body: unknown;
-            /** @description Plain-text rendering of the comment content. */
-            text: string;
-            author: components["schemas"]["User"] | null;
-            /** @description Screenshot diff this comment is anchored to, if any. */
-            screenshotDiffId: string | null;
-            /** @description Where the comment points on its screenshot diff. Null means the whole diff. */
-            anchor: ({
+            /** @description The test the ignored change belongs to. */
+            test: {
+                id: string;
+                name: string;
+                buildName: string;
+            };
+        };
+        /** @description A test with its flakiness metrics, both aggregated and over time, and when it first and last changed. */
+        TestDetails: {
+            /** @description Unique identifier of the test */
+            id: string;
+            /** @description Name of the test */
+            name: string;
+            /** @description Name of the build the test belongs to */
+            buildName: string;
+            metrics: components["schemas"]["TestMetrics"];
+            status: components["schemas"]["TestStatus"];
+            /**
+             * Format: date-time
+             * @description When Snapvisor first saw this test.
+             */
+            createdAt: string;
+            /**
+             * Format: uri
+             * @description URL of the test in Snapvisor.
+             */
+            url: string;
+            /** @description The test's metrics bucketed over the requested period, oldest first. Use it to tell a test that has always been flaky from one that only started recently. */
+            series: components["schemas"]["TestMetricsDataPoint"][];
+            /** @description The first time this test ever changed, whatever the period. Null when it never changed. */
+            firstSeenChange: components["schemas"]["TestChangeOccurrence"] | null;
+            /** @description The last time this test changed, whatever the period. Null when it never changed. */
+            lastSeenChange: components["schemas"]["TestChangeOccurrence"] | null;
+        };
+        /**
+         * @description `ongoing` when the test still runs — it showed up in the latest build of its build name. `removed` when it did not, so it was deleted, renamed or skipped.
+         * @enum {string}
+         */
+        TestStatus: "ongoing" | "removed";
+        /** @description One bucket of a test's metrics over time. The bucket size is derived from the requested period. */
+        TestMetricsDataPoint: {
+            /**
+             * Format: date-time
+             * @description Start of the time bucket.
+             */
+            date: string;
+            /** @description Number of builds in which the test ran in this bucket. */
+            total: number;
+            /** @description Number of times the test changed in this bucket. */
+            changes: number;
+            /** @description Number of those changes that were seen only once. */
+            uniqueChanges: number;
+        };
+        /** @description A single appearance of a change, in the build that saw it. */
+        TestChangeOccurrence: {
+            /**
+             * Format: date-time
+             * @description When the diff was captured.
+             */
+            date: string;
+            /** @description Public URL of the diff image. Null when the image is no longer available. */
+            url: string | null;
+            /**
+             * @description Number of the build that captured the diff.
+             * @example 42
+             */
+            buildNumber: number;
+            /**
+             * Format: uri
+             * @description URL of that build in Snapvisor.
+             */
+            buildUrl: string;
+        };
+        /** @description One distinct change of a test: an exact visual difference, with how often it came back over the period. A change that keeps reappearing while nothing in the UI changed is a flaky one. */
+        TestChange: {
+            /** @description Unique identifier of the change (a test + fingerprint pair). Use it with the ignore/unignore endpoints. */
+            id: string;
+            /** @description Whether this change is currently ignored. Ignored changes no longer require review and are automatically approved. */
+            ignored: boolean;
+            /** @description Number of times this change has been seen over the metrics period. A high count for a recurring change is a strong flakiness signal. */
+            occurrences: number;
+            /** @description The first time this change was seen over the period. */
+            firstSeen: components["schemas"]["TestChangeOccurrence"];
+            /** @description The last time this change was seen over the period. */
+            lastSeen: components["schemas"]["TestChangeOccurrence"];
+            /** @description The diff captured the last time the change was seen, with the baseline and the captured snapshot, so you can look at what moved. */
+            diff: components["schemas"]["SnapshotDiff"];
+        };
+        /** @description How flaky changes are ignored on a project. */
+        IgnoreConfigOutput: {
+            /** @description Whether changes can be ignored on this project. */
+            enabled: boolean;
+            /** @description Auto-ignore settings, `null` when auto-ignore is off. */
+            autoIgnore: {
+                /** @description Number of times a change must reappear before it is ignored automatically. */
+                changes: number;
+            } | null;
+        };
+        /** @description One stored part. Send it back unchanged when completing the upload. */
+        UploadedMultipartPartOutput: {
+            /** @description 1-based number of the part. */
+            partNumber: number;
+            /** @description The part's ETag, as returned when it was uploaded. */
+            etag: string;
+            /** @description The part's checksum, as returned when it was uploaded (`null` when the store computed none). */
+            checksumCRC32: string | null;
+        };
+        /** @description A condition narrowing when a rule fires. Conditions are combined with AND; wrap one in `{ not: … }` to negate it, or `{ glob: … }` to match a branch by pattern. */
+        AutomationConditionOutput: (({
+            /** @constant */
+            type: "build-branch";
+            value: string;
+        } | {
+            /** @constant */
+            type: "build-conclusion";
+            value: ("no-changes" | "changes-detected") | null;
+        } | {
+            /** @constant */
+            type: "build-mode";
+            value: ("ci" | "monitoring") | null;
+        } | {
+            /** @constant */
+            type: "build-name";
+            value: string;
+        } | {
+            /** @constant */
+            type: "build-type";
+            value: ("reference" | "check" | "orphan" | "skipped") | null;
+        }) | {
+            glob: {
                 /** @constant */
-                type: "point";
-                x: number;
-                y: number;
+                type: "build-branch";
+                value: string;
+            };
+        }) | {
+            not: ({
+                /** @constant */
+                type: "build-branch";
+                value: string;
             } | {
                 /** @constant */
-                type: "lines";
-                from: number;
-                to: number;
-            }) | null;
-            /** @description Whether the comment belongs to a pending (unsubmitted) review and is only visible to its author. */
-            pending: boolean;
-            /** @description Date the thread was resolved, null if not resolved. Only set on a root comment. */
-            resolvedAt: string | null;
-            /** @description Date the comment was last edited, null if never edited. */
-            editedAt: string | null;
-            /** @description Date the comment was posted. */
-            createdAt: string;
-            reactions: {
-                /** @description The emoji used for the reaction. */
-                emoji: string;
-                /** @description Number of users who reacted with this emoji. */
-                count: number;
-                /** @description The users who reacted with this emoji. */
-                users: components["schemas"]["User"][];
-            }[];
-        };
-        /** @description A user. */
-        User: {
-            id: string;
-            slug: string;
-            name: string | null;
+                type: "build-conclusion";
+                value: ("no-changes" | "changes-detected") | null;
+            } | {
+                /** @constant */
+                type: "build-mode";
+                value: ("ci" | "monitoring") | null;
+            } | {
+                /** @constant */
+                type: "build-name";
+                value: string;
+            } | {
+                /** @constant */
+                type: "build-type";
+                value: ("reference" | "check" | "orphan" | "skipped") | null;
+            }) | {
+                glob: {
+                    /** @constant */
+                    type: "build-branch";
+                    value: string;
+                };
+            };
         };
     };
     responses: never;
@@ -1361,12 +3311,154 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the account to retrieve. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The account with its plan and usage */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDetails"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    defaultUserLevel: components["schemas"]["TeamDefaultUserLevel"];
+                };
+            };
+        };
+        responses: {
+            /** @description The updated account */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDetails"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getAccountAnalytics: {
         parameters: {
             query: {
-                /** @description Start of the analytics period, as an ISO 8601 datetime. */
+                /** @description Start of the analytics period. Accepts a full ISO 8601 datetime (`2026-09-01T09:30:00Z`) or a date on its own (`2026-09-01`). A date on its own starts at 00:00:00.000 UTC on that day. */
                 from: string;
-                /** @description End of the analytics period, as an ISO 8601 datetime. Defaults to the current time. */
+                /** @description End of the analytics period, inclusive. Accepts a full ISO 8601 datetime (`2026-09-01T09:30:00Z`) or a date on its own (`2026-09-01`). A date on its own ends at 23:59:59.999 UTC on that day. Defaults to the current time. */
                 to?: string;
                 /** @description Time period used to group each series data point. */
                 groupBy: "day" | "week" | "month";
@@ -1487,6 +3579,1995 @@ export interface operations {
             };
         };
     };
+    listAccountMembers: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Match members on their name, slug, or email address. */
+                search?: string;
+                /** @description Restrict to the given roles, comma-separated (e.g. `owner,member`). */
+                levels?: string;
+                /** @description Ordering of the results. Defaults to `date`, most recently added first. */
+                orderBy?: "date" | "name-asc" | "name-desc";
+            };
+            header?: never;
+            path: {
+                /** @description Slug of the team to list members for. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of team members */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["TeamMember"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeAccountMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+                /** @description Identifier of the user to act on — the `user.id` returned by `listAccountMembers`, which is the user's account id. */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setAccountMemberLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+                /** @description Identifier of the user to act on — the `user.id` returned by `listAccountMembers`, which is the user's account id. */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    level: components["schemas"]["TeamUserLevel"];
+                };
+            };
+        };
+        responses: {
+            /** @description The updated membership */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamMember"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listAccountInvites: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Match invites on their email address. */
+                search?: string;
+            };
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of pending invites */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["TeamInvite"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createAccountInvites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The people to invite. */
+                    members: {
+                        /** Format: email */
+                        email: string;
+                        level: components["schemas"]["TeamUserLevel"];
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description The invites that were created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamInvite"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    cancelAccountInvite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+                /** @description Identifier of the invite, as returned when listing them. */
+                inviteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invite cancelled */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listTeamDomains: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The team's email domains */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamDomain"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    addTeamDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The email domain, e.g. `acme.com`. */
+                    domain: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The domain the team is now open to */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamDomain"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeTeamDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+                /** @description The email domain to remove. */
+                domain: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Domain removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    resetAccountInviteLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The new invite link */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteLink"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description File name, used for display and as the Markdown alt text. Also the media's identity: uploading the same name on the same pull request adds a version rather than creating a second media.
+                     * @example before.png
+                     * @example checkout-flow.mp4
+                     */
+                    name: string;
+                    state?: ("before" | "after") | null;
+                    /** @description Prose shown under the media in the managed pull request comment. */
+                    description?: string | null;
+                    /** @description Content type of the media file */
+                    contentType: string;
+                    /** @description Size of the file in bytes. Checked against your plan's limit before the upload is signed. */
+                    size: number;
+                    /** @description SHA-256 of the file contents, hex encoded. Uploading the same file twice is free: Snapvisor recognizes the hash and skips the transfer, and byte-identical bytes do not create a new version. */
+                    hash: string;
+                    /** @description Who can open the media share page. `team` requires a signed-in session with access to the owning account; `public` only requires the share URL. Omit it — the usual case — and the media follows its project's visibility: `public` for a public project, `team` for a private one. `team` requires a paid plan. */
+                    visibility?: ("team" | "public") | null;
+                    /**
+                     * @description Project to upload to, as `owner/project`. Required with a personal access token; ignored with a project token, which already identifies its project.
+                     * @example acme/web
+                     */
+                    project?: string | null;
+                    /** @description Pull request this media belongs to. Snapvisor maintains a single comment on it listing every media uploaded, editing it in place rather than posting a new one each time — attaching a media to a pull request and showing it there are the same act, not two. Also part of the media's identity: uploading the same name again on this pull request adds a version. */
+                    prNumber?: number | null;
+                    branch?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description The registered media and where to upload it */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        media: components["schemas"]["Media"];
+                        /** @description Where to send the bytes, or `null` when Snapvisor already holds this exact file — in which case the media is ready and nothing needs uploading. */
+                        upload: components["schemas"]["MediaUploadTarget"] | null;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Media details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Media"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Media deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description File name, used for display and as the Markdown alt text. Also the media's identity: uploading the same name on the same pull request adds a version rather than creating a second media.
+                     * @example before.png
+                     * @example checkout-flow.mp4
+                     */
+                    name?: string;
+                    /** @description Prose shown under the media in the managed pull request comment. */
+                    description?: string | null;
+                    branch?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description The updated media */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Media"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listMediaVersions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The media's versions, newest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaVersion"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    finalizeMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The finalized media */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Media"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listMediaComments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Comments, oldest first. Replies carry a threadId pointing at their root comment. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createMediaComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Comment content. Either Markdown text or the JSON representation of a rich-text document. */
+                    body: string | {
+                        [key: string]: unknown;
+                    };
+                    /** @description Public ID of the root comment to reply to (e.g. `comment-xf23d`). */
+                    threadId?: string;
+                    /** @description Where on the referenced screenshot diff the comment points. A point uses normalized (0–1) coordinates; lines is a 1-based inclusive range. */
+                    anchor?: {
+                        /** @constant */
+                        type: "point";
+                        x: number;
+                        y: number;
+                    } | {
+                        /** @constant */
+                        type: "lines";
+                        from: number;
+                        to: number;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Comment created successfully — returns the comment */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getMediaComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteMediaComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Comment deleted successfully — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateMediaComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Comment content. Either Markdown text or the JSON representation of a rich-text document. */
+                    body: string | {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Comment updated successfully — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    addMediaCommentReaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The emoji to react with. */
+                    emoji: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Reaction added — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeMediaCommentReaction: {
+        parameters: {
+            query: {
+                /** @description The emoji reaction to remove. */
+                emoji: string;
+            };
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reaction removed — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    resolveMediaCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Thread resolved — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unresolveMediaCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Thread reopened — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    subscribeMediaCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Subscribed — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unsubscribeMediaCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The media ID */
+                mediaId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unsubscribed — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     createBuild: {
         parameters: {
             query?: never;
@@ -1540,7 +5621,6 @@ export interface operations {
                      *     This is useful when a build is created from an incomplete test suite where some tests are skipped.
                      */
                     subset?: boolean | null;
-                } & ({
                     /**
                      * @deprecated
                      * @description Keys of screenshot files
@@ -1548,10 +5628,53 @@ export interface operations {
                     screenshotKeys: components["schemas"]["Sha256Hash"][];
                     screenshots?: unknown;
                 } | {
+                    /** @description The commit the build is running on */
+                    commit: components["schemas"]["Sha1Hash"];
+                    /** @description The branch the build is running on */
+                    branch: components["schemas"]["GitBranch"];
+                    /** @description Keys of Playwright trace files */
+                    pwTraceKeys?: components["schemas"]["Sha256Hash"][];
+                    /** @description The name of the build (for multi-build setups) */
+                    name?: string | null;
+                    /** @description Whether to run the build in parallel */
+                    parallel?: boolean | null;
+                    /** @description A unique nonce for the parallel build */
+                    parallelNonce?: string | null;
+                    /** @description The pull request number */
+                    prNumber?: number | null;
+                    /** @description The head commit of the pull request */
+                    prHeadCommit?: components["schemas"]["Sha1Hash"] | null;
+                    /** @description The commit to use as a reference for the build */
+                    referenceCommit?: components["schemas"]["Sha1Hash"] | null;
+                    /** @description The branch to use as a reference for the build */
+                    referenceBranch?: string | null;
+                    /** @description The parent commits of the build */
+                    parentCommits?: components["schemas"]["Sha1Hash"][] | null;
+                    /** @description The mode in which the build is running */
+                    mode?: ("ci" | "monitoring") | null;
+                    /** @description The CI provider being used */
+                    ciProvider?: string | null;
+                    /** @description The version of the Snapvisor SDK being used */
+                    argosSdk?: string | null;
+                    /** @description The ID of the current run */
+                    runId?: string | null;
+                    /** @description The attempt number of the current run */
+                    runAttempt?: number | null;
+                    /** @description Whether the build was skipped, not comparing anything and always succeeding */
+                    skipped?: boolean | null;
+                    /** @description Whether the build has been created in a merge queue */
+                    mergeQueue?: boolean | null;
+                    /** @description Pull request numbers aggregated by the merge queue build. Requires `mergeQueue` to be `true`. */
+                    mergeQueuePrNumbers?: number[] | null;
+                    /**
+                     * @description Indicates whether this build contains only a subset of screenshots.
+                     *     This is useful when a build is created from an incomplete test suite where some tests are skipped.
+                     */
+                    subset?: boolean | null;
                     /** @description Screenshot files to upload */
                     screenshots: components["schemas"]["ScreenshotUploadRequest"][];
                     screenshotKeys?: unknown;
-                });
+                };
             };
         };
         responses: {
@@ -1636,6 +5759,448 @@ export interface operations {
             };
         };
     };
+    diffImagesTool: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description The baseline image (PNG, JPEG or WebP).
+                     */
+                    base: string;
+                    /**
+                     * Format: binary
+                     * @description The image to check against it.
+                     */
+                    head: string;
+                    /** @description Sensitivity from 0 to 1, default 0.5 (lower finds more). */
+                    threshold?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The verdict. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImageDiffVerdict"];
+                    "text/markdown": string;
+                };
+            };
+            /** @description Not multipart, or a file or field is missing or extra. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description An image is larger than 5 MB. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description A file is not an image sharp can decode. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description An image is over 16 million pixels, or the threshold is not between 0 and 1. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description More than 20 requests from this address today. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Two diffs are already running; retry after the Retry-After delay. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    uploadObject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadObjectRequest"];
+            };
+        };
+        responses: {
+            /** @description File stored at the key pinned in the policy. Empty body, like S3 POST object. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Payload too large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The dedicated `/v2/uploads` rate limit was exceeded. The body is the rate limiter's one-line message (served as `text/html`), with a `Retry-After` header. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: {
+                            message: string;
+                            code?: string | number;
+                        };
+                    };
+                };
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    startMultipartUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["StartMultipartUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description The multipart upload is open */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StartMultipartUploadResponse"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Payload too large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The dedicated `/v2/uploads` rate limit was exceeded. The body is the rate limiter's one-line message (served as `text/html`), with a `Retry-After` header. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    uploadMultipartPart: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The signed `session` token returned when the multipart upload was started. */
+                "x-upload-session": string;
+            };
+            path: {
+                /** @description 1-based part number, from 1 to `partCount`. */
+                partNumber: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/octet-stream": string;
+            };
+        };
+        responses: {
+            /** @description The part is stored */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadedMultipartPartOutput"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Payload too large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The dedicated `/v2/uploads` rate limit was exceeded. The body is the rate limiter's one-line message (served as `text/html`), with a `Retry-After` header. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+        };
+    };
+    completeMultipartUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["CompleteMultipartUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description The object is stored */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The dedicated `/v2/uploads` rate limit was exceeded. The body is the rate limiter's one-line message (served as `text/html`), with a `Retry-After` header. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+        };
+    };
+    abortMultipartUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AbortMultipartUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description The upload is discarded */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The dedicated `/v2/uploads` rate limit was exceeded. The body is the rate limiter's one-line message (served as `text/html`), with a `Retry-After` header. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+        };
+    };
     createDeployment: {
         parameters: {
             query?: never;
@@ -1655,7 +6220,7 @@ export interface operations {
                     /** @description The head commit of the pull request. When `commit` is a merge commit built for the pull request, such as the test-merge commit GitHub Actions checks out, the deployment status is reported on this commit, where the pull request shows it. */
                     prHeadCommit?: components["schemas"]["Sha1Hash"] | null;
                     /**
-                     * @description The deployment environment. When omitted, it is inferred from `branch`: branches matching the configured production-branch glob are treated as `production`; all others default to `preview`.
+                     * @description The deployment environment. When omitted, it is inferred from `branch`: branches matching the configured production-branch glob are treated as `production`; all others default to `preview`. A tokenless GitHub Actions credential cannot choose: it is deployed to `production` only from the production branch of the repository itself (never from a fork), and asking for `production` from anywhere else is refused with 403.
                      * @enum {string}
                      */
                     environment?: "preview" | "production";
@@ -2088,7 +6653,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @description Argos API token for CLI use */
+                        /** @description Snapvisor API token for CLI use */
                         token: string;
                     };
                 };
@@ -2149,7 +6714,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @description Short-lived Argos project token */
+                        /** @description Short-lived Snapvisor project token */
                         token: string;
                         /** @description Token expiration date as an ISO string */
                         expiresAt: string;
@@ -2204,7 +6769,7 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    /** @description Argos tokenless GitHub Actions bearer token */
+                    /** @description Snapvisor tokenless GitHub Actions bearer token */
                     tokenlessToken: string;
                     /** @description Expected commit SHA */
                     commit: components["schemas"]["Sha1Hash"];
@@ -2221,7 +6786,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @description Short-lived Argos project token */
+                        /** @description Short-lived Snapvisor project token */
                         token: string;
                         /** @description Token expiration date as an ISO string */
                         expiresAt: string;
@@ -2322,6 +6887,266 @@ export interface operations {
             };
         };
     };
+    requestAccountDeletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The confirmation email was sent */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDeletionRequest"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    startAppStorePurchase: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team that would be upgraded. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The team can buy through the iOS app */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AppStorePurchase"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    registerDevice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The APNs device token, as hexadecimal. */
+                    token: string;
+                    /**
+                     * @description The APNs environment the token was issued for. A build signed with a development profile (run from Xcode) gets `sandbox` tokens; TestFlight and App Store builds get `production` tokens. Send what the app's `aps-environment` entitlement says: a token sent to the wrong environment is refused by APNs and the device is removed.
+                     * @enum {string}
+                     */
+                    environment: "sandbox" | "production";
+                    /** @description The app's bundle identifier, which must be the one this server sends pushes for. */
+                    bundleId: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The device is registered */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Device"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unregisterDevice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The APNs device token, as hexadecimal. */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The device no longer receives pushes */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getAuthProject: {
         parameters: {
             query?: never;
@@ -2377,7 +7202,7 @@ export interface operations {
                     parallel?: boolean | null;
                     parallelTotal?: number | null;
                     parallelIndex?: number | null;
-                    /** @description Only used for non-parallel builds. Indicates that this is the last request of the build, so Argos can finalize it. A build whose screenshots are too large to fit in a single request can split them across several sequential requests, leaving `final` falsy on every request but the last. Defaults to `true`. */
+                    /** @description Only used for non-parallel builds. Indicates that this is the last request of the build, so Snapvisor can finalize it. A build whose screenshots are too large to fit in a single request can split them across several sequential requests, leaving `final` falsy on every request but the last. Defaults to `true`. */
                     final?: boolean | null;
                     metadata?: components["schemas"]["BuildMetadata"];
                 };
@@ -2575,6 +7400,856 @@ export interface operations {
             };
         };
     };
+    updateProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description New name for the project. Must be unique within the owning account (case-insensitive). */
+                    name?: string;
+                    /** @description Branch used as the baseline when no better one applies. `null` falls back to the repository's default branch. */
+                    defaultBaseBranch?: string | null;
+                    /** @description Glob matching the branches whose builds are approved automatically. `null` falls back to the default base branch. */
+                    autoApprovedBranchGlob?: string | null;
+                    /** @description Glob matching the branches whose deployments count as production. `null` falls back to the repository's default branch. */
+                    deploymentProductionBranchGlob?: string | null;
+                    /** @description Force the project's privacy. `null` inherits it from the linked repository. */
+                    private?: boolean | null;
+                    summaryCheck?: components["schemas"]["SummaryCheck"];
+                    /** @description Access given to team members that are not contributors on this project. `null` gives them none. */
+                    defaultUserLevel?: components["schemas"]["ProjectUserLevel"] | null;
+                    ignoreConfig?: components["schemas"]["IgnoreConfig"];
+                    deploymentEnabled?: boolean;
+                    deploymentAuth?: components["schemas"]["DeploymentAuth"];
+                    githubActionsOidcEnabled?: boolean;
+                    tokenlessAuthEnabled?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description The updated project */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Project"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listAutomationRules: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Restrict to rules that still fire (`true`) or to deactivated ones (`false`). Omit for both. */
+                active?: "true" | "false";
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of automation rules */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["AutomationRule"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createAutomationRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                    events: components["schemas"]["AutomationEvent"][];
+                    /** @default [] */
+                    conditions?: components["schemas"]["AutomationCondition"][];
+                    actions: components["schemas"]["AutomationActionInput"][];
+                };
+            };
+        };
+        responses: {
+            /** @description The created rule */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationRule"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getAutomationRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description Identifier of the automation rule. */
+                ruleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The automation rule */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationRule"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateAutomationRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description Identifier of the automation rule. */
+                ruleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                    events: components["schemas"]["AutomationEvent"][];
+                    /** @default [] */
+                    conditions?: components["schemas"]["AutomationCondition"][];
+                    actions: components["schemas"]["AutomationActionInput"][];
+                };
+            };
+        };
+        responses: {
+            /** @description The updated rule */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationRule"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deactivateAutomationRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description Identifier of the automation rule. */
+                ruleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The deactivated rule */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationRule"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listProjectContributors: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of contributors */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["ProjectContributor"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setProjectContributor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description Identifier of the user — the `user.id` returned by `listAccountMembers` or `listProjectContributors`. */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    level: components["schemas"]["ProjectUserLevel"];
+                };
+            };
+        };
+        responses: {
+            /** @description The granted access */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectContributor"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeProjectContributor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description Identifier of the user — the `user.id` returned by `listAccountMembers` or `listProjectContributors`. */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Access revoked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    transferProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Slug of the account that will own the project. */
+                    targetAccountSlug: string;
+                    /** @description Name to give the project on the target account. Defaults to its current name, which must be free there. */
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The transferred project */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Project"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listMedia: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Only media uploaded for this branch, staged and published alike. */
+                branch?: string;
+                /** @description Only media published to this pull request. */
+                prNumber?: number;
+                /** @description Restrict to staged media (no pull request yet) or to published media. */
+                stage?: "staged" | "published";
+                /** @description Match media on their file name or slug. */
+                search?: string;
+                /** @description Restrict to images or to videos. */
+                type?: "image" | "video";
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of media */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["Media"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     listBuilds: {
         parameters: {
             query?: {
@@ -2607,6 +8282,451 @@ export interface operations {
                     "application/json": {
                         pageInfo: components["schemas"]["PageInfo"];
                         results: components["schemas"]["Build"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createBuildForProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description The commit the build is running on */
+                    commit: components["schemas"]["Sha1Hash"];
+                    /** @description The branch the build is running on */
+                    branch: components["schemas"]["GitBranch"];
+                    /** @description Keys of Playwright trace files */
+                    pwTraceKeys?: components["schemas"]["Sha256Hash"][];
+                    /** @description The name of the build (for multi-build setups) */
+                    name?: string | null;
+                    /** @description Whether to run the build in parallel */
+                    parallel?: boolean | null;
+                    /** @description A unique nonce for the parallel build */
+                    parallelNonce?: string | null;
+                    /** @description The pull request number */
+                    prNumber?: number | null;
+                    /** @description The head commit of the pull request */
+                    prHeadCommit?: components["schemas"]["Sha1Hash"] | null;
+                    /** @description The commit to use as a reference for the build */
+                    referenceCommit?: components["schemas"]["Sha1Hash"] | null;
+                    /** @description The branch to use as a reference for the build */
+                    referenceBranch?: string | null;
+                    /** @description The parent commits of the build */
+                    parentCommits?: components["schemas"]["Sha1Hash"][] | null;
+                    /** @description The mode in which the build is running */
+                    mode?: ("ci" | "monitoring") | null;
+                    /** @description The CI provider being used */
+                    ciProvider?: string | null;
+                    /** @description The version of the Snapvisor SDK being used */
+                    argosSdk?: string | null;
+                    /** @description The ID of the current run */
+                    runId?: string | null;
+                    /** @description The attempt number of the current run */
+                    runAttempt?: number | null;
+                    /** @description Whether the build was skipped, not comparing anything and always succeeding */
+                    skipped?: boolean | null;
+                    /** @description Whether the build has been created in a merge queue */
+                    mergeQueue?: boolean | null;
+                    /** @description Pull request numbers aggregated by the merge queue build. Requires `mergeQueue` to be `true`. */
+                    mergeQueuePrNumbers?: number[] | null;
+                    /**
+                     * @description Indicates whether this build contains only a subset of screenshots.
+                     *     This is useful when a build is created from an incomplete test suite where some tests are skipped.
+                     */
+                    subset?: boolean | null;
+                    /** @description Screenshot files to upload */
+                    screenshots: components["schemas"]["ScreenshotUploadRequest"][];
+                };
+            };
+        };
+        responses: {
+            /** @description Result of build creation */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        build: components["schemas"]["Build"];
+                        screenshots: ({
+                            key: string;
+                            /**
+                             * Format: uri
+                             * @deprecated
+                             * @description Deprecated. Use postUrl and fields instead.
+                             */
+                            putUrl: string;
+                        } | {
+                            key: string;
+                            /** Format: uri */
+                            postUrl: string;
+                            fields: {
+                                [key: string]: string;
+                            };
+                        })[];
+                        pwTraces: ({
+                            key: string;
+                            /**
+                             * Format: uri
+                             * @deprecated
+                             * @description Deprecated. Use postUrl and fields instead.
+                             */
+                            putUrl: string;
+                        } | {
+                            key: string;
+                            /** Format: uri */
+                            postUrl: string;
+                            fields: {
+                                [key: string]: string;
+                            };
+                        })[];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    captureScreenshotsForProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description The pages to capture, at most 10. */
+                    pages: {
+                        /** @description Screenshot name in the build, such as "home" or "pricing". Use the same name for the same page every time: the comparison matches screenshots by name. */
+                        name: string;
+                        /** @description Address of the page, http or https, reachable from the public internet. Pages behind a login cannot be captured. */
+                        url: string;
+                        /**
+                         * @description Browser window width in pixels. Default 1280.
+                         * @default 1280
+                         */
+                        width?: number;
+                        /**
+                         * @description Browser window height in pixels. Default 800.
+                         * @default 800
+                         */
+                        height?: number;
+                        /**
+                         * @description Capture the whole page down to its end (default) instead of only the visible window.
+                         * @default true
+                         */
+                        fullPage?: boolean;
+                    }[];
+                    /** @description Branch to record the build on. Default: the project's default base branch, where each build is compared against the previous one. */
+                    branch?: components["schemas"]["GitBranch"];
+                    /** @description Build name, to keep separate series of captures apart (for example "mobile"). Default "default". */
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The build, pending until its pages are captured */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        build: components["schemas"]["Build"];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    finalizeProjectBuilds: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    parallelNonce: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Result of build finalization */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        builds: components["schemas"]["Build"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    findBaselineForProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description The commits to look for an eligible baseline, ordered from the closest to the furthest ancestor. The first commit with an eligible baseline wins. */
+                    commits: components["schemas"]["Sha1Hash"][];
+                    /**
+                     * @description The name of the build to find a baseline for.
+                     * @default default
+                     */
+                    name?: string;
+                    /**
+                     * @description The mode of the build to find a baseline for.
+                     * @default ci
+                     * @enum {string}
+                     */
+                    mode?: "ci" | "monitoring";
+                };
+            };
+        };
+        responses: {
+            /** @description The eligible baseline build, or null when none is found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description The eligible baseline build found among the commits, or null when none is found. */
+                        baseline: components["schemas"]["Build"] | null;
                     };
                 };
             };
@@ -2709,6 +8829,269 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateBuildForProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    screenshots: components["schemas"]["ScreenshotInput"][];
+                    parallel?: boolean | null;
+                    parallelTotal?: number | null;
+                    parallelIndex?: number | null;
+                    /** @description Only used for non-parallel builds. Indicates that this is the last request of the build, so Snapvisor can finalize it. A build whose screenshots are too large to fit in a single request can split them across several sequential requests, leaving `final` falsy on every request but the last. Defaults to `true`. */
+                    final?: boolean | null;
+                    metadata?: components["schemas"]["BuildMetadata"];
+                };
+            };
+        };
+        responses: {
+            /** @description Result of build update */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        build: components["schemas"]["Build"];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getBuildCapture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The build's page capture */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuildCapture"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    uploadScreenshotForProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description The screenshot's bytes, base64-encoded. A `data:<type>;base64,` prefix is accepted and stripped. Decoded size must be at most 700 KB; larger screenshots are rejected with 413 and should be uploaded through the CLI. */
+                    image: string;
+                    /** @description The image's content type. Defaults to image/png. */
+                    contentType?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Screenshot stored; its content hash is returned as `key`. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description The screenshot's content hash (sha256). Pass it as a screenshot `key` to updateBuildForProject to register the screenshot on the build. */
+                        key: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Payload too large */
+            413: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3196,6 +9579,510 @@ export interface operations {
             };
         };
     };
+    listBuildReviewers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The users requested to review the build */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuildReviewers"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    addBuildReviewers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Identifiers of the users to act on — the `id` of a user as returned by `listBuildReviewers` or `getMe`. */
+                    userIds: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description The users requested to review the build */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuildReviewers"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeBuildReviewers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Identifiers of the users to act on — the `id` of a user as returned by `listBuildReviewers` or `getMe`. */
+                    userIds: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description The users still requested to review the build */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuildReviewers"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    subscribeBuild: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Subscribed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSubscription"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unsubscribeBuild: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The build number */
+                buildNumber: components["schemas"]["BuildNumberParam"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unsubscribed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSubscription"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    subscribeTest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Subscribed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSubscription"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unsubscribeTest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unsubscribed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSubscription"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     dismissReview: {
         parameters: {
             query?: never;
@@ -3268,7 +10155,7 @@ export interface operations {
             };
         };
     };
-    listComments: {
+    listBuildComments: {
         parameters: {
             query?: never;
             header?: never;
@@ -3282,7 +10169,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Build comments, oldest first. Replies carry a threadId pointing at their root comment. */
+            /** @description Comments, oldest first. Replies carry a threadId pointing at their root comment. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3338,7 +10225,7 @@ export interface operations {
             };
         };
     };
-    createComment: {
+    createBuildComment: {
         parameters: {
             query?: never;
             header?: never;
@@ -3357,7 +10244,7 @@ export interface operations {
                     body: string | {
                         [key: string]: unknown;
                     };
-                    /** @description Root comment ID to reply to. */
+                    /** @description Public ID of the root comment to reply to (e.g. `comment-xf23d`). */
                     threadId?: string;
                     /** @description Screenshot diff to anchor the comment to. Required when anchor is set. */
                     screenshotDiffId?: string;
@@ -3435,7 +10322,7 @@ export interface operations {
             };
         };
     };
-    getComment: {
+    getBuildComment: {
         parameters: {
             query?: never;
             header?: never;
@@ -3444,8 +10331,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description The ID of the comment */
-                commentId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
             };
             cookie?: never;
         };
@@ -3507,7 +10394,7 @@ export interface operations {
             };
         };
     };
-    deleteComment: {
+    deleteBuildComment: {
         parameters: {
             query?: never;
             header?: never;
@@ -3516,8 +10403,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description The ID of the comment */
-                commentId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
             };
             cookie?: never;
         };
@@ -3579,7 +10466,7 @@ export interface operations {
             };
         };
     };
-    updateComment: {
+    updateBuildComment: {
         parameters: {
             query?: never;
             header?: never;
@@ -3588,8 +10475,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description The ID of the comment */
-                commentId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
             };
             cookie?: never;
         };
@@ -3660,7 +10547,7 @@ export interface operations {
             };
         };
     };
-    addCommentReaction: {
+    addBuildCommentReaction: {
         parameters: {
             query?: never;
             header?: never;
@@ -3669,8 +10556,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description The ID of the comment */
-                commentId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
             };
             cookie?: never;
         };
@@ -3739,7 +10626,7 @@ export interface operations {
             };
         };
     };
-    removeCommentReaction: {
+    removeBuildCommentReaction: {
         parameters: {
             query: {
                 /** @description The emoji reaction to remove. */
@@ -3751,8 +10638,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description The ID of the comment */
-                commentId: string;
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
             };
             cookie?: never;
         };
@@ -3814,7 +10701,7 @@ export interface operations {
             };
         };
     };
-    resolveCommentThread: {
+    resolveBuildCommentThread: {
         parameters: {
             query?: never;
             header?: never;
@@ -3823,8 +10710,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description ID of any comment in the thread */
-                commentId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
             };
             cookie?: never;
         };
@@ -3886,7 +10773,7 @@ export interface operations {
             };
         };
     };
-    unresolveCommentThread: {
+    unresolveBuildCommentThread: {
         parameters: {
             query?: never;
             header?: never;
@@ -3895,8 +10782,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description ID of any comment in the thread */
-                commentId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
             };
             cookie?: never;
         };
@@ -3958,7 +10845,7 @@ export interface operations {
             };
         };
     };
-    subscribeCommentThread: {
+    subscribeBuildCommentThread: {
         parameters: {
             query?: never;
             header?: never;
@@ -3967,8 +10854,8 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description ID of any comment in the thread */
-                commentId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
             };
             cookie?: never;
         };
@@ -4030,7 +10917,7 @@ export interface operations {
             };
         };
     };
-    unsubscribeCommentThread: {
+    unsubscribeBuildCommentThread: {
         parameters: {
             query?: never;
             header?: never;
@@ -4039,8 +10926,1371 @@ export interface operations {
                 project: string;
                 /** @description The build number */
                 buildNumber: components["schemas"]["BuildNumberParam"];
-                /** @description ID of any comment in the thread */
-                commentId: string;
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unsubscribed — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listTests: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Period over which the test flakiness metrics are computed. */
+                metricsPeriod?: "LAST_24_HOURS" | "LAST_3_DAYS" | "LAST_7_DAYS" | "LAST_30_DAYS" | "LAST_90_DAYS";
+                /** @description Restrict to the tests of a single build name. */
+                buildName?: string;
+                /** @description Match tests on their name. */
+                search?: string;
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of the project's tests, flakiest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["TestSummary"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listProjectDeployments: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Restrict to one environment. */
+                environment?: "preview" | "production";
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of deployments */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: {
+                            id: string;
+                            /** @enum {string} */
+                            status: "pending" | "ready" | "error";
+                            /** @enum {string} */
+                            environment: "preview" | "production";
+                            branch: components["schemas"]["GitBranch"];
+                            commitSha: components["schemas"]["Sha256Hash"];
+                            /** Format: uri */
+                            url: string;
+                            createdAt: string;
+                        }[];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getProjectDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The production deployment domain */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDomain"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateProjectDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The full domain to serve production deployments on, under the Snapvisor deployments domain (a slug followed by that domain, as shown in the project's deployment settings). `getProjectDomain` returns the project's current one. */
+                    domain: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The updated production deployment domain */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDomain"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listIgnoredChanges: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of the project's ignored changes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["IgnoredChange"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getTest: {
+        parameters: {
+            query?: {
+                /** @description Period over which the test flakiness metrics are computed. */
+                metricsPeriod?: "LAST_24_HOURS" | "LAST_3_DAYS" | "LAST_7_DAYS" | "LAST_30_DAYS" | "LAST_90_DAYS";
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The test and its flakiness metrics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestDetails"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listTestChanges: {
+        parameters: {
+            query?: {
+                /** @description Number of items per page (max 100) */
+                perPage?: string;
+                /** @description Page number */
+                page?: string;
+                /** @description Period over which the test flakiness metrics are computed. */
+                metricsPeriod?: "LAST_24_HOURS" | "LAST_3_DAYS" | "LAST_7_DAYS" | "LAST_30_DAYS" | "LAST_90_DAYS";
+                /** @description Restrict the changes to the ones currently ignored (`true`) or to the ones still under review (`false`). Omit it to get both. */
+                ignored?: "true" | "false";
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of the test's changes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pageInfo: components["schemas"]["PageInfo"];
+                        results: components["schemas"]["TestChange"][];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listTestComments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Comments, oldest first. Replies carry a threadId pointing at their root comment. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createTestComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Comment content. Either Markdown text or the JSON representation of a rich-text document. */
+                    body: string | {
+                        [key: string]: unknown;
+                    };
+                    /** @description Public ID of the root comment to reply to (e.g. `comment-xf23d`). */
+                    threadId?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Comment created successfully — returns the comment */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getTestComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteTestComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Comment deleted successfully — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateTestComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Comment content. Either Markdown text or the JSON representation of a rich-text document. */
+                    body: string | {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Comment updated successfully — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    addTestCommentReaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The emoji to react with. */
+                    emoji: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Reaction added — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeTestCommentReaction: {
+        parameters: {
+            query: {
+                /** @description The emoji reaction to remove. */
+                emoji: string;
+            };
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description The public ID of the comment (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["CommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reaction removed — returns the comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    resolveTestCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Thread resolved — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unresolveTestCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Thread reopened — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    subscribeTestCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Subscribed — returns the root comment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Comment"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unsubscribeTestCommentThread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The test identifier, as returned in a diff's `test.id` */
+                testId: components["schemas"]["TestId"];
+                /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
+                commentId: components["schemas"]["ThreadCommentId"];
             };
             cookie?: never;
         };
