@@ -1,4 +1,10 @@
-import type { ElementHandle, Frame, Page, TestInfo } from "@playwright/test";
+import type {
+  ElementHandle,
+  Frame,
+  Locator,
+  Page,
+  TestInfo,
+} from "@playwright/test";
 import type { TestCase, TestResult } from "@playwright/test/reporter";
 import { createRequire } from "node:module";
 import {
@@ -9,10 +15,15 @@ import {
 import {
   getGlobalScript,
   type ArgosGlobal,
+  type ArgosHelper,
   type StabilizationContext,
   type ViewportSize,
 } from "@snapvisor/browser";
-import type { ScreenshotMetadata } from "@snapvisor/util";
+import {
+  getTestRunKey,
+  nextCaptureIndex,
+  type ScreenshotMetadata,
+} from "@snapvisor/util";
 import { dirname, resolve } from "node:path";
 import { mkdir } from "node:fs/promises";
 import type { ArgosAttachment } from "./attachment";
@@ -98,6 +109,29 @@ export async function getTestInfo() {
 }
 
 /**
+ * Take the next capture index for the running test, or `null` when the
+ * screenshot isn't taken from a test — there is no sequence to record then.
+ */
+export function takeCaptureIndex(testInfo: TestInfo | null): number | null {
+  // Another SDK drives Playwright and owns the test context (Vitest): it
+  // counts on its side and hands us the result.
+  const injected = getMetadataOverrides()?.captureIndex;
+  if (injected != null) {
+    return injected;
+  }
+  if (!testInfo) {
+    return null;
+  }
+  return nextCaptureIndex(
+    getTestRunKey({
+      id: testInfo.testId,
+      retry: testInfo.retry,
+      repeat: testInfo.repeatEachIndex,
+    }),
+  );
+}
+
+/**
  * Check if the value is a Page.
  */
 export function checkIsPage(value: unknown): value is Page {
@@ -143,17 +177,45 @@ export function getPage(handler: Page | Frame): Page {
 /**
  * Get the viewport size.
  */
-export function getViewportSize(page: Page) {
+export async function getViewportSize(page: Page): Promise<ViewportSize> {
   const viewportSize = page.viewportSize();
-  if (!viewportSize) {
-    throw new Error("Snapshots can't be taken without a viewport.");
+  if (viewportSize) {
+    return viewportSize;
   }
-  return viewportSize;
+  // No emulated viewport (Electron windows, `viewport: null`): the page is
+  // sized by its window.
+  return page.evaluate(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }));
+}
+
+/**
+ * Get the browser running the page, or `undefined` if it can't be identified.
+ */
+export async function getBrowserMetadata(
+  page: Page,
+): Promise<ScreenshotMetadata["browser"]> {
+  const browser = page.context().browser();
+  if (browser) {
+    return { name: browser.browserType().name(), version: browser.version() };
+  }
+  // Electron contexts have no browser, but Electron adds its version to the
+  // default user agent. An app that overrides it stays unidentified.
+  const userAgent = await page.evaluate(() => navigator.userAgent);
+  const electronVersion = userAgent.match(/\bElectron\/(\S+)/)?.[1];
+  return electronVersion
+    ? { name: "electron", version: electronVersion }
+    : undefined;
 }
 
 type SnapshotNames = {
   name: string;
-  baseName: string | null;
+  /**
+   * Names to compare against, in priority order, or `null` to compare against
+   * `name` itself.
+   */
+  baseNames: string[] | null;
 };
 
 /**
@@ -175,27 +237,31 @@ export async function setViewportSize(page: Page, viewportSize: ViewportSize) {
 export function getSnapshotNames(
   name: string,
   testInfo: TestInfo | null,
+  baseNames?: string[] | null,
 ): SnapshotNames {
-  if (testInfo) {
-    // The project name is empty when no `projects` are configured in the
-    // Playwright config. In that case we must not prefix the name, otherwise it
-    // becomes an absolute path (e.g. `/my-screenshot`) and `path.resolve(root,
-    // name)` resolves it to the filesystem root.
-    const projectName = testInfo.project.name
-      ? `${testInfo.project.name}/${name}`
-      : name;
+  // The project name is empty when no `projects` are configured in the
+  // Playwright config. In that case we must not prefix the name, otherwise it
+  // becomes an absolute path (e.g. `/my-screenshot`) and `path.resolve(root,
+  // name)` resolves it to the filesystem root.
+  const prefix = testInfo?.project.name ? `${testInfo.project.name}/` : "";
+  const prefixedName = `${prefix}${name}`;
+  // User-provided names live in the same namespace as the snapshot name, so
+  // they get the same project prefix.
+  const prefixedBaseNames =
+    baseNames && baseNames.length > 0
+      ? baseNames.map((baseName) => `${prefix}${baseName}`)
+      : null;
 
-    if (testInfo.repeatEachIndex > 0) {
-      return {
-        name: `${projectName} repeat-${testInfo.repeatEachIndex}`,
-        baseName: projectName,
-      };
-    }
-
-    return { name: projectName, baseName: null };
+  if (testInfo && testInfo.repeatEachIndex > 0) {
+    return {
+      name: `${prefixedName} repeat-${testInfo.repeatEachIndex}`,
+      // A repeat has no baseline of its own, so it compares against the
+      // non-repeated snapshot — unless the user named its baselines.
+      baseNames: prefixedBaseNames ?? [prefixedName],
+    };
   }
 
-  return { name, baseName: null };
+  return { name: prefixedName, baseNames: prefixedBaseNames };
 }
 
 /**
@@ -227,10 +293,8 @@ export async function prepare(args: {
   ]);
 }
 
-type ScreenshotMetadataWithBaseName = ScreenshotMetadata & {
-  transient: Partial<NonNullable<ScreenshotMetadata["transient"]>> & {
-    baseName: string;
-  };
+type ScreenshotMetadataWithTransient = ScreenshotMetadata & {
+  transient: NonNullable<ScreenshotMetadata["transient"]>;
 };
 
 /**
@@ -243,11 +307,21 @@ export async function getPathAndMetadata(args: {
   extension: string;
   root: string;
   useArgosReporter: boolean;
+  /** Position of the screenshot in its test, see {@link takeCaptureIndex}. */
+  captureIndex?: number | null;
 }): Promise<{
-  metadata: ScreenshotMetadataWithBaseName;
+  metadata: ScreenshotMetadataWithTransient;
   path: string;
 }> {
-  const { handler, testInfo, names, extension, root, useArgosReporter } = args;
+  const {
+    handler,
+    testInfo,
+    names,
+    extension,
+    root,
+    useArgosReporter,
+    captureIndex,
+  } = args;
   const overrides = getMetadataOverrides();
 
   const path =
@@ -257,28 +331,27 @@ export async function getPathAndMetadata(args: {
 
   const dir = dirname(path);
 
-  const [colorScheme, mediaType, libMetadata, testMetadata] = await Promise.all(
-    [
-      handler.evaluate(() =>
-        ((window as any).__ARGOS__ as ArgosGlobal).getColorScheme(),
-      ),
-      handler.evaluate(() =>
-        ((window as any).__ARGOS__ as ArgosGlobal).getMediaType(),
-      ),
-      getLibraryMetadata(),
-      getTestMetadata(testInfo),
-      dir !== root ? mkdir(dir, { recursive: true }) : null,
-    ],
-  );
+  const [
+    colorScheme,
+    mediaType,
+    libMetadata,
+    testMetadata,
+    viewportSize,
+    browser,
+  ] = await Promise.all([
+    handler.evaluate(() =>
+      ((window as any).__ARGOS__ as ArgosGlobal).getColorScheme(),
+    ),
+    handler.evaluate(() =>
+      ((window as any).__ARGOS__ as ArgosGlobal).getMediaType(),
+    ),
+    getLibraryMetadata(),
+    getTestMetadata(testInfo),
+    checkIsFrame(handler) ? null : getViewportSize(handler),
+    getBrowserMetadata(getPage(handler)),
+    dir !== root ? mkdir(dir, { recursive: true }) : null,
+  ]);
 
-  const viewportSize = checkIsFrame(handler) ? null : getViewportSize(handler);
-
-  const browser = getPage(handler).context().browser();
-  if (!browser) {
-    throw new Error("Can't take screenshots without a browser.");
-  }
-  const browserName = browser.browserType().name();
-  const browserVersion = browser.version();
   const url = overrides?.url ?? handler.url();
 
   const metadata: ScreenshotMetadata = {
@@ -287,10 +360,7 @@ export async function getPathAndMetadata(args: {
     mediaType,
     test: testMetadata,
     story: overrides?.story,
-    browser: {
-      name: browserName,
-      version: browserVersion,
-    },
+    browser,
     ...libMetadata,
   };
 
@@ -300,14 +370,20 @@ export async function getPathAndMetadata(args: {
     metadata.viewport = viewport;
   }
 
+  if (captureIndex != null) {
+    metadata.capture = { index: captureIndex };
+  }
+
   metadata.transient = {};
 
-  if (names.baseName) {
-    metadata.transient.baseName = `${names.baseName}${extension}`;
+  if (names.baseNames) {
+    metadata.transient.baseName = names.baseNames.map(
+      (baseName) => `${baseName}${extension}`,
+    );
   }
 
   return {
-    metadata: metadata as ScreenshotMetadataWithBaseName,
+    metadata: metadata as ScreenshotMetadataWithTransient,
     path,
   };
 }
@@ -359,6 +435,41 @@ export async function beforeEach(
       ((window as any).__ARGOS__ as ArgosGlobal).afterEach(),
     );
   };
+}
+
+/**
+ * Get the `Locator` of a string selector, or the `Locator` itself.
+ */
+export function toLocator(handler: Page | Frame, target: string | Locator) {
+  return typeof target === "string" ? handler.locator(target) : target;
+}
+
+/**
+ * Apply the `hide` and `remove` options until `afterEach` runs, as if the
+ * matched elements had the `data-visual-test` helper attribute.
+ */
+export async function applyHelpers(
+  handler: Page | Frame,
+  options: {
+    hide?: (string | Locator)[];
+    remove?: (string | Locator)[];
+  },
+) {
+  const apply = (targets: (string | Locator)[] = [], helper: ArgosHelper) =>
+    targets.map((target) =>
+      toLocator(handler, target).evaluateAll(
+        (elements, helper) =>
+          ((window as any).__ARGOS__ as ArgosGlobal).applyHelper(
+            elements,
+            helper,
+          ),
+        helper,
+      ),
+    );
+  await Promise.all([
+    ...apply(options.hide, "transparent"),
+    ...apply(options.remove, "removed"),
+  ]);
 }
 
 /**

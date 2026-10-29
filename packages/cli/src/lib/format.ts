@@ -1,9 +1,17 @@
 import type { ArgosAPISchema } from "@snapvisor/api-client";
 
+import type { DocsSearchResult } from "./docs";
+import type { SnapshotDownload } from "./download";
+import { sanitizeTerminalText } from "./terminal";
+
 type Build = ArgosAPISchema.components["schemas"]["Build"];
 type SnapshotDiff = ArgosAPISchema.components["schemas"]["SnapshotDiff"];
 type SnapshotDiffStatus = SnapshotDiff["status"];
 type TestMetrics = ArgosAPISchema.components["schemas"]["TestMetrics"];
+type TestDetails = ArgosAPISchema.components["schemas"]["TestDetails"];
+type TestChange = ArgosAPISchema.components["schemas"]["TestChange"];
+type TestChangeOccurrence =
+  ArgosAPISchema.components["schemas"]["TestChangeOccurrence"];
 type Change = ArgosAPISchema.components["schemas"]["Change"];
 type BuildReview = ArgosAPISchema.components["schemas"]["BuildReview"];
 type Comment = ArgosAPISchema.components["schemas"]["Comment"];
@@ -12,6 +20,25 @@ type Me = ArgosAPISchema.components["schemas"]["Me"];
 type Project = ArgosAPISchema.components["schemas"]["Project"];
 type AccountAnalytics =
   ArgosAPISchema.components["schemas"]["AccountAnalytics"];
+type AccountDetails = ArgosAPISchema.components["schemas"]["AccountDetails"];
+type TeamMember = ArgosAPISchema.components["schemas"]["TeamMember"];
+type TeamInvite = ArgosAPISchema.components["schemas"]["TeamInvite"];
+type TeamDomain = ArgosAPISchema.components["schemas"]["TeamDomain"];
+type InviteLink = ArgosAPISchema.components["schemas"]["InviteLink"];
+type ProjectContributor =
+  ArgosAPISchema.components["schemas"]["ProjectContributor"];
+type ProjectDomain = ArgosAPISchema.components["schemas"]["ProjectDomain"];
+type IgnoredChange = ArgosAPISchema.components["schemas"]["IgnoredChange"];
+type Media = ArgosAPISchema.components["schemas"]["Media"];
+type MediaVersion = ArgosAPISchema.components["schemas"]["MediaVersion"];
+type TestSummary = ArgosAPISchema.components["schemas"]["TestSummary"];
+type BuildReviewers = ArgosAPISchema.components["schemas"]["BuildReviewers"];
+type NotificationSubscription =
+  ArgosAPISchema.components["schemas"]["NotificationSubscription"];
+type AutomationRule = ArgosAPISchema.components["schemas"]["AutomationRule"];
+/** A deployment as returned by `listProjectDeployments`; it has no named schema. */
+export type ProjectDeployment =
+  ArgosAPISchema.operations["listProjectDeployments"]["responses"][200]["content"]["application/json"]["results"][number];
 
 /** Render a scalar, using `-` for empty values. */
 export function formatValue(value: string | number | null | undefined): string {
@@ -19,6 +46,11 @@ export function formatValue(value: string | number | null | undefined): string {
     return "-";
   }
   return String(value);
+}
+
+/** Render a flag as `yes` / `no`. */
+function formatBoolean(value: boolean): string {
+  return value ? "yes" : "no";
 }
 
 function formatUser(user: User | null | undefined): string {
@@ -40,7 +72,7 @@ export function formatMe(me: Me): string {
   return lines.join("\n");
 }
 
-export function formatProject(project: Project): string {
+export function formatCreatedProject(project: Project): string {
   return [
     `Created project ${project.account.slug}/${project.name}.`,
     `ID: ${project.id}`,
@@ -48,6 +80,33 @@ export function formatProject(project: Project): string {
     `Account: ${project.account.slug}`,
     `Default base branch: ${formatValue(project.defaultBaseBranch)}`,
   ].join("\n");
+}
+
+export function formatProject(project: Project): string {
+  return [
+    `Project ${project.account.slug}/${project.name}`,
+    `ID: ${project.id}`,
+    `Visibility: ${project.private ? "private" : "public"}`,
+    `Default base branch: ${formatValue(project.defaultBaseBranch)}`,
+    `Auto-approved branches: ${formatValue(project.autoApprovedBranchGlob)}`,
+    `Summary check: ${project.summaryCheck}`,
+    `PR comment: ${formatBoolean(project.prCommentEnabled)}`,
+    `Default user level: ${formatValue(project.defaultUserLevel)}`,
+    `Ignore changes: ${formatIgnoreConfig(project.ignoreConfig)}`,
+    `Deployments: ${formatBoolean(project.deploymentEnabled)} (${project.deploymentAuth}, production branches ${formatValue(project.deploymentProductionBranchGlob)})`,
+    `GitHub Actions OIDC: ${formatBoolean(project.githubActionsOidcEnabled)}`,
+    `Tokenless auth: ${formatBoolean(project.tokenlessAuthEnabled)}`,
+  ].join("\n");
+}
+
+function formatIgnoreConfig(config: Project["ignoreConfig"]): string {
+  if (!config.enabled) {
+    return "disabled";
+  }
+  const autoIgnore = config.autoIgnore;
+  return autoIgnore
+    ? `enabled, auto-ignore after ${autoIgnore.changes} occurrences`
+    : "enabled, auto-ignore off";
 }
 
 export function formatStats(stats: Build["stats"]): string {
@@ -144,6 +203,92 @@ export function formatSnapshots(diffs: SnapshotDiff[], build: Build): string {
     `Summary: ${formatSnapshotSummary(diffs)}`,
     "",
     ...diffs.flatMap((diff) => [...formatSnapshotDiff(diff, build), ""]),
+  ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+export function formatBuilds(builds: Build[]): string {
+  if (builds.length === 0) {
+    return "No builds found.";
+  }
+  return [
+    `Builds (${builds.length})`,
+    "",
+    ...builds.flatMap((build) => [
+      `#${build.number} [${build.status}]`,
+      `  Branch: ${formatValue(build.head.branch)}`,
+      `  Commit: ${formatValue(build.head.sha)}`,
+      `  Snapshots: ${formatStats(build.stats)}`,
+      `  URL: ${build.url}`,
+      "",
+    ]),
+  ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+/**
+ * Format the result of a download. `kind` names what was downloaded, e.g.
+ * `baseline snapshot`, and is pluralized as needed.
+ */
+export function formatSnapshotDownload(
+  download: SnapshotDownload,
+  kind = "snapshot",
+): string {
+  const { build, directory, files } = download;
+  if (files.length === 0) {
+    return `Build #${build.number} has no ${kind}s to download.`;
+  }
+  return [
+    `Downloaded ${files.length} ${kind}${files.length === 1 ? "" : "s"} of build #${build.number} to ${directory}`,
+    `Branch: ${formatValue(build.head.branch)}`,
+    `Commit: ${formatValue(build.head.sha)}`,
+    `URL: ${build.url}`,
+  ].join("\n");
+}
+
+/** When and where a change was captured, on one line. */
+function formatOccurrence(occurrence: TestChangeOccurrence): string {
+  return `${occurrence.date} in build #${occurrence.buildNumber}`;
+}
+
+export function formatTest(test: TestDetails): string {
+  const lines = [
+    `Test ${test.id} [${test.status}]`,
+    `Name: ${test.name}`,
+    `Build name: ${test.buildName}`,
+    `Flakiness: ${formatFlakiness(test.metrics)}`,
+    `Builds: ${test.metrics.total}`,
+    `Changes: ${test.metrics.changes} (${test.metrics.uniqueChanges} seen only once)`,
+  ];
+  if (test.firstSeenChange) {
+    lines.push(`First change: ${formatOccurrence(test.firstSeenChange)}`);
+  }
+  if (test.lastSeenChange) {
+    lines.push(`Last change: ${formatOccurrence(test.lastSeenChange)}`);
+  }
+  lines.push(`URL: ${test.url}`);
+  return lines.join("\n");
+}
+
+export function formatTestChanges(changes: TestChange[]): string {
+  if (changes.length === 0) {
+    return "No changes found.";
+  }
+  return [
+    `Changes (${changes.length})`,
+    "",
+    ...changes.flatMap((change) => [
+      `${change.id}${change.ignored ? " [ignored]" : ""}`,
+      `  Occurrences: ${change.occurrences}`,
+      `  First seen: ${formatOccurrence(change.firstSeen)}`,
+      `  Last seen: ${formatOccurrence(change.lastSeen)}`,
+      `  Mask: ${formatValue(change.diff.url)}`,
+      `  Base file: ${formatValue(change.diff.base?.url)}`,
+      `  Head file: ${formatValue(change.diff.head?.url)}`,
+      "",
+    ]),
   ]
     .slice(0, -1)
     .join("\n");
@@ -263,6 +408,37 @@ function formatReactions(reactions: Comment["reactions"]): string | null {
   return reactions.map((r) => `${r.emoji} ${r.count}`).join(" ");
 }
 
+/**
+ * What a comment points at: the diff or the spot on the media, and the upload that
+ * spot describes.
+ *
+ * Shared by the single-comment and list renderings, because a pin a listing does
+ * not print is a review an agent cannot act on.
+ */
+function formatCommentTarget(comment: Comment): string[] {
+  const lines: string[] = [];
+  const anchor = formatAnchor(comment.anchor);
+
+  if (comment.screenshotDiffId) {
+    lines.push(
+      `Diff: ${comment.screenshotDiffId}${anchor ? ` (${anchor})` : ""}`,
+    );
+  } else if (anchor) {
+    // A comment on a media carries an anchor with no diff behind it: the point is
+    // on the media itself. Without this the pin would not show up at all.
+    lines.push(`Pinned: ${anchor}`);
+  }
+
+  if (comment.mediaVersionId) {
+    // The version the pin was placed on. It only matters once the media has been
+    // re-uploaded, but that is exactly when reading the pin against the newest
+    // file points at the wrong pixel — `argos media versions` resolves it.
+    lines.push(`Media version: ${comment.mediaVersionId}`);
+  }
+
+  return lines;
+}
+
 export function formatComment(comment: Comment): string {
   const lines = [
     `Comment #${comment.id}`,
@@ -271,12 +447,7 @@ export function formatComment(comment: Comment): string {
   if (comment.threadId) {
     lines.push(`Reply to: ${comment.threadId}`);
   }
-  if (comment.screenshotDiffId) {
-    const anchor = formatAnchor(comment.anchor);
-    lines.push(
-      `Diff: ${comment.screenshotDiffId}${anchor ? ` (${anchor})` : ""}`,
-    );
-  }
+  lines.push(...formatCommentTarget(comment));
   if (comment.pending) {
     lines.push("Pending: draft (only visible to you)");
   }
@@ -309,11 +480,370 @@ export function formatComments(comments: Comment[]): string {
       ].filter(Boolean);
       return [
         `#${comment.id} [${tags.join(", ")}] ${formatUser(comment.author)}`,
+        // Where it points, and on which upload. A pin is the whole content of a
+        // comment on a screenshot, so a listing that drops it says nothing about
+        // what has to change — and the version is what resolves the pin to the
+        // bytes its author was looking at.
+        ...formatCommentTarget(comment).map((line) => indent(line)),
         indent(comment.text),
         "",
       ];
     }),
   ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+export function formatAccount(account: AccountDetails): string {
+  const lines = [
+    `Account ${account.slug} (${account.type})`,
+    `ID: ${account.id}`,
+    `Name: ${formatValue(account.name)}`,
+    `Plan: ${formatValue(account.plan?.name)}`,
+    `Period: ${formatValue(account.periodStartDate)} → ${formatValue(account.periodEndDate)}`,
+    `Screenshots: ${account.currentPeriodScreenshots} / ${account.includedScreenshots} (${Math.round(account.consumptionRatio * 100)}%)`,
+  ];
+  if (account.additionalScreenshotsCost > 0) {
+    lines.push(
+      `Additional screenshots cost: ${account.additionalScreenshotsCost}`,
+    );
+  }
+  if (account.defaultUserLevel) {
+    lines.push(`Default user level: ${account.defaultUserLevel}`);
+  }
+  return lines.join("\n");
+}
+
+export function formatMembers(members: TeamMember[]): string {
+  if (members.length === 0) {
+    return "No members found.";
+  }
+  return [
+    `Members (${members.length})`,
+    "",
+    ...members.map(
+      (member) =>
+        `${formatUser(member.user)} [${member.level}] · user ${member.user.id}`,
+    ),
+  ].join("\n");
+}
+
+export function formatMember(member: TeamMember): string {
+  return [
+    `Member ${formatUser(member.user)}`,
+    `Level: ${member.level}`,
+    `User ID: ${member.user.id}`,
+  ].join("\n");
+}
+
+export function formatInvites(invites: TeamInvite[]): string {
+  if (invites.length === 0) {
+    return "No pending invites found.";
+  }
+  return [
+    `Invites (${invites.length})`,
+    "",
+    ...invites.map(
+      (invite) =>
+        `${invite.email} [${invite.level}${invite.expired ? ", expired" : ""}] · ${invite.id} · expires ${invite.expiresAt}`,
+    ),
+  ].join("\n");
+}
+
+export function formatInviteLink(link: InviteLink): string {
+  return `Invite link: ${link.inviteLink}`;
+}
+
+export function formatDomains(domains: TeamDomain[]): string {
+  if (domains.length === 0) {
+    return "No email domains found.";
+  }
+  return [
+    `Email domains (${domains.length})`,
+    "",
+    ...domains.map((domain) => `${domain.domain} · added ${domain.createdAt}`),
+  ].join("\n");
+}
+
+export function formatDomain(domain: TeamDomain): string {
+  return [`Domain ${domain.domain}`, `Added: ${domain.createdAt}`].join("\n");
+}
+
+export function formatContributors(contributors: ProjectContributor[]): string {
+  if (contributors.length === 0) {
+    return "No contributors found.";
+  }
+  return [
+    `Contributors (${contributors.length})`,
+    "",
+    ...contributors.map(
+      (contributor) =>
+        `${formatUser(contributor.user)} [${contributor.level}] · user ${contributor.user.id}`,
+    ),
+  ].join("\n");
+}
+
+export function formatContributor(contributor: ProjectContributor): string {
+  return [
+    `Contributor ${formatUser(contributor.user)}`,
+    `Level: ${contributor.level}`,
+    `User ID: ${contributor.user.id}`,
+  ].join("\n");
+}
+
+export function formatDeployments(deployments: ProjectDeployment[]): string {
+  if (deployments.length === 0) {
+    return "No deployments found.";
+  }
+  return [
+    `Deployments (${deployments.length})`,
+    "",
+    ...deployments.flatMap((deployment) => [
+      `${deployment.id} [${deployment.status}, ${deployment.environment}]`,
+      `  Branch: ${formatValue(deployment.branch)}`,
+      `  Commit: ${formatValue(deployment.commitSha)}`,
+      `  Date: ${deployment.createdAt}`,
+      `  URL: ${deployment.url}`,
+      "",
+    ]),
+  ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+export function formatProjectDomain(domain: ProjectDomain): string {
+  return `Deployment domain: ${formatValue(domain.domain)}`;
+}
+
+export function formatIgnoredChanges(changes: IgnoredChange[]): string {
+  if (changes.length === 0) {
+    return "No ignored changes found.";
+  }
+  return [
+    `Ignored changes (${changes.length})`,
+    "",
+    ...changes.flatMap((change) => [
+      change.id,
+      `  Test: ${change.test.name} (${change.test.buildName})`,
+      `  Test ID: ${change.test.id}`,
+      "",
+    ]),
+  ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+export function formatTests(tests: TestSummary[]): string {
+  if (tests.length === 0) {
+    return "No tests found.";
+  }
+  return [
+    `Tests (${tests.length})`,
+    "",
+    ...tests.flatMap((test) => [
+      `${test.name} (${test.buildName})`,
+      `  ID: ${test.id}`,
+      `  Flakiness: ${formatFlakiness(test.metrics)}`,
+      `  Changes: ${test.metrics.changes} over ${test.metrics.total} builds`,
+      "",
+    ]),
+  ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+export function formatReviewers(data: BuildReviewers): string {
+  if (data.reviewers.length === 0) {
+    return "No reviewers requested.";
+  }
+  return [
+    `Requested reviewers (${data.reviewers.length})`,
+    "",
+    ...data.reviewers.map((user) => `${formatUser(user)} · user ${user.id}`),
+  ].join("\n");
+}
+
+export function formatSubscription(
+  subscription: NotificationSubscription,
+): string {
+  return subscription.subscribed
+    ? "Subscribed: you will receive notifications."
+    : "Unsubscribed: you will no longer receive notifications.";
+}
+
+/** One line per condition, rendering the `not` and `glob` wrappers inline. */
+function formatConditions(conditions: AutomationRule["conditions"]): string[] {
+  return conditions.map((condition) => {
+    if ("not" in condition) {
+      const inner = condition.not;
+      return "glob" in inner
+        ? `not ${inner.glob.type} matches ${inner.glob.value}`
+        : `not ${inner.type} is ${formatValue(inner.value)}`;
+    }
+    if ("glob" in condition) {
+      return `${condition.glob.type} matches ${condition.glob.value}`;
+    }
+    return `${condition.type} is ${formatValue(condition.value)}`;
+  });
+}
+
+export function formatAutomationRule(rule: AutomationRule): string {
+  const lines = [
+    `Rule ${rule.name} [${rule.active ? "active" : "inactive"}]`,
+    `ID: ${rule.id}`,
+    `Events: ${rule.events.join(", ")}`,
+  ];
+  const conditions = formatConditions(rule.conditions);
+  lines.push(
+    conditions.length > 0
+      ? `Conditions: ${conditions.join(" AND ")}`
+      : "Conditions: none",
+  );
+  lines.push(
+    `Actions: ${rule.actions.map((action) => action.action).join(", ")}`,
+  );
+  lines.push(`Updated: ${rule.updatedAt}`);
+  return lines.join("\n");
+}
+
+export function formatAutomationRules(rules: AutomationRule[]): string {
+  if (rules.length === 0) {
+    return "No automation rules found.";
+  }
+  return [
+    `Automation rules (${rules.length})`,
+    "",
+    ...rules.flatMap((rule) => [
+      `${rule.name} [${rule.active ? "active" : "inactive"}]`,
+      `  ID: ${rule.id}`,
+      `  Events: ${rule.events.join(", ")}`,
+      `  Actions: ${rule.actions.map((action) => action.action).join(", ")}`,
+      "",
+    ]),
+  ]
+    .slice(0, -1)
+    .join("\n");
+}
+
+/** Format bytes the way a file listing does. */
+function formatMediaSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+  const kb = bytes / 1024;
+  if (kb < 1024) {
+    return `${Math.round(kb)} KB`;
+  }
+  const mb = kb / 1024;
+  return mb < 10 ? `${mb.toFixed(1)} MB` : `${Math.round(mb)} MB`;
+}
+
+/** Content type, size, dimensions — the same middle line everywhere media prints. */
+function formatMediaDetails(media: Media | MediaVersion): string {
+  return [
+    media.contentType,
+    formatMediaSize(media.sizeBytes),
+    media.width && media.height ? `${media.width}x${media.height}` : null,
+  ]
+    .filter((part): part is string => Boolean(part))
+    .join(" · ");
+}
+
+/**
+ * Where a media stands: attached to a pull request and listed in its comment, or
+ * waiting on one to open for its branch.
+ */
+function formatMediaStage(media: Media): string {
+  if (media.stage === "published") {
+    return media.prNumber ? `published to PR #${media.prNumber}` : "published";
+  }
+  return media.branch ? `staged on ${media.branch}` : "staged";
+}
+
+/**
+ * Format one media.
+ *
+ * The Markdown embed comes last and on its own line: it is what a caller copies,
+ * and burying it between fields makes it harder to select.
+ */
+export function formatMedia(media: Media): string {
+  return [
+    media.state ? `${media.name} (${media.state})` : media.name,
+    `  ID: ${media.id}`,
+    `  ${formatMediaStage(media)}`,
+    `  ${formatMediaDetails(media)} · ${media.visibility} · ${media.status}`,
+    // Only worth a line once there is history: a first upload is version 1, and
+    // saying so on every line is noise. Not "x of y" — `version` counts every
+    // version created, `versionCount` only the ones whose bytes landed, so an
+    // abandoned upload in between makes the two disagree.
+    media.versionCount > 1
+      ? `  Version: ${media.version} (${media.versionCount} uploaded)`
+      : null,
+    media.description ? `  Description: ${media.description}` : null,
+    media.expiresAt ? `  Expires: ${media.expiresAt}` : null,
+    `  URL: ${media.url}`,
+    `  File: ${media.fileUrl}`,
+    `  Markdown: ${media.markdown}`,
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
+}
+
+export function formatMediaList(list: Media[]): string {
+  if (list.length === 0) {
+    return "No media found.";
+  }
+  return [`Media (${list.length})`, "", ...list.map(formatMedia)].join("\n");
+}
+
+/**
+ * Format a media's versions.
+ *
+ * The id leads each entry because that is what this listing is for: a comment
+ * records the `mediaVersionId` its author was looking at, and matching it here is
+ * how feedback written on an earlier upload gets read against the right file.
+ */
+export function formatMediaVersions(versions: MediaVersion[]): string {
+  if (versions.length === 0) {
+    return "No versions found.";
+  }
+  return [
+    `Versions (${versions.length})`,
+    "",
+    ...versions.flatMap((version) => [
+      `#${version.number} · ${formatMediaDetails(version)} · ${version.createdAt}`,
+      `  ID: ${version.id}`,
+      `  File: ${version.fileUrl}`,
+      version.expiresAt ? `  Expires: ${version.expiresAt}` : null,
+      "",
+    ]),
+  ]
+    .filter((line): line is string => line !== null)
+    .slice(0, -1)
+    .join("\n");
+}
+
+/**
+ * Format documentation search results, best match first. Titles and excerpts
+ * come from the docs host, so they are sanitized before reaching the terminal,
+ * which also cuts the excerpt down to a single line. URLs were normalized when
+ * the results were parsed.
+ */
+export function formatDocsSearchResults(
+  results: DocsSearchResult[],
+  query: string,
+): string {
+  if (results.length === 0) {
+    return `No documentation found for "${sanitizeTerminalText(query)}".`;
+  }
+  return results
+    .flatMap((result, index) => [
+      `${index + 1}. ${sanitizeTerminalText(result.title)}`,
+      `  ${result.url}`,
+      result.excerpt ? `  ${sanitizeTerminalText(result.excerpt)}` : null,
+      "",
+    ])
+    .filter((line): line is string => line !== null)
     .slice(0, -1)
     .join("\n");
 }

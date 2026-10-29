@@ -14,12 +14,15 @@
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },
   "keywords": [
-    "puppeteer",
     "argos",
+    "argos-ci",
+    "puppeteer",
     "testing",
-    "visual testing",
-    "regression",
-    "visual regression"
+    "e2e-testing",
+    "visual-testing",
+    "visual-regression",
+    "visual-regression-testing",
+    "screenshot-testing"
   ],
   "publishConfig": {
     "access": "public"
@@ -50,10 +53,10 @@
     "@types/jest": "^30.0.0",
     "@types/node": "catalog:",
     "expect-puppeteer": "^11.0.0",
-    "jest": "^30.4.2",
-    "jest-light-runner": "^0.7.12",
+    "jest": "^30.5.2",
+    "jest-light-runner": "^0.8.2",
     "jest-puppeteer": "^11.0.0",
-    "puppeteer": "^25.1.0"
+    "puppeteer": "^25.12.0"
   },
   "scripts": {
     "build": "tsdown && cp ./src/index.cjs ./dist",

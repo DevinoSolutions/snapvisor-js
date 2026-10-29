@@ -108,7 +108,12 @@ export async function deploy(params: DeployParameters) {
       commit: config.commit ?? null,
       branch: config.branch ?? null,
       prNumber: config.prNumber ?? null,
-      prHeadCommit: config.prHeadCommit ?? null,
+      // Argos reports the deployment status on the pull request head, which
+      // is the wrong commit in a merge queue: there the status belongs to the
+      // merge group commit, as it does for builds.
+      prHeadCommit: config.mergeQueuePrNumbers
+        ? null
+        : (config.prHeadCommit ?? null),
       environment: params.environment,
       files: files.map(({ path, hash, size, contentType }) => ({
         path,

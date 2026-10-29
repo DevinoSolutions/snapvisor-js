@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { BrowserCommandContext } from "vitest/node";
 
-const { argosScreenshot, setMetadataConfig } = vi.hoisted(() => ({
-  argosScreenshot: vi.fn(),
-  setMetadataConfig: vi.fn(),
-}));
+const { argosScreenshot, setMetadataConfig, resolveStorybookLibrary } =
+  vi.hoisted(() => ({
+    argosScreenshot: vi.fn(),
+    setMetadataConfig: vi.fn(),
+    resolveStorybookLibrary: vi.fn(),
+  }));
 
 vi.mock("@snapvisor/playwright", () => ({
   argosScreenshot,
@@ -13,7 +15,10 @@ vi.mock("@snapvisor/playwright", () => ({
 
 vi.mock("./version", () => ({
   getArgosVitestVersion: vi.fn().mockResolvedValue("0.0.0-test"),
+  resolveStorybookLibrary,
 }));
+
+const TEST_PATH = "/project/src/Button.test.tsx";
 
 import { createArgosScreenshotCommand } from "./command";
 
@@ -23,6 +28,7 @@ function createCtx() {
   const ctx = {
     page: { evaluate },
     frame: vi.fn().mockResolvedValue(frame),
+    testPath: TEST_PATH,
   } as unknown as BrowserCommandContext;
   return { ctx, evaluate, frame };
 }
@@ -38,6 +44,7 @@ describe("createArgosScreenshotCommand", () => {
       },
     ]);
     setMetadataConfig.mockReset();
+    resolveStorybookLibrary.mockReset().mockResolvedValue(null);
   });
 
   it("throws when the name is missing", async () => {
@@ -86,7 +93,92 @@ describe("createArgosScreenshotCommand", () => {
       name: "@snapvisor/vitest",
       version: "0.0.0-test",
     });
-    expect(metadata.playwrightLibraries).toContain("vitest");
+    expect(metadata.playwrightLibraries).toEqual(["vitest"]);
+    expect(metadata.story).toBeUndefined();
+  });
+
+  it("reports a screenshot of a story with the Storybook library resolved from the test file", async () => {
+    const command = createArgosScreenshotCommand();
+    const { ctx } = createCtx();
+    const storybookLibrary = { name: "storybook", version: "10.6.1" };
+    resolveStorybookLibrary.mockResolvedValue(storybookLibrary);
+    const storybook = {
+      source: "portable-stories" as const,
+      story: { id: "components-button--primary", tags: ["dev"], play: false },
+    };
+
+    await command(ctx, "shot", {}, null, 0, storybook);
+
+    expect(resolveStorybookLibrary).toHaveBeenCalledWith(storybook, TEST_PATH);
+    const metadata = setMetadataConfig.mock.calls.at(-1)![0];
+    expect(metadata.sdk.name).toBe("@snapvisor/vitest");
+    expect(metadata.automationLibrary).toEqual(storybookLibrary);
+    expect(metadata.story).toEqual(storybook.story);
+  });
+
+  it("reports a story without a stable id as Storybook, without story metadata", async () => {
+    const command = createArgosScreenshotCommand();
+    const { ctx } = createCtx();
+    resolveStorybookLibrary.mockResolvedValue({
+      name: "storybook",
+      version: "10.6.1",
+    });
+
+    await command(ctx, "shot", {}, null, 0, {
+      source: "portable-stories",
+      story: null,
+    });
+
+    const metadata = setMetadataConfig.mock.calls.at(-1)![0];
+    expect(metadata.automationLibrary?.name).toBe("storybook");
+    expect(metadata.story).toBeUndefined();
+  });
+
+  it("falls back to Vitest when Storybook cannot be resolved", async () => {
+    const command = createArgosScreenshotCommand();
+    const { ctx } = createCtx();
+
+    await command(ctx, "shot", {}, null, 0, {
+      source: "portable-stories",
+      story: null,
+    });
+
+    const metadata = setMetadataConfig.mock.calls.at(-1)![0];
+    expect(metadata.automationLibrary).toBeUndefined();
+    expect(metadata.playwrightLibraries).toEqual(["vitest"]);
+  });
+
+  it("waits for stabilization before sizing the iframe to the content", async () => {
+    const command = createArgosScreenshotCommand();
+    const { ctx, evaluate } = createCtx();
+
+    await command(ctx, "shot");
+
+    const [, , opts] = argosScreenshot.mock.calls[0]!;
+    const evaluateCallsBefore = evaluate.mock.calls.length;
+    const runStabilization = vi.fn(async () => {
+      // Nothing has been measured yet: content that is still loading (images,
+      // fonts) would make the page look shorter than it ends up being.
+      expect(evaluate).toHaveBeenCalledTimes(evaluateCallsBefore);
+    });
+
+    await opts.beforeScreenshot({ runStabilization });
+
+    expect(runStabilization).toHaveBeenCalledTimes(1);
+    // The iframe is only grown once the content has settled.
+    expect(evaluate.mock.calls.length).toBeGreaterThan(evaluateCallsBefore);
+  });
+
+  it("restores the iframe size once the screenshot is taken", async () => {
+    const command = createArgosScreenshotCommand();
+    const { ctx, evaluate } = createCtx();
+
+    await command(ctx, "shot");
+
+    // Vitest reuses the same iframe for every test in the file, so the size it
+    // was grown to must not leak into the next screenshot.
+    const sizes = evaluate.mock.calls.map((call) => call[1]?.size);
+    expect(sizes).toContain("initial");
   });
 
   it("takes one screenshot per viewport with viewport-suffixed names", async () => {

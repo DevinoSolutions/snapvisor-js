@@ -56,11 +56,57 @@ export interface VitestScreenshotOptions {
   argosCSS?: string;
 
   /**
+   * Selectors of the elements to hide from the screenshot.
+   * Hidden elements keep their space in the layout, like with the
+   * `data-visual-test="transparent"` helper.
+   * Selectors that match nothing are ignored.
+   */
+  hide?: string[];
+
+  /**
+   * Selectors of the elements to remove from the screenshot.
+   * Removed elements no longer take space in the layout, like with the
+   * `data-visual-test="removed"` helper.
+   * Selectors that match nothing are ignored.
+   */
+  remove?: string[];
+
+  /**
+   * Selectors of the elements to cover with a box when the screenshot is
+   * taken, like with the `data-visual-test="blackout"` helper.
+   * Selectors that match nothing are ignored.
+   */
+  mask?: string[];
+
+  /**
+   * Color of the box covering the masked elements, in CSS color format.
+   * @default "#FF00FF"
+   */
+  maskColor?: string;
+
+  /**
    * Sensitivity threshold between 0 and 1.
    * The higher the threshold, the less sensitive the diff will be.
    * @default 0.5
    */
   threshold?: number;
+
+  /**
+   * Name, or list of names, to compare this screenshot against instead of its
+   * own name. A list is tried in order and the first name found in the baseline
+   * build wins, which lets a brand new screenshot fall back to an existing one
+   * rather than showing up as added.
+   *
+   * The screenshot's own name is not implicitly included: list it first to keep
+   * comparing against itself when it exists.
+   *
+   * @example
+   *    // Compare "home-variant-b" against itself, or against "home" if it is new.
+   *    argosScreenshot("home-variant-b", {
+   *      baseName: ["home-variant-b", "home"],
+   *    })
+   */
+  baseName?: string | string[];
 
   /**
    * Tag or array of tags to attach to the screenshot.

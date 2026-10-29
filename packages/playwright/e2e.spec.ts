@@ -1,12 +1,13 @@
-import { test, expect, type BrowserContext } from "@playwright/test";
+import { test, expect, type BrowserContext, type Page } from "@playwright/test";
 import { fileURLToPath } from "node:url";
-import { stat } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { argosScreenshot } from "./dist/index.mjs";
 import { argosScreenshot as typedArgosScreenshot } from "./src";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { argosScreenshot as argosScreenshotCjs } from "./dist/index.cjs";
 import { argosAriaSnapshot } from "./dist/index.mjs";
+import { readMetadata } from "@snapvisor/util";
 
 test.describe.configure({ mode: "serial" });
 const screenshotFolder = "screenshots";
@@ -158,6 +159,100 @@ test.describe("#argosScreenshot", () => {
     });
   });
 
+  test.describe("with `hide`, `remove` and `mask`", () => {
+    /**
+     * Read the color of some pixels of a PNG, decoded by the browser.
+     */
+    async function getPixels(
+      page: Page,
+      path: string,
+      points: { x: number; y: number }[],
+    ) {
+      const data = await readFile(path, "base64");
+      return page.evaluate(
+        async ({ data, points }) => {
+          const img = new Image();
+          img.src = `data:image/png;base64,${data}`;
+          await img.decode();
+          const canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext("2d")!;
+          ctx.drawImage(img, 0, 0);
+          return points.map(({ x, y }) => {
+            const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+            return { r, g, b };
+          });
+        },
+        { data, points },
+      );
+    }
+
+    const WHITE = { r: 255, g: 255, b: 255 };
+    const MASK = { r: 255, g: 0, b: 255 };
+    const BLACK = { r: 0, g: 0, b: 0 };
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto(fixture("helpers.html"));
+    });
+
+    test("hides, removes and masks elements", async ({ page }) => {
+      const [screenshot] = await argosScreenshot(page, "helpers", {
+        fullPage: false,
+        hide: ["#hidden", ".does-not-exist"],
+        remove: [page.locator("#removed")],
+        mask: ["#masked", page.locator(".does-not-exist")],
+      });
+
+      // Each row is 50px high: `#removed` no longer takes space, so the rows
+      // below it move up.
+      const pixels = await getPixels(page, screenshot!.path, [
+        // `#hidden` keeps its space but is transparent.
+        { x: 10, y: 25 },
+        // `#masked`, masked by the `mask` option.
+        { x: 10, y: 75 },
+        // `#blackout`, still masked by its `data-visual-test` attribute.
+        { x: 10, y: 125 },
+        // `#last`.
+        { x: 10, y: 175 },
+      ]);
+      expect(pixels).toEqual([WHITE, MASK, MASK, BLACK]);
+
+      // The page is restored after the screenshot.
+      await expect(page.locator("#hidden")).not.toHaveAttribute(
+        "data-visual-test",
+      );
+      await expect(page.locator("#removed")).not.toHaveAttribute(
+        "data-visual-test",
+      );
+    });
+
+    test("restores the original helper attribute", async ({ page }) => {
+      const [screenshot] = await argosScreenshot(page, "helpers-restore", {
+        fullPage: false,
+        hide: ["#blackout", "#last"],
+        // Removing wins over hiding.
+        remove: ["#last"],
+      });
+
+      const pixels = await getPixels(page, screenshot!.path, [
+        // `#blackout` is hidden instead of masked.
+        { x: 10, y: 175 },
+        // `#last` is removed.
+        { x: 10, y: 225 },
+      ]);
+      expect(pixels).toEqual([WHITE, WHITE]);
+
+      await expect(page.locator("#blackout")).toHaveAttribute(
+        "data-visual-test",
+        "blackout",
+      );
+      await expect(page.locator("#last")).not.toHaveAttribute(
+        "data-visual-test",
+      );
+    });
+  });
+
   test.describe("viewports", () => {
     test("takes screenshots on different viewports", async ({ page }) => {
       await page.goto(fixture("basic.html"));
@@ -179,6 +274,55 @@ test.describe("#argosScreenshot", () => {
         expectSnapshotToExists("viewport vw-1024"),
         expectSnapshotToExists("viewport vw-1440"),
       ]);
+    });
+  });
+
+  test.describe("without a viewport", () => {
+    // Like an Electron window: the page is sized by its window. The device
+    // preset of the project sets a `deviceScaleFactor`, which requires a
+    // viewport, so the context is created by hand.
+    let context: BrowserContext;
+    let page: Page;
+
+    test.beforeEach(async ({ browser }) => {
+      context = await browser.newContext({
+        viewport: null,
+        deviceScaleFactor: undefined,
+      });
+      page = await context.newPage();
+      await page.goto(fixture("basic.html"));
+    });
+
+    test.afterEach(async () => {
+      await context.close();
+    });
+
+    test("reads the viewport from the window", async () => {
+      const attachments = await argosScreenshot(page, "without-viewport", {
+        fullPage: false,
+      });
+      await expectSnapshotToExists("without-viewport");
+
+      const screenshot = attachments.find(
+        (attachment) => attachment.contentType === "image/png",
+      );
+      const metadata = await readMetadata(screenshot!.path);
+      expect(metadata?.viewport).toEqual(
+        await page.evaluate(() => ({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        })),
+      );
+    });
+
+    test("does not support the viewports option", async () => {
+      await expect(
+        argosScreenshot(page, "without-viewport-viewports", {
+          viewports: ["iphone-4"],
+        }),
+      ).rejects.toThrow(
+        "viewports option is not supported on a page without a viewport, such as an Electron window",
+      );
     });
   });
 
@@ -449,6 +593,104 @@ test.describe("#argosScreenshot", () => {
       // The GIF is left untouched (still an animated GIF).
       const src = await page.locator("#gif").getAttribute("src");
       expect(src).toMatch(/^data:image\/gif/);
+
+      await page.evaluate(() => (window as any).__ARGOS__.afterEach());
+    });
+  });
+
+  test.describe("with `pauseSvgAnimations`", () => {
+    /**
+     * For each animated square of the fixture: whether the clock of its
+     * nearest `<svg>` is paused, where that clock stands, and the square's `x`.
+     */
+    function readAnimations(page: Page) {
+      return page.evaluate(() => {
+        const read = (id: string) => {
+          const rect = document.getElementById(id) as unknown as SVGRectElement;
+          const svg = rect.ownerSVGElement!;
+          return {
+            paused: svg.animationsPaused(),
+            time: svg.getCurrentTime(),
+            x: rect.x.animVal.value,
+          };
+        };
+        return {
+          endless: read("endless"),
+          nestedEndless: read("nested-endless"),
+          finite: read("finite"),
+        };
+      });
+    }
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto(fixture("svg-animation.html"));
+      // Let the loops move off their first frame, and the finite one end.
+      await page.waitForFunction(() => {
+        const x = (id: string) =>
+          (document.getElementById(id) as unknown as SVGRectElement).x.animVal
+            .value;
+        return (
+          x("endless") > 0 && x("nested-endless") > 0 && x("finite") === 160
+        );
+      });
+    });
+
+    test("pauses endless SVG animations on their first frame", async ({
+      page,
+    }) => {
+      await argosScreenshot(page, "with-svg-animation", { fullPage: false });
+
+      const timeBefore = await page.evaluate(() => {
+        const rect = document.getElementById(
+          "endless",
+        ) as unknown as SVGRectElement;
+        const time = rect.ownerSVGElement!.getCurrentTime();
+        (window as any).__ARGOS__.beforeEach({});
+        return time;
+      });
+
+      // Both loops are held on their first frame, the nested one included.
+      const paused = await readAnimations(page);
+      expect(paused.endless).toEqual({ paused: true, time: 0, x: 0 });
+      expect(paused.nestedEndless).toEqual({ paused: true, time: 0, x: 0 });
+
+      // Cleanup hands the clocks back where they were, running.
+      await page.evaluate(() => (window as any).__ARGOS__.afterEach());
+      const restored = await readAnimations(page);
+      expect(restored.endless.paused).toBe(false);
+      expect(restored.nestedEndless.paused).toBe(false);
+      // `getCurrentTime()` returns a single-precision float, so the round trip
+      // can land a microsecond early.
+      expect(restored.endless.time).toBeGreaterThan(timeBefore - 0.001);
+    });
+
+    test("leaves SVG animations that end alone", async ({ page }) => {
+      await argosScreenshot(page, "with-finite-svg-animation", {
+        fullPage: false,
+      });
+
+      await page.evaluate(() => (window as any).__ARGOS__.beforeEach({}));
+
+      // Still on its last value, on a clock nobody paused.
+      const { finite } = await readAnimations(page);
+      expect(finite).toMatchObject({ paused: false, x: 160 });
+
+      await page.evaluate(() => (window as any).__ARGOS__.afterEach());
+    });
+
+    test("does not pause SVG animations when disabled", async ({ page }) => {
+      await argosScreenshot(page, "with-svg-animation-disabled", {
+        fullPage: false,
+      });
+
+      await page.evaluate(() =>
+        (window as any).__ARGOS__.beforeEach({
+          options: { pauseSvgAnimations: false },
+        }),
+      );
+
+      const { endless } = await readAnimations(page);
+      expect(endless.paused).toBe(false);
 
       await page.evaluate(() => (window as any).__ARGOS__.afterEach());
     });

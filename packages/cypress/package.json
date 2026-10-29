@@ -14,13 +14,16 @@
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },
   "keywords": [
+    "argos",
+    "argos-ci",
     "cypress",
     "cypress-plugin",
-    "argos",
     "testing",
-    "visual testing",
-    "regression",
-    "visual regression"
+    "e2e-testing",
+    "visual-testing",
+    "visual-regression",
+    "visual-regression-testing",
+    "screenshot-testing"
   ],
   "publishConfig": {
     "access": "public"
@@ -50,12 +53,12 @@
     "cypress-wait-until": "^3.0.2"
   },
   "peerDependencies": {
-    "cypress": ">=12 <16"
+    "cypress": ">=12 <17"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "cypress": "^15.17.0",
-    "eslint-plugin-cypress": "^6.4.1"
+    "cypress": "^16.1.1",
+    "eslint-plugin-cypress": "^7.0.2"
   },
   "scripts": {
     "build": "tsdown",

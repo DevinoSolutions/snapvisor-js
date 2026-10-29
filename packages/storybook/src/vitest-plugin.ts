@@ -57,13 +57,18 @@ export const createArgosScreenshotCommand = (
     // and we screenshot the iframe's `<body>`. Anything overflowing the iframe box
     // is not painted, so the screenshot gets cut. `setViewportSize` grows the iframe
     // *before* `argosCSS` (which injects `fitToContent`'s `zoom`) is applied, so it
-    // can't account for the final content size. Re-fit the iframe here, after
-    // stabilization has injected `argosCSS`, so the whole content is painted.
+    // can't account for the final content size. Re-fit the iframe here, once the
+    // content has settled, so the whole story is painted.
     const userBeforeScreenshot = options?.beforeScreenshot;
     const optionsWithFit: ArgosScreenshotOptions = {
       ...options,
       beforeScreenshot: async (api) => {
         await userBeforeScreenshot?.(api);
+        // Stabilize before measuring: `beforeScreenshot` runs *before* the SDK
+        // waits for images and fonts, and an image that has not loaded yet
+        // takes no space. Sizing the iframe from that layout leaves it too
+        // small for the final story, and the rest is never painted.
+        await api.runStabilization();
         // `fitToContent` fits the content in both dimensions, so the iframe must
         // also grow horizontally to paint content wider than the viewport.
         // Without `fitToContent` we keep the viewport width to match Playwright's
@@ -72,21 +77,27 @@ export const createArgosScreenshotCommand = (
       },
     };
 
-    const attachments = await storybookArgosScreenshot(
-      frame,
-      {
-        ...testContext,
-        playwrightLibraries: ["@storybook/addon-vitest"],
-        setViewportSize: async (size) => {
-          await setIframeViewportSize(ctx, size, {
-            fullPage: screenshotOptions.fullPage ?? !fitToContent,
-          });
+    try {
+      return await storybookArgosScreenshot(
+        frame,
+        {
+          ...testContext,
+          playwrightLibraries: ["@storybook/addon-vitest"],
+          setViewportSize: async (size) => {
+            await setIframeViewportSize(ctx, size, {
+              fullPage: screenshotOptions.fullPage ?? !fitToContent,
+            });
+          },
         },
-      },
-      optionsWithFit,
-    );
-    await after();
-    return attachments;
+        optionsWithFit,
+      );
+    } finally {
+      // The iframe was grown to fit the story, so restore it: Vitest reuses the
+      // same iframe for every story in the file, and a leftover size would pad
+      // the next screenshots with blank space.
+      await setIframeViewportSize(ctx, "initial");
+      await after();
+    }
   };
 };
 
@@ -120,13 +131,18 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     ...otherOptions
   } = options ?? {};
   const root = resolve(cwd, unresolvedRoot);
-  const setupFile = resolve(
-    dirname(fileURLToPath(import.meta.url)),
-    "./vitest-setup-file.mjs",
-  );
+  const distDir = dirname(fileURLToPath(import.meta.url));
+  const setupFile = resolve(distDir, "./vitest-setup-file.mjs");
+  const channelSetupFile = resolve(distDir, "./vitest-setup-channel-file.mjs");
   return {
     name: "@snapvisor/storybook/vitest-plugin",
     configureVitest({ vitest, project }) {
+      // Ahead of the user's setup files: it installs the Storybook channel that
+      // addon preview modules capture when they are imported.
+      project.config.setupFiles.unshift(channelSetupFile);
+      // After them: `afterEach` hooks run in reverse registration order, so
+      // registering last is what makes the screenshot happen before Storybook
+      // unmounts the story.
       project.config.setupFiles.push(setupFile);
 
       if (uploadToArgos) {
@@ -138,7 +154,10 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     config() {
       return {
         optimizeDeps: {
-          include: ["@snapvisor/storybook/internal/vitest-setup-file"],
+          include: [
+            "@snapvisor/storybook/internal/vitest-setup-file",
+            "@snapvisor/storybook/internal/vitest-setup-channel-file",
+          ],
         },
         test: {
           browser: {

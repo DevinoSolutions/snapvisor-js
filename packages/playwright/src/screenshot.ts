@@ -15,12 +15,14 @@ import {
 import {
   getMetadataPath,
   getScreenshotName,
+  normalizeBaseNames,
   validateThreshold,
   writeMetadata,
   type ScreenshotMetadata,
 } from "@snapvisor/util";
 import { getAttachmentName, type ArgosAttachment } from "./attachment";
 import {
+  applyHelpers,
   attachAttachments,
   beforeAll,
   beforeEach,
@@ -28,14 +30,16 @@ import {
   checkIsFrame,
   checkIsPage,
   checkIsUsingArgosReporter,
+  getPage,
   getPathAndMetadata,
   getSnapshotNames,
   getTestInfo,
-  getViewportSize,
   PNG_EXTENSION,
   prepare,
   screenshotToSnapshotPath,
   setViewportSize,
+  takeCaptureIndex,
+  toLocator,
   waitForReadiness,
 } from "./util";
 import { writeFile } from "node:fs/promises";
@@ -46,7 +50,7 @@ type LocatorOptions = Parameters<Page["locator"]>[1];
 
 type ScreenshotOptions<
   TBase extends PageScreenshotOptions | LocatorScreenshotOptions,
-> = Omit<TBase, "encoding" | "type" | "omitBackground" | "path">;
+> = Omit<TBase, "encoding" | "type" | "omitBackground" | "path" | "mask">;
 
 export type ArgosScreenshotOptions = {
   /**
@@ -57,6 +61,7 @@ export type ArgosScreenshotOptions = {
 
   /**
    * Viewports to take screenshots of.
+   * Not supported on pages without a viewport, such as Electron windows.
    */
   viewports?: ViewportOption[];
 
@@ -75,6 +80,38 @@ export type ArgosScreenshotOptions = {
   argosCSS?: string;
 
   /**
+   * Elements to hide from the screenshot, as `Locator`s or string selectors.
+   * Hidden elements keep their space in the layout, like with the
+   * `data-visual-test="transparent"` helper.
+   * Selectors that match nothing are ignored.
+   * @example
+   *    argosScreenshot(page, "home", {
+   *      hide: ["#clock", page.getByTestId("avatar")],
+   *    })
+   */
+  hide?: (string | Locator)[];
+
+  /**
+   * Elements to remove from the screenshot, as `Locator`s or string selectors.
+   * Removed elements no longer take space in the layout, like with the
+   * `data-visual-test="removed"` helper.
+   * Selectors that match nothing are ignored.
+   * @example
+   *    argosScreenshot(page, "home", { remove: [".cookie-banner"] })
+   */
+  remove?: (string | Locator)[];
+
+  /**
+   * Elements to cover with a box when the screenshot is taken, as `Locator`s
+   * or string selectors, like with the `data-visual-test="blackout"` helper.
+   * Selectors that match nothing are ignored.
+   * @see https://playwright.dev/docs/api/class-page#page-screenshot-option-mask
+   * @example
+   *    argosScreenshot(page, "home", { mask: ["#map", page.getByRole("img")] })
+   */
+  mask?: (string | Locator)[];
+
+  /**
    * Disable hover effects by moving the mouse to the top-left corner of the document.
    * @default true
    */
@@ -86,6 +123,23 @@ export type ArgosScreenshotOptions = {
    * @default 0.5
    */
   threshold?: number;
+
+  /**
+   * Name, or list of names, to compare this screenshot against instead of its
+   * own name. A list is tried in order and the first name found in the baseline
+   * build wins, which lets a brand new screenshot fall back to an existing one
+   * rather than showing up as added.
+   *
+   * The screenshot's own name is not implicitly included: list it first to keep
+   * comparing against itself when it exists.
+   *
+   * @example
+   *    // Compare "home-variant-b" against itself, or against "home" if it is new.
+   *    argosScreenshot(page, "home-variant-b", {
+   *      baseName: ["home-variant-b", "home"],
+   *    })
+   */
+  baseName?: string | string[];
 
   /**
    * Folder where the screenshots will be saved if not using the Snapvisor reporter.
@@ -108,11 +162,11 @@ export type ArgosScreenshotOptions = {
 
   /**
    * Run a function before taking the screenshot.
-   * When using viewports, this function will run before taking sreenshots on each viewport.
+   * When using viewports, this function will run before taking screenshots on each viewport.
    */
   beforeScreenshot?: (api: {
     /**
-     * Run Snapvisor stabilization alorithm.
+     * Run Snapvisor stabilization algorithm.
      * Accepts an object to customize the stabilization.
      * Note that this function is independent of the `stabilize` option.
      */
@@ -121,7 +175,7 @@ export type ArgosScreenshotOptions = {
 
   /**
    * Run a function after taking the screenshot.
-   * When using viewports, this function will run after taking sreenshots on each viewport.
+   * When using viewports, this function will run after taking screenshots on each viewport.
    */
   afterScreenshot?: () => Promise<void> | void;
 } & LocatorOptions &
@@ -129,7 +183,7 @@ export type ArgosScreenshotOptions = {
   ScreenshotOptions<PageScreenshotOptions>;
 
 /**
- * Stabilize the UI and takes a screenshot of the application under test.
+ * Stabilize the UI and take a screenshot of the application under test.
  *
  * @example
  *    argosScreenshot(page, "my-screenshot")
@@ -160,14 +214,33 @@ export async function argosScreenshot(
     root = DEFAULT_SCREENSHOT_ROOT,
     ariaSnapshot,
     disableHover = true,
+    baseName,
+    hide,
+    remove,
+    mask = [],
     ...playwrightOptions
   } = options;
+
+  const baseNames = normalizeBaseNames(baseName);
 
   if (!handler) {
     throw new Error("A Playwright `handler` object is required.");
   }
   if (!name) {
     throw new Error("The `name` argument is required.");
+  }
+  if (viewports) {
+    if (checkIsFrame(handler)) {
+      throw new Error(`viewports option is not supported with an iframe`);
+    }
+    // A page without a viewport (Electron window, `viewport: null`) is sized
+    // by its window. Setting one can't be undone: the page would stop
+    // following its window and lose its device scale factor.
+    if (!handler.viewportSize()) {
+      throw new Error(
+        `viewports option is not supported on a page without a viewport, such as an Electron window`,
+      );
+    }
   }
 
   const screenshotTarget =
@@ -178,13 +251,13 @@ export async function argosScreenshot(
 
   const testInfo = await getTestInfo();
 
+  // One index per call, not per file: the viewport variants below are the same
+  // step of the journey seen at several widths, so they share it.
+  const captureIndex = takeCaptureIndex(testInfo);
+
   const useArgosReporter = checkIsUsingArgosReporter(testInfo);
 
   await prepare({ handler, useArgosReporter, root });
-
-  const originalViewportSize = checkIsFrame(handler)
-    ? null
-    : getViewportSize(handler);
 
   const fullPage =
     options.fullPage !== undefined
@@ -194,8 +267,11 @@ export async function argosScreenshot(
   const context = getStabilizationContext(options);
   const afterAll = await beforeAll(handler, context, { disableHover });
 
-  const stabilizeAndScreenshot = async (name: string) => {
-    const names = getSnapshotNames(name, testInfo);
+  const stabilizeAndScreenshot = async (
+    name: string,
+    baseNames: string[] | null,
+  ) => {
+    const names = getSnapshotNames(name, testInfo, baseNames);
     const { path: screenshotPath, metadata } = await getPathAndMetadata({
       handler,
       extension: PNG_EXTENSION,
@@ -203,6 +279,7 @@ export async function argosScreenshot(
       names,
       testInfo,
       useArgosReporter,
+      captureIndex,
     });
 
     if (options.tag) {
@@ -226,6 +303,7 @@ export async function argosScreenshot(
     });
 
     await waitForReadiness(handler, context);
+    await applyHelpers(handler, { hide, remove });
     const afterEach = await beforeEach(handler, context);
     await waitForReadiness(handler, context);
 
@@ -249,10 +327,10 @@ export async function argosScreenshot(
           ...metadata,
           transient: {
             parentName: `${names.name}${PNG_EXTENSION}`,
-            ...(metadata.transient.baseName
+            ...(names.baseNames
               ? {
-                  baseName: screenshotToSnapshotPath(
-                    metadata.transient.baseName,
+                  baseName: names.baseNames.map((baseName) =>
+                    screenshotToSnapshotPath(`${baseName}${PNG_EXTENSION}`),
                   ),
                 }
               : {}),
@@ -272,9 +350,12 @@ export async function argosScreenshot(
         path: screenshotPath,
         type: "png",
         fullPage,
-        mask: [handler.locator('[data-visual-test="blackout"]')],
         animations: "disabled",
         ...playwrightOptions,
+        // Extend the `blackout` helper mask, don't replace it.
+        mask: ['[data-visual-test="blackout"]', ...mask].map((target) =>
+          toLocator(handler, target),
+        ),
       }),
       writeMetadata(screenshotPath, metadata),
     ]);
@@ -319,26 +400,28 @@ export async function argosScreenshot(
 
   // If no viewports are specified, take a single screenshot
   if (viewports) {
-    if (checkIsFrame(handler)) {
-      throw new Error(`viewports option is not supported with an iframe`);
-    }
+    const page = getPage(handler);
+    const originalViewportSize = page.viewportSize();
     // Take screenshots for each viewport
     for (const viewport of viewports) {
       const viewportSize = resolveViewport(viewport);
-      await setViewportSize(handler, viewportSize);
+      await setViewportSize(page, viewportSize);
+      // The viewport suffix is part of the name, so the baselines need it too.
       const attachments = await stabilizeAndScreenshot(
         getScreenshotName(name, { viewportWidth: viewportSize.width }),
+        baseNames?.map((baseName) =>
+          getScreenshotName(baseName, { viewportWidth: viewportSize.width }),
+        ) ?? null,
       );
       allAttachments.push(...attachments);
     }
 
     // Restore the original viewport size
-    if (!originalViewportSize) {
-      throw new Error(`Invariant: viewport size must be saved`);
+    if (originalViewportSize) {
+      await setViewportSize(page, originalViewportSize);
     }
-    await setViewportSize(handler, originalViewportSize);
   } else {
-    const attachments = await stabilizeAndScreenshot(name);
+    const attachments = await stabilizeAndScreenshot(name, baseNames);
     allAttachments.push(...attachments);
   }
 
