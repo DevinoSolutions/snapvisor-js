@@ -43,7 +43,7 @@ beforeAll(() => {
     }).stdout,
   );
   const match = build.url.match(
-    /app\.argos-ci\.(?:com|dev(?::\d+)?)\/([^/?#]+)\/([^/?#]+)\/builds\//,
+    /app\.(?:argos-ci\.(?:com|dev(?::\d+)?)|snapvisor\.io)\/([^/?#]+)\/([^/?#]+)\/builds\//,
   );
   if (!match) {
     throw new Error(`Could not parse project from build URL: ${build.url}`);
@@ -65,7 +65,7 @@ describe("argos test get", () => {
   test("fails when no token is provided", () => {
     const error = expectRunToFail(["test", "get", "PROJECT-abc"]);
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("rejects an invalid --metrics-period value", () => {

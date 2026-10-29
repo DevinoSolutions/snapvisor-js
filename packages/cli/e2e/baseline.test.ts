@@ -114,7 +114,7 @@ describe("argos baseline download", () => {
 
     expect(error.status).not.toBe(0);
     expect(error.stderr).toContain(
-      "No Argos token found. Pass the project's token with --token or set ARGOS_TOKEN.",
+      "No Snapvisor token found. Pass the project's token with --token or set ARGOS_TOKEN.",
     );
   });
 
