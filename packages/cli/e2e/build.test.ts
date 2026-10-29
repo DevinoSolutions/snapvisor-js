@@ -200,7 +200,7 @@ describe("argos build list", () => {
     const error = expectRunToFail(["build", "list"], { ARGOS_TOKEN: "" });
 
     expect(error.status).not.toBe(0);
-    expect(error.stderr).toContain("No Argos token found");
+    expect(error.stderr).toContain("No Snapvisor token found");
   });
 
   test("lists the most recent builds first, up to --limit", () => {
