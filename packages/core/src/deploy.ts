@@ -108,6 +108,7 @@ export async function deploy(params: DeployParameters) {
       commit: config.commit ?? null,
       branch: config.branch ?? null,
       prNumber: config.prNumber ?? null,
+      prHeadCommit: config.prHeadCommit ?? null,
       environment: params.environment,
       files: files.map(({ path, hash, size, contentType }) => ({
         path,
