@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/cli",
   "description": "Command-line (CLI) for visual testing with Snapvisor.",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "bin": {
     "snapvisor": "./bin/argos-cli.js",
     "argos": "./bin/argos-cli.js"

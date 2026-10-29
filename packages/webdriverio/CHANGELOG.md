@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/webdriverio@0.8.1...@snapvisor/webdriverio@0.8.2) (2026-10-29)
+
+
+### Bug Fixes
+
+* **webdriverio:** disable autoXvfb so e2e workers survive Ubuntu 26.04 xvfb-run ([#17](https://github.com/DevinoSolutions/snapvisor-js/issues/17)) ([eb931d3](https://github.com/DevinoSolutions/snapvisor-js/commit/eb931d3cba5bcec851ec3bd9eb68707b671ddf2f))
+
+
+
+
+
 ## [0.8.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/webdriverio@0.8.0...@snapvisor/webdriverio@0.8.1) (2026-10-25)
 
 

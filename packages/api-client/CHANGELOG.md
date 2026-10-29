@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.27.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/api-client@0.27.0...@snapvisor/api-client@0.27.1) (2026-10-29)
+
+
+### Bug Fixes
+
+* **core:** forward prHeadCommit when creating a deployment ([#18](https://github.com/DevinoSolutions/snapvisor-js/issues/18)) ([fe53cdb](https://github.com/DevinoSolutions/snapvisor-js/commit/fe53cdbcd33af8db93dc75b1a7743de11266d05c))
+
+
+
+
+
 # 0.27.0 (2026-07-24)
 
 

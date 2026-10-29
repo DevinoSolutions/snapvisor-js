@@ -2,7 +2,7 @@
   "name": "@snapvisor/gitlab",
   "private": true,
   "description": "GitLab utilities for visual testing with Argos.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {

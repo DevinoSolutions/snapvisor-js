@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/puppeteer",
   "description": "Puppeteer SDK for visual testing with Snapvisor.",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
