@@ -6,6 +6,7 @@ import { uploadCommand } from "./commands/upload";
 import { finalizeCommand } from "./commands/finalize";
 import { skipCommand } from "./commands/skip";
 import { buildCommand } from "./commands/build";
+import { baselineCommand } from "./commands/baseline";
 import { reviewCommand } from "./commands/review";
 import { commentCommand } from "./commands/comment";
 import { loginCommand } from "./commands/login";
@@ -15,11 +16,22 @@ import { whoamiCommand } from "./commands/whoami";
 import { createProjectCommand } from "./commands/create-project";
 import { analyticsCommand } from "./commands/analytics";
 import { changeCommand } from "./commands/change";
+import { mediaCommand } from "./commands/media";
+import { testCommand } from "./commands/test";
+import { accountCommand } from "./commands/account";
+import { projectCommand } from "./commands/project";
+import { automationCommand } from "./commands/automation";
+import { docsCommand } from "./commands/docs";
+import { initUserAgent } from "./lib/user-agent";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const rawPkg = await readFile(resolve(__dirname, "..", "package.json"), "utf8");
 const pkg = JSON.parse(rawPkg);
+
+// Detect the coding agent driving the CLI, if any, before any command runs, so
+// every API request identifies it.
+await initUserAgent(pkg.version);
 
 program
   .name(pkg.name)
@@ -32,6 +44,7 @@ uploadCommand(program);
 skipCommand(program);
 finalizeCommand(program);
 buildCommand(program);
+baselineCommand(program);
 reviewCommand(program);
 commentCommand(program);
 loginCommand(program);
@@ -41,6 +54,12 @@ whoamiCommand(program);
 createProjectCommand(program);
 analyticsCommand(program);
 changeCommand(program);
+mediaCommand(program);
+testCommand(program);
+accountCommand(program);
+projectCommand(program);
+automationCommand(program);
+docsCommand(program);
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();

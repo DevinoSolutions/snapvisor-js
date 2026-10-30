@@ -4,7 +4,7 @@ import {
   type ArgosAttachment,
 } from "@snapvisor/playwright";
 import { resolveViewport, type ViewportSize } from "@snapvisor/browser";
-import { getScreenshotName } from "@snapvisor/util";
+import { getScreenshotName, normalizeBaseNames } from "@snapvisor/util";
 import type {
   ArgosVitestPluginOptions,
   VitestScreenshotOptions,
@@ -12,7 +12,8 @@ import type {
 import { resetTesterScale, setIframeViewportSize } from "./iframe";
 import type { TestMetadata } from "./metadata";
 import { screenshotFrame } from "./screenshot";
-import { getArgosVitestVersion } from "./version";
+import type { StorybookContext } from "./storybook";
+import { getArgosVitestVersion, resolveStorybookLibrary } from "./version";
 
 /**
  * Arguments of the `argosScreenshot` browser command.
@@ -22,6 +23,8 @@ export type ArgosScreenshotCommandArgs = [
   name: string,
   options?: VitestScreenshotOptions,
   test?: TestMetadata,
+  captureIndex?: number | null,
+  storybook?: StorybookContext | null,
 ];
 
 /**
@@ -35,18 +38,25 @@ export type ArgosScreenshotCommandArgs = [
 export const createArgosScreenshotCommand = (
   pluginOptions: ArgosVitestPluginOptions = {},
 ): BrowserCommand<ArgosScreenshotCommandArgs> => {
-  return async (ctx, name, options, test) => {
+  return async (ctx, name, options, test, captureIndex, storybook) => {
     if (!name) {
       throw new Error("The `name` argument is required.");
     }
 
     const merged: ArgosVitestPluginOptions = { ...pluginOptions, ...options };
+    const baseNames = normalizeBaseNames(merged.baseName);
     const fullPage = merged.fullPage ?? false;
     const fitWidth = !fullPage;
 
     const restore = await resetTesterScale(ctx);
     try {
-      const version = await getArgosVitestVersion();
+      const [version, storybookLibrary] = await Promise.all([
+        getArgosVitestVersion(),
+        // A screenshot of a story reports Storybook, the way
+        // `@snapvisor/storybook` does: it is what tells Storybook screenshots
+        // apart. Resolved from the test file, where the user installs it.
+        storybook ? resolveStorybookLibrary(storybook, ctx.testPath) : null,
+      ]);
       const setMetadata = (viewport?: ViewportSize) => {
         DO_NOT_USE_setMetadataConfig({
           sdk: { name: "@snapvisor/vitest", version },
@@ -54,11 +64,15 @@ export const createArgosScreenshotCommand = (
           // `@vitest/browser-playwright` provider), so screenshots match the
           // `vitest` automation library used by `argosSnapshot`.
           playwrightLibraries: ["vitest"],
+          automationLibrary: storybookLibrary ?? undefined,
+          story: storybook?.story ?? undefined,
           viewport,
           // Injected so the Playwright SDK attaches the Vitest test metadata
           // (Playwright's own `testInfo` is absent here). It resolves
           // `location.file` relative to the git repository.
           test,
+          // Counted on the test side, for the same reason.
+          captureIndex,
         });
       };
 
@@ -74,7 +88,15 @@ export const createArgosScreenshotCommand = (
           const shot = await screenshotFrame(
             ctx,
             getScreenshotName(name, { viewportWidth: size.width }),
-            merged,
+            {
+              ...merged,
+              // The viewports loop is reimplemented here rather than delegated
+              // to the Playwright SDK, so the viewport suffix has to be applied
+              // to the baselines as well as to the name.
+              baseName: baseNames?.map((baseName) =>
+                getScreenshotName(baseName, { viewportWidth: size.width }),
+              ),
+            },
             // Keep the fixed viewport width, only grow the height to fit.
             { fitWidth: false },
           );
@@ -90,6 +112,10 @@ export const createArgosScreenshotCommand = (
 
       return attachments;
     } finally {
+      // The iframe was grown to fit the content, so restore it: Vitest reuses
+      // the same iframe for every test in the file, and a leftover size would
+      // pad the next screenshots with blank space.
+      await setIframeViewportSize(ctx, "initial");
       await restore();
     }
   };

@@ -2,20 +2,21 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@commitlint/cli": "^21.0.2",
-    "@commitlint/config-conventional": "^21.0.2",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@eslint/js": "^10.0.1",
-    "@vitest/eslint-plugin": "^1.6.20",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "@vitest/eslint-plugin": "^1.6.27",
     "cross-env": "^10.1.0",
-    "eslint": "^10.5.0",
-    "globals": "^17.6.0",
-    "lerna": "^9.0.7",
-    "prettier": "^3.8.4",
-    "tsdown": "^0.22.3",
-    "turbo": "^2.9.18",
-    "typedoc": "^0.28.19",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "lerna": "^10.0.1",
+    "prettier": "^3.9.9",
+    "tsdown": "^0.23.0",
+    "turbo": "^2.11.5",
+    "typedoc": "^0.28.20",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "typescript-eslint": "^8.70.1"
   },
   "scripts": {
     "clean": "rm -rf packages/*/dist",
@@ -27,11 +28,11 @@
     "check-types": "turbo run check-types",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "release": "npm run build && lerna publish --conventional-commits --create-release=github",
+    "release": "node scripts/check-release-baseline.mjs && npm run build && lerna publish --conventional-commits --create-release=github",
     "release-canary": "npm run build && lerna publish --force-publish --dist-tag canary --canary"
   },
   "engines": {
     "node": "22"
   },
-  "packageManager": "pnpm@11.8.0+sha512.c1f5e7c4cb241c8f174b743851d82f42b802324afc8b0f116b96adb15aa06664948dde36960a3ba1079ba5b4b29dd0140135b94b5b5f5263592249d68e555f26"
+  "packageManager": "pnpm@11.28.2+sha512.755ce2fe3c05bfd7bb412b42aff3c5c55cd38c529c6eca810475497ae36746c571e4b6e1814e6e7e4b97d7ee864b8a0e44673c3b297a50e0ac28771c5ce15d27"
 }

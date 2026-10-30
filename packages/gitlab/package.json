@@ -2,7 +2,7 @@
   "name": "@snapvisor/gitlab",
   "private": true,
   "description": "GitLab utilities for visual testing with Argos.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "author": "Smooth Code",
   "license": "MIT",
   "repository": {
@@ -15,12 +15,14 @@
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },
   "keywords": [
-    "gitlab",
     "argos",
+    "argos-ci",
+    "gitlab",
+    "gitlab-ci",
+    "merge-request",
     "testing",
-    "visual testing",
-    "regression",
-    "visual regression"
+    "visual-testing",
+    "visual-regression-testing"
   ],
   "publishConfig": {
     "access": "public"

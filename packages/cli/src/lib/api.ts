@@ -5,6 +5,8 @@ import {
   type ArgosAPIClient,
 } from "@snapvisor/api-client";
 
+import { getUserAgent } from "./user-agent";
+
 /** Optional override for the API base URL (used in tests and dev). */
 export function getApiBaseUrl(): string | undefined {
   return process.env["ARGOS_API_BASE_URL"];
@@ -12,7 +14,13 @@ export function getApiBaseUrl(): string | undefined {
 
 /** Create an Snapvisor API client authenticated with the given token. */
 export function createApiClient(authToken?: string): ArgosAPIClient {
-  return createClient({ authToken, baseUrl: getApiBaseUrl() });
+  return createClient({
+    authToken,
+    baseUrl: getApiBaseUrl(),
+    // Read per request rather than captured here: agent detection is async and
+    // resolves at startup, while clients are built synchronously all over.
+    userAgent: getUserAgent,
+  });
 }
 
 /**
@@ -37,4 +45,17 @@ export function unwrap<T>(result: {
     });
   }
   return result.data;
+}
+
+/**
+ * Like {@link unwrap} for endpoints that answer `204 No Content`: it only
+ * checks the request succeeded, since there is no body to return.
+ */
+export function unwrapEmpty(result: {
+  error?: unknown;
+  response: Response;
+}): void {
+  if (!result.response.ok) {
+    throwAPIError(result.error, result.response);
+  }
 }

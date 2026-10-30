@@ -1,4 +1,9 @@
-import type { ScreenshotMetadata } from "@snapvisor/util";
+import {
+  getTestRunKey,
+  nextCaptureIndex,
+  type ScreenshotMetadata,
+} from "@snapvisor/util";
+import { getStorybookContext, type StorybookContext } from "./storybook";
 import {
   getCurrentTest,
   type CurrentSuite,
@@ -12,7 +17,7 @@ export type TestMetadata = ScreenshotMetadata["test"];
  * Build the title path of a task (`[file, ...describes, title]`), replicating
  * Vitest's own `getNames` helper so it matches the framework's conventions.
  */
-function getTitlePath(task: CurrentTask): string[] {
+export function getTitlePath(task: CurrentTask): string[] {
   const names = [task.name];
   let current: CurrentSuite = task;
   while (current.suite) {
@@ -27,6 +32,18 @@ function getTitlePath(task: CurrentTask): string[] {
     names.unshift(task.file.name);
   }
   return names;
+}
+
+/**
+ * Get the configured maximum number of retries of a task. Since Vitest 4.1 the
+ * `retry` option can be an object, which the task keeps as is, while the
+ * metadata expects a number: take its `count`, defaulting to 0 like Vitest.
+ */
+function getRetries(task: CurrentTask): number | undefined {
+  if (typeof task.retry === "object") {
+    return task.retry.count ?? 0;
+  }
+  return task.retry;
 }
 
 /**
@@ -47,7 +64,7 @@ export function buildTestMetadata(
     tags: task.tags && task.tags.length > 0 ? task.tags : undefined,
     // `retry`/`repeats` on the task are the configured maximums; the current
     // counts live on the result.
-    retries: task.retry ?? undefined,
+    retries: getRetries(task),
     retry: task.result?.retryCount ?? undefined,
     repeat: task.result?.repeatCount ?? task.repeats ?? undefined,
     location: {
@@ -73,16 +90,33 @@ export function buildTestMetadata(
 }
 
 /**
- * Get the Snapvisor `test` metadata for the current Vitest test, or `null` when not
- * running inside a test.
+ * What a capture records about the current Vitest test, read from a single
+ * lookup of the test: its `test` metadata, its position among the test's
+ * captures, and the story it renders. All `null` outside a test.
  *
  * Runs on the test side (browser or Node) where the test context is available;
- * the resulting plain object crosses the browser/Node RPC boundary unchanged.
+ * the resulting plain objects cross the browser/Node RPC boundary unchanged.
  */
-export async function getTestMetadata(): Promise<TestMetadata> {
+export async function getCaptureMetadata(): Promise<{
+  test: TestMetadata;
+  captureIndex: number | null;
+  storybook: StorybookContext | null;
+}> {
   const task = await getCurrentTest();
   if (!task) {
-    return null;
+    return { test: null, captureIndex: null, storybook: null };
   }
-  return buildTestMetadata(task);
+  return {
+    test: buildTestMetadata(task),
+    // Screenshots and snapshots share the counter, so a test that mixes both
+    // still numbers them in the order it produced them.
+    captureIndex: nextCaptureIndex(
+      getTestRunKey({
+        id: task.id,
+        retry: task.result?.retryCount ?? undefined,
+        repeat: task.result?.repeatCount ?? undefined,
+      }),
+    ),
+    storybook: getStorybookContext(task),
+  };
 }

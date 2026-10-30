@@ -1,5 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 
+import { sanitizeTerminalText } from "./terminal";
+
 /**
  * OAuth 2.1 client configuration and helpers for the `argos login` flow
  * (Authorization Code + PKCE with a loopback redirect, RFC 8252).
@@ -13,7 +15,11 @@ export const OAUTH_CLIENT_ID = "argos-cli";
 
 /**
  * Scopes requested by `argos login`, covering the CLI's user actions (identity,
- * projects, reviews, comments). Build upload keeps using a project token.
+ * projects, reviews, comments, media). Build upload keeps using a project token.
+ *
+ * Every scope a CLI command needs has to be listed here: the consent screen
+ * only offers what the client asks for, so a missing entry is not something the
+ * user can grant — it leaves the command permanently answering 403.
  */
 export const OAUTH_SCOPES = [
   "profile",
@@ -22,6 +28,8 @@ export const OAUTH_SCOPES = [
   "reviews:write",
   "comments:read",
   "comments:write",
+  "media:read",
+  "media:write",
 ] as const;
 
 /** Refresh a bit early so a token never expires mid-request. */
@@ -115,8 +123,13 @@ async function postToken(
     .json()
     .catch(() => null)) as TokenEndpointResponse | null;
   if (!response.ok || !data?.access_token) {
+    // The description is written by the authorization server and printed to the
+    // terminal by the caller, so it is sanitized here rather than at the print
+    // site — an `Error` message carrying escape sequences would spoof output
+    // anywhere it surfaces.
     const message =
-      data?.error_description ?? data?.error ?? `HTTP ${response.status}`;
+      sanitizeTerminalText(data?.error_description ?? data?.error) ||
+      `HTTP ${response.status}`;
     throw new OAuthTokenError(message, data?.error);
   }
   // A response without a refresh token would be persisted as a token set with

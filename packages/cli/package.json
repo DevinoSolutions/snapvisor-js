@@ -1,7 +1,7 @@
 {
   "name": "@snapvisor/cli",
   "description": "Command-line (CLI) for visual testing with Snapvisor.",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "bin": {
     "snapvisor": "./bin/argos-cli.js",
     "argos": "./bin/argos-cli.js"
@@ -24,12 +24,17 @@
   },
   "license": "MIT",
   "keywords": [
-    "cli",
     "argos",
+    "argos-ci",
+    "cli",
     "testing",
-    "visual testing",
-    "regression",
-    "visual regression"
+    "visual-testing",
+    "visual-regression",
+    "visual-regression-testing",
+    "screenshot-testing",
+    "snapshot-testing",
+    "continuous-integration",
+    "ci"
   ],
   "publishConfig": {
     "access": "public"
@@ -37,10 +42,10 @@
   "dependencies": {
     "@snapvisor/api-client": "workspace:*",
     "@snapvisor/core": "workspace:*",
+    "@vercel/detect-agent": "^1.2.5",
     "commander": "^15.0.0",
-    "open": "^11.0.0",
-    "ora": "^9.4.0",
-    "update-notifier": "^7.3.1"
+    "open": "^11.0.4",
+    "ora": "^9.4.1"
   },
   "devDependencies": {
     "vitest": "catalog:"
