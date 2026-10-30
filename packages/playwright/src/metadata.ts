@@ -25,10 +25,22 @@ function tryResolve(pkg: string) {
 export type MetadataConfig = {
   sdk: ScreenshotMetadata["sdk"];
   playwrightLibraries: string[];
+  /**
+   * Automation library resolved by the SDK itself, which wins over
+   * `playwrightLibraries`: for packages this one cannot resolve from its own
+   * install location, like a user's Storybook under strict package managers.
+   */
+  automationLibrary?: ScreenshotMetadata["automationLibrary"];
   url?: string;
   test?: ScreenshotMetadata["test"];
   story?: ScreenshotMetadata["story"];
   viewport?: ScreenshotMetadata["viewport"];
+  /**
+   * Position of the screenshot within its test. Injected by SDKs that drive
+   * Playwright without a Playwright test (Vitest), where the counter has to be
+   * kept on the side that owns the test context.
+   */
+  captureIndex?: number | null;
 };
 
 /**
@@ -64,6 +76,9 @@ async function getAutomationLibraryMetadata(): Promise<
   ScreenshotMetadata["automationLibrary"]
 > {
   const metadataConfig = metadataConfigStorage.getStore();
+  if (metadataConfig?.automationLibrary) {
+    return metadataConfig.automationLibrary;
+  }
   const libraries =
     metadataConfig?.playwrightLibraries ?? DEFAULT_PLAYWRIGHT_LIBRARIES;
   for (const name of libraries) {

@@ -1,0 +1,104 @@
+import { argosScreenshot } from "@snapvisor/vitest";
+import { composeStories, composeStory } from "@storybook/react-vite";
+import { createElement } from "react";
+import { flushSync } from "react-dom";
+import { createRoot } from "react-dom/client";
+import {
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  onTestFinished,
+  test,
+} from "vitest";
+import * as HeaderStories from "../stories/Header.stories";
+import * as PageStories from "../stories/Page.stories";
+import { readMetadata } from "./metadata";
+
+/**
+ * Stories rendered by regular Vitest tests (portable stories), screenshotted
+ * with `@snapvisor/vitest`: it must report them as Storybook screenshots.
+ */
+
+const { LoggedIn, LoggedOut } = composeStories(HeaderStories);
+const { LoggedIn: PageLoggedIn } = composeStories(PageStories);
+
+beforeEach(() => {
+  // The tests of a file share the page: start each screenshot from a blank one.
+  document.body.replaceChildren();
+});
+
+test("reports a story run by the test as a Storybook screenshot", async () => {
+  await LoggedIn.run();
+
+  const metadata = await readMetadata(
+    await argosScreenshot("portable-stories/header-logged-in"),
+  );
+  expect(metadata.sdk.name).toBe("@snapvisor/vitest");
+  expect(metadata.automationLibrary.name).toBe("storybook");
+  expect(metadata.story).toEqual({
+    id: "example-header--logged-in",
+    tags: expect.arrayContaining(["autodocs"]),
+    play: false,
+  });
+});
+
+test("reports a story rendered as a component", async () => {
+  const root = createRoot(
+    document.body.appendChild(document.createElement("div")),
+  );
+  onTestFinished(() => root.unmount());
+  flushSync(() => root.render(createElement(LoggedOut)));
+
+  const metadata = await readMetadata(
+    await argosScreenshot("portable-stories/header-logged-out"),
+  );
+  expect(metadata.automationLibrary.name).toBe("storybook");
+  expect(metadata.story?.id).toBe("example-header--logged-out");
+});
+
+test("reports whether the story has a play function", async () => {
+  await PageLoggedIn.run();
+
+  const metadata = await readMetadata(
+    await argosScreenshot("portable-stories/page-logged-in"),
+  );
+  expect(metadata.automationLibrary.name).toBe("storybook");
+  expect(metadata.story).toMatchObject({
+    id: "example-page--logged-in",
+    play: true,
+  });
+});
+
+test("leaves out the id of a story Storybook could not name", async () => {
+  // Composed outside its indexer, a story whose meta has no `title` gets a
+  // placeholder id, shared by every such story.
+  const Untitled = composeStory(HeaderStories.LoggedIn, {
+    component: HeaderStories.default.component,
+  });
+  await Untitled.run();
+
+  const metadata = await readMetadata(
+    await argosScreenshot("portable-stories/untitled"),
+  );
+  expect(metadata.automationLibrary.name).toBe("storybook");
+  expect(metadata.story).toBeUndefined();
+});
+
+describe("a screenshot without story", () => {
+  // A story rendered outside the test, whatever order the tests run in: it
+  // must not leak into the test's screenshots.
+  beforeAll(async () => {
+    await LoggedIn.run();
+  });
+
+  test("is not reported as a Storybook one", async () => {
+    document.body.innerHTML = "<p>Not a story</p>";
+
+    const metadata = await readMetadata(
+      await argosScreenshot("portable-stories/not-a-story"),
+    );
+    expect(metadata.automationLibrary.name).toBe("vitest");
+    expect(metadata.story).toBeUndefined();
+  });
+});

@@ -7,47 +7,161 @@ import type { ViewportSize } from "@snapvisor/browser";
 export const VITEST_IFRAME_SELECTOR = 'iframe[data-vitest="true"]';
 
 /**
- * ID of the Vitest "tester" element that wraps the iframe with a `scale(...)`
- * transform.
+ * ID of the Vitest "tester" element wrapping the iframe.
  */
 export const VITEST_TESTER_ID = "vitest-tester";
 
 /**
- * Remove the scale from the Vitest `#vitest-tester` element before taking a
- * screenshot to avoid ending up with small screenshots.
- * @returns A function to restore the scale after the screenshot.
+ * Dataset key holding the tester's inline `transform` from before Argos reset
+ * it.
+ *
+ * The presence of the key — not the value it holds — is what marks the
+ * transform as backed up: the original inline `transform` is usually an empty
+ * string, which is indistinguishable from "nothing was saved yet".
+ */
+const TRANSFORM_BACKUP_KEY = "argosBckTransform";
+
+/**
+ * Dataset key counting the screenshots currently holding the tester unscaled.
+ *
+ * Captures nest: a story calling `argosScreenshot` from its play function runs
+ * one inside the automatic screenshot taken after the test. Both share this one
+ * element, so without a count the inner restore would hand the scale back while
+ * the outer capture is still to come — and the outer screenshot would come out
+ * shrunk. Only the first reset saves and overrides the transform, and only the
+ * last restore puts it back.
+ */
+const SCALE_HOLD_KEY = "argosScaleHold";
+
+/**
+ * Attribute holding the iframe's inline size from before Argos resized it, as
+ * JSON.
+ *
+ * The presence of the attribute — not the values it holds — is what marks the
+ * size as backed up: the original `style.width`/`style.height` are usually
+ * empty strings, which are indistinguishable from "nothing was saved yet".
+ */
+const SIZE_BACKUP_ATTRIBUTE = "data-argos-size-backup";
+
+/**
+ * Undo the scale Vitest applies to the `#vitest-tester` element, so the
+ * screenshot is captured at full size instead of shrunk.
+ *
+ * Only some Vitest versions scale the tester. Up to Vitest 4 a viewport larger
+ * than the browser window is emulated by sizing the tester to the requested
+ * viewport and shrinking it with a CSS `transform: scale(...)`. From Vitest 5
+ * the real browser viewport is resized instead, so the tester carries no
+ * transform and there is nothing to undo — which is why an unscaled tester is
+ * a no-op rather than an error.
+ *
+ * Detection reads the *computed* transform, so a scale set from a stylesheet
+ * counts too, while the override goes on the inline style, which is the only
+ * layer guaranteed to win.
+ *
+ * @returns A function restoring the transform after the screenshot.
  */
 export async function resetTesterScale(
   ctx: BrowserCommandContext,
 ): Promise<() => Promise<void>> {
-  await ctx.page.evaluate((testerId) => {
-    const tester = document.getElementById(testerId);
-
-    if (!(tester instanceof HTMLElement)) {
-      return;
-    }
-
-    const scale = tester.getAttribute("data-scale");
-
-    if (!scale) {
-      throw new Error("Vitest iframe data-scale attribute not found");
-    }
-
-    tester.dataset.bckTransform = tester.style.transform;
-    tester.style.transform = `scale(1)`;
-  }, VITEST_TESTER_ID);
+  await ctx.page.evaluate(resetTesterScaleInPage, {
+    testerId: VITEST_TESTER_ID,
+    backupKey: TRANSFORM_BACKUP_KEY,
+    holdKey: SCALE_HOLD_KEY,
+  });
 
   return async () => {
-    await ctx.page.evaluate((testerId) => {
-      const tester = document.getElementById(testerId);
-
-      if (!(tester instanceof HTMLElement)) {
-        return;
-      }
-
-      tester.style.transform = tester.dataset.bckTransform ?? "";
-    }, VITEST_TESTER_ID);
+    await ctx.page.evaluate(restoreTesterScaleInPage, {
+      testerId: VITEST_TESTER_ID,
+      backupKey: TRANSFORM_BACKUP_KEY,
+      holdKey: SCALE_HOLD_KEY,
+    });
   };
+}
+
+/**
+ * Body of {@link resetTesterScale}, running in the page.
+ *
+ * Exported for tests only, and self-contained on purpose: it is serialized to
+ * the browser by `page.evaluate`, so it can reference nothing but its argument
+ * and page globals.
+ */
+export function resetTesterScaleInPage(args: {
+  testerId: string;
+  backupKey: string;
+  holdKey: string;
+}): void {
+  const { testerId, backupKey, holdKey } = args;
+  const tester = document.getElementById(testerId);
+
+  if (!(tester instanceof HTMLElement)) {
+    return;
+  }
+
+  const held = Number(tester.dataset[holdKey] ?? "0");
+  tester.dataset[holdKey] = String(held + 1);
+
+  // An enclosing capture already holds the tester unscaled, and owns the saved
+  // transform.
+  if (held > 0) {
+    return;
+  }
+
+  const { transform } = getComputedStyle(tester);
+
+  if (!transform || transform === "none") {
+    return;
+  }
+
+  // `a` and `d` are the horizontal and vertical scale factors; both at 1 means
+  // the transform does not resize the tester, whatever else it does.
+  const matrix = new DOMMatrixReadOnly(transform);
+
+  if (matrix.a === 1 && matrix.d === 1) {
+    return;
+  }
+
+  tester.dataset[backupKey] = tester.style.transform;
+  tester.style.transform = "scale(1)";
+}
+
+/**
+ * Body of the function {@link resetTesterScale} returns, running in the page.
+ *
+ * Exported for tests only, and self-contained for the same reason as
+ * {@link resetTesterScaleInPage}.
+ */
+export function restoreTesterScaleInPage(args: {
+  testerId: string;
+  backupKey: string;
+  holdKey: string;
+}): void {
+  const { testerId, backupKey, holdKey } = args;
+  const tester = document.getElementById(testerId);
+
+  if (!(tester instanceof HTMLElement)) {
+    return;
+  }
+
+  const held = Math.max(0, Number(tester.dataset[holdKey] ?? "0") - 1);
+
+  // Another capture is still running; it needs the tester unscaled.
+  if (held > 0) {
+    tester.dataset[holdKey] = String(held);
+    return;
+  }
+
+  delete tester.dataset[holdKey];
+
+  const backup = tester.dataset[backupKey];
+
+  // Nothing was reset — leave the tester alone rather than clearing a
+  // transform this never touched.
+  if (backup === undefined) {
+    return;
+  }
+
+  tester.style.transform = backup;
+  delete tester.dataset[backupKey];
 }
 
 /**
@@ -58,7 +172,7 @@ export async function resetTesterScale(
  * box is not painted, so the iframe must be sized to hold the content.
  *
  * @param size - The viewport size, `"default"` to keep the natural size, or
- *   `"initial"` to restore the size backed up on the first resize.
+ *   `"initial"` to restore the size the iframe had before Argos resized it.
  * @param options.fullPage - When `true`, grow the height to fit the content
  *   while keeping the viewport width (Playwright-style full page).
  */
@@ -68,7 +182,7 @@ export async function setIframeViewportSize(
   options: { fullPage?: boolean } = {},
 ): Promise<void> {
   await ctx.page.evaluate(
-    ({ size, fullPage, selector }) => {
+    ({ size, fullPage, selector, backupAttribute }) => {
       const iframe = document.querySelector(selector);
 
       if (!(iframe instanceof HTMLIFrameElement)) {
@@ -80,17 +194,26 @@ export async function setIframeViewportSize(
       }
 
       if (size === "initial") {
-        if (iframe.dataset.initialWidth && iframe.dataset.initialHeight) {
-          iframe.style.width = iframe.dataset.initialWidth;
-          iframe.style.height = iframe.dataset.initialHeight;
+        const backup = iframe.getAttribute(backupAttribute);
+        if (backup !== null) {
+          const { width, height } = JSON.parse(backup);
+          iframe.style.width = width;
+          iframe.style.height = height;
+          // Drop the backup so the next screenshot saves the size the iframe
+          // actually has then, rather than restoring a stale one.
+          iframe.removeAttribute(backupAttribute);
         }
         return;
       }
 
-      // Backup default width/height if not set
-      if (!iframe.dataset.initialWidth && !iframe.dataset.initialHeight) {
-        iframe.dataset.initialWidth = iframe.style.width;
-        iframe.dataset.initialHeight = iframe.style.height;
+      if (!iframe.hasAttribute(backupAttribute)) {
+        iframe.setAttribute(
+          backupAttribute,
+          JSON.stringify({
+            width: iframe.style.width,
+            height: iframe.style.height,
+          }),
+        );
       }
 
       if (size !== "default") {
@@ -118,6 +241,7 @@ export async function setIframeViewportSize(
       size,
       fullPage: options.fullPage ?? false,
       selector: VITEST_IFRAME_SELECTOR,
+      backupAttribute: SIZE_BACKUP_ATTRIBUTE,
     },
   );
 }
@@ -125,9 +249,12 @@ export async function setIframeViewportSize(
 /**
  * Grow the Vitest iframe to fit its content so nothing is clipped.
  *
- * This must run *after* `argosCSS` (which may inject a `zoom`) is applied,
- * because `setIframeViewportSize` sizes the iframe *before* the content's final
- * size is known. It only ever grows the iframe, never shrinks it.
+ * This must run once the content has reached its final size — after `argosCSS`
+ * (which may inject a `zoom`) is applied *and* after stabilization has waited
+ * for images and fonts. `setIframeViewportSize` sizes the iframe before any of
+ * that, so it can't account for the final content size. It only ever grows the
+ * iframe, never shrinks it; use `setIframeViewportSize(ctx, "initial")` to
+ * restore the original size afterwards.
  *
  * @param options.fitWidth - Also grow the iframe horizontally to paint content
  *   wider than the viewport. When `false`, only the height grows (to match
@@ -138,11 +265,21 @@ export async function fitIframeToContent(
   options: { fitWidth: boolean },
 ): Promise<void> {
   await ctx.page.evaluate(
-    ({ fitWidth, selector }) => {
+    ({ fitWidth, selector, backupAttribute }) => {
       const iframe = document.querySelector(selector);
 
       if (!(iframe instanceof HTMLIFrameElement) || !iframe.contentDocument) {
         return;
+      }
+
+      if (!iframe.hasAttribute(backupAttribute)) {
+        iframe.setAttribute(
+          backupAttribute,
+          JSON.stringify({
+            width: iframe.style.width,
+            height: iframe.style.height,
+          }),
+        );
       }
 
       const { body, documentElement } = iframe.contentDocument;
@@ -170,6 +307,10 @@ export async function fitIframeToContent(
         }
       }
     },
-    { fitWidth: options.fitWidth, selector: VITEST_IFRAME_SELECTOR },
+    {
+      fitWidth: options.fitWidth,
+      selector: VITEST_IFRAME_SELECTOR,
+      backupAttribute: SIZE_BACKUP_ATTRIBUTE,
+    },
   );
 }

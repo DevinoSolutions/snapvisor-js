@@ -14,13 +14,18 @@
     "url": "https://github.com/argos-ci/argos-javascript/issues"
   },
   "keywords": [
+    "argos",
+    "argos-ci",
     "webdriverio",
     "webdriverio-plugin",
-    "argos",
+    "wdio",
+    "wdio-plugin",
     "testing",
-    "visual testing",
-    "regression",
-    "visual regression"
+    "e2e-testing",
+    "visual-testing",
+    "visual-regression",
+    "visual-regression-testing",
+    "screenshot-testing"
   ],
   "publishConfig": {
     "access": "public"
@@ -40,21 +45,23 @@
     "node": ">=22.0.0"
   },
   "peerDependencies": {
-    "webdriverio": "^6 || ^7 || ^8 || ^9"
+    "webdriverio": "^6 || ^7 || ^8 || ^9 || ^10"
   },
   "dependencies": {
-    "sharp": "^0.35.4"
+    "@snapvisor/browser": "workspace:*",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@snapvisor/cli": "workspace:*",
-    "@wdio/cli": "^9.29.0",
-    "@wdio/globals": "^9.29.0",
-    "@wdio/local-runner": "^9.29.0",
-    "@wdio/mocha-framework": "^9.29.0",
-    "@wdio/spec-reporter": "^9.29.0",
-    "@wdio/types": "^9.29.0",
-    "tsx": "^4.22.4",
-    "webdriverio": "^9.29.0"
+    "@wdio/cli": "^10.0.0",
+    "@wdio/globals": "^10.0.0",
+    "@wdio/local-runner": "^10.0.0",
+    "@wdio/mocha-framework": "^10.0.0",
+    "@wdio/spec-reporter": "^10.0.0",
+    "@wdio/types": "^10.0.0",
+    "tsx": "^4.23.15",
+    "vitest": "catalog:",
+    "webdriverio": "^10.0.0"
   },
   "scripts": {
     "build": "tsdown && cp ./src/index.cjs ./dist",
@@ -62,6 +69,7 @@
     "argos-upload": "pnpm exec argos upload screenshots --build-name \"argos-webdriverio-e2e-node-$NODE_VERSION-$OS\"",
     "e2e": "pnpm run test-e2e && pnpm run argos-upload",
     "check-types": "tsc",
+    "test": "vitest run src",
     "check-format": "prettier --check --ignore-unknown --ignore-path=../../.gitignore --ignore-path=../../.prettierignore .",
     "lint": "eslint ."
   }

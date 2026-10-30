@@ -27,13 +27,16 @@
   },
   "license": "MIT",
   "keywords": [
+    "argos",
+    "argos-ci",
     "sdk",
     "node",
-    "argos",
     "testing",
-    "visual testing",
-    "regression",
-    "visual regression"
+    "visual-testing",
+    "visual-regression",
+    "visual-regression-testing",
+    "screenshot-testing",
+    "continuous-integration"
   ],
   "publishConfig": {
     "access": "public"
@@ -45,8 +48,8 @@
     "debug": "^4.4.3",
     "fast-glob": "^3.3.3",
     "mime-types": "^3.0.2",
-    "p-retry": "^8.0.0",
-    "sharp": "^0.35.4",
+    "p-retry": "^8.0.1",
+    "sharp": "^0.35.5",
     "tmp": "^0.2.7"
   },
   "devDependencies": {
@@ -57,7 +60,7 @@
     "@types/node": "catalog:",
     "@types/tmp": "^0.2.6",
     "@vercel/repository-dispatch": "^0.1.0",
-    "msw": "^2.14.6",
+    "msw": "^2.15.0",
     "vitest": "catalog:"
   },
   "scripts": {

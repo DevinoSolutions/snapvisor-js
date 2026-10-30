@@ -17,4 +17,4 @@ test.skip("deploys a static site with HTML and CSS assets", () => {
 
   expect(deployResult.combined).toContain("Deployed:");
   expect(deployResult.combined).toMatch(/https?:\/\/\S+/);
-}, 10000);
+});

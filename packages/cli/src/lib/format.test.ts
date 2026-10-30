@@ -2,12 +2,19 @@ import type { ArgosAPISchema } from "@snapvisor/api-client";
 import { describe, expect, it } from "vitest";
 import {
   formatBuild,
+  formatBuilds,
   formatChange,
   formatComment,
   formatComments,
+  formatCreatedProject,
+  formatDocsSearchResults,
+  formatMedia,
+  formatMediaList,
+  formatMediaVersions,
   formatProject,
   formatReview,
   formatReviews,
+  formatSnapshotDownload,
   formatSnapshotSummary,
   formatSnapshots,
   formatStats,
@@ -18,6 +25,8 @@ type Build = ArgosAPISchema.components["schemas"]["Build"];
 type SnapshotDiff = ArgosAPISchema.components["schemas"]["SnapshotDiff"];
 type BuildReview = ArgosAPISchema.components["schemas"]["BuildReview"];
 type Comment = ArgosAPISchema.components["schemas"]["Comment"];
+type Media = ArgosAPISchema.components["schemas"]["Media"];
+type MediaVersion = ArgosAPISchema.components["schemas"]["MediaVersion"];
 
 const build = {
   number: 42,
@@ -51,7 +60,7 @@ describe("formatValue", () => {
   });
 });
 
-describe("formatProject", () => {
+describe("formatCreatedProject", () => {
   it("summarizes the created project", () => {
     const project = {
       id: "project-1",
@@ -60,11 +69,68 @@ describe("formatProject", () => {
       defaultBaseBranch: "main",
       hasRemoteContentAccess: true,
     } as ArgosAPISchema.components["schemas"]["Project"];
-    const output = formatProject(project);
+    const output = formatCreatedProject(project);
     expect(output).toContain("Created project acme/my-app.");
     expect(output).toContain("ID: project-1");
     expect(output).toContain("Account: acme");
     expect(output).toContain("Default base branch: main");
+  });
+});
+
+describe("formatProject", () => {
+  it("summarizes the project settings", () => {
+    const project = {
+      id: "project-1",
+      name: "my-app",
+      account: { id: "account-1", slug: "acme" },
+      defaultBaseBranch: "main",
+      hasRemoteContentAccess: true,
+      autoApprovedBranchGlob: "main",
+      deploymentProductionBranchGlob: "main",
+      private: true,
+      summaryCheck: "auto",
+      prCommentEnabled: true,
+      githubActionsOidcEnabled: false,
+      tokenlessAuthEnabled: false,
+      deploymentEnabled: true,
+      deploymentAuth: "public",
+      defaultUserLevel: "reviewer",
+      ignoreConfig: { enabled: true, autoIgnore: { changes: 3 } },
+    } as ArgosAPISchema.components["schemas"]["Project"];
+    const output = formatProject(project);
+    expect(output).toContain("Project acme/my-app");
+    expect(output).toContain("Visibility: private");
+    expect(output).toContain("Summary check: auto");
+    expect(output).toContain(
+      "Ignore changes: enabled, auto-ignore after 3 occurrences",
+    );
+    expect(output).toContain(
+      "Deployments: yes (public, production branches main)",
+    );
+  });
+
+  it("reports a disabled ignore config", () => {
+    const project = {
+      id: "project-1",
+      name: "my-app",
+      account: { id: "account-1", slug: "acme" },
+      defaultBaseBranch: "main",
+      autoApprovedBranchGlob: "main",
+      deploymentProductionBranchGlob: "main",
+      private: false,
+      summaryCheck: "never",
+      prCommentEnabled: false,
+      githubActionsOidcEnabled: false,
+      tokenlessAuthEnabled: false,
+      deploymentEnabled: false,
+      deploymentAuth: "private",
+      defaultUserLevel: null,
+      ignoreConfig: { enabled: false, autoIgnore: null },
+    } as unknown as ArgosAPISchema.components["schemas"]["Project"];
+    const output = formatProject(project);
+    expect(output).toContain("Visibility: public");
+    expect(output).toContain("Ignore changes: disabled");
+    expect(output).toContain("Default user level: -");
   });
 });
 
@@ -99,6 +165,63 @@ describe("formatBuild", () => {
     expect(output).toContain("Branch: feature");
     expect(output).toContain("Base branch: main");
     expect(output).toContain("URL: https://app.argos-ci.com/o/p/builds/42");
+  });
+});
+
+describe("formatBuilds", () => {
+  it("reports an empty list", () => {
+    expect(formatBuilds([])).toBe("No builds found.");
+  });
+
+  it("lists each build with its status, branch, commit and URL", () => {
+    const output = formatBuilds([build, { ...build, number: 41 }]);
+    expect(output).toContain("Builds (2)");
+    expect(output).toContain("#42 [changes-detected]");
+    expect(output).toContain("#41 [changes-detected]");
+    expect(output).toContain("  Branch: feature");
+    expect(output).toContain("  Commit: abc123");
+    expect(output).toContain("  Snapshots: total 10, changed 2");
+    expect(output).toContain("  URL: https://app.argos-ci.com/o/p/builds/42");
+  });
+});
+
+describe("formatSnapshotDownload", () => {
+  const file = {
+    name: "home.png",
+    url: "https://files.argos-ci.com/home.png",
+    contentType: "image/png",
+    status: "unchanged" as const,
+    path: "/tmp/out/home.png",
+  };
+
+  it("says where the files went and which build they come from", () => {
+    const output = formatSnapshotDownload({
+      build,
+      directory: "/tmp/out",
+      files: [file, { ...file, name: "about.png" }],
+    });
+    expect(output).toContain("Downloaded 2 snapshots of build #42 to /tmp/out");
+    expect(output).toContain("Branch: feature");
+    expect(output).toContain("Commit: abc123");
+    expect(output).toContain("URL: https://app.argos-ci.com/o/p/builds/42");
+  });
+
+  it("names what was downloaded, singular or plural", () => {
+    expect(
+      formatSnapshotDownload(
+        { build, directory: "/tmp/out", files: [file] },
+        "baseline snapshot",
+      ),
+    ).toContain("Downloaded 1 baseline snapshot of build #42");
+  });
+
+  it("says when there was nothing to download", () => {
+    expect(
+      formatSnapshotDownload(
+        { build, directory: "/tmp/out", files: [] },
+        "baseline snapshot",
+      ),
+    ).toBe("Build #42 has no baseline snapshots to download.");
   });
 });
 
@@ -280,6 +403,20 @@ describe("formatComment / formatComments", () => {
     expect(output).toContain("👍 2");
   });
 
+  it("shows where on a media a comment points, and which upload it points at", () => {
+    // A media comment has an anchor and no diff behind it, so the pin has to be
+    // reported on its own — otherwise the coordinates never reach the reader.
+    const pinned = {
+      ...comment,
+      mediaId: "42",
+      mediaVersionId: "media-version-9",
+      anchor: { type: "point", x: 0.62, y: 0.34 },
+    } as unknown as Comment;
+    const output = formatComment(pinned);
+    expect(output).toContain("Pinned: point 0.62,0.34");
+    expect(output).toContain("Media version: media-version-9");
+  });
+
   it("reports an empty comment list", () => {
     expect(formatComments([])).toBe("No comments found.");
   });
@@ -293,5 +430,169 @@ describe("formatComment / formatComments", () => {
     const output = formatComments([comment, reply]);
     expect(output).toContain("#c1 [thread]");
     expect(output).toContain("#c2 [reply]");
+  });
+});
+
+describe("formatMedia / formatMediaList", () => {
+  const media = {
+    id: "42",
+    name: "checkout.png",
+    state: "after",
+    description: null,
+    stage: "staged",
+    branch: "feat/checkout",
+    prNumber: null,
+    url: "https://app.argos-ci.com/m/tok",
+    markdown: "![checkout.png](https://app.argos-ci.com/m/tok)",
+    version: 1,
+    versionCount: 1,
+    fileUrl: "https://files.argos-ci.com/media/1/abc.webp",
+    posterUrl: null,
+    contentType: "image/webp",
+    sizeBytes: 188_416,
+    width: 1440,
+    height: 900,
+    visibility: "public",
+    status: "ready",
+    expiresAt: null,
+    createdAt: "2026-01-01T00:00:00.000Z",
+  } as unknown as Media;
+
+  it("reports an empty list", () => {
+    expect(formatMediaList([])).toBe("No media found.");
+  });
+
+  it("labels which half of a pair the media is", () => {
+    expect(formatMedia(media)).toContain("checkout.png (after)");
+  });
+
+  it("says a staged media is waiting on a pull request for its branch", () => {
+    expect(formatMedia(media)).toContain("staged on feat/checkout");
+  });
+
+  it("names the pull request a published media went to", () => {
+    const published = {
+      ...media,
+      stage: "published",
+      prNumber: 1234,
+    } as unknown as Media;
+    expect(formatMedia(published)).toContain("published to PR #1234");
+  });
+
+  it("prints the details, the file and the embed to paste", () => {
+    const output = formatMedia(media);
+    expect(output).toContain("image/webp · 184 KB · 1440x900 · public · ready");
+    // The file URL is what lets an agent go and look at the image itself.
+    expect(output).toContain(
+      "File: https://files.argos-ci.com/media/1/abc.webp",
+    );
+    expect(output).toContain(
+      "Markdown: ![checkout.png](https://app.argos-ci.com/m/tok)",
+    );
+  });
+
+  it("only mentions the version once there is history", () => {
+    expect(formatMedia(media)).not.toContain("Version:");
+    const revised = {
+      ...media,
+      version: 2,
+      versionCount: 3,
+    } as unknown as Media;
+    expect(formatMedia(revised)).toContain("Version: 2 (3 uploaded)");
+  });
+
+  it("does not present the version as a fraction of the uploaded count", () => {
+    // `version` counts every version created, `versionCount` only the ones whose
+    // bytes landed, so an abandoned upload in between makes the first exceed the
+    // second — "3 of 2" would be nonsense.
+    const afterAbandonedUpload = {
+      ...media,
+      version: 3,
+      versionCount: 2,
+    } as unknown as Media;
+    const output = formatMedia(afterAbandonedUpload);
+    expect(output).toContain("Version: 3 (2 uploaded)");
+    expect(output).not.toContain("of 2");
+  });
+});
+
+describe("formatMediaVersions", () => {
+  const version = {
+    id: "media-version-9",
+    number: 2,
+    fileUrl: "https://files.argos-ci.com/media/1/def.webp",
+    posterUrl: null,
+    contentType: "image/webp",
+    sizeBytes: 2048,
+    width: 1440,
+    height: 900,
+    expiresAt: null,
+    createdAt: "2026-01-02T00:00:00.000Z",
+  } as unknown as MediaVersion;
+
+  it("reports an empty history", () => {
+    expect(formatMediaVersions([])).toBe("No versions found.");
+  });
+
+  it("prints the id a comment points at, and the file to look at", () => {
+    const output = formatMediaVersions([version]);
+    expect(output).toContain("#2 · image/webp · 2 KB · 1440x900");
+    expect(output).toContain("ID: media-version-9");
+    expect(output).toContain(
+      "File: https://files.argos-ci.com/media/1/def.webp",
+    );
+  });
+});
+
+describe("formatDocsSearchResults", () => {
+  it("numbers each result with its URL and excerpt on a single line", () => {
+    expect(
+      formatDocsSearchResults(
+        [
+          {
+            title: "Parallel testing",
+            url: "https://argos-ci.com/docs/parallel",
+            excerpt: "Split your suite\n\nacross shards.",
+          },
+          {
+            title: "Blog post",
+            url: "https://argos-ci.com/blog",
+            excerpt: null,
+          },
+        ],
+        "parallel",
+      ),
+    ).toBe(
+      [
+        "1. Parallel testing",
+        "  https://argos-ci.com/docs/parallel",
+        "  Split your suite across shards.",
+        "",
+        "2. Blog post",
+        "  https://argos-ci.com/blog",
+      ].join("\n"),
+    );
+  });
+
+  it("strips escape sequences from remote text", () => {
+    const output = formatDocsSearchResults(
+      [
+        {
+          title: "\u001B[2KFake title",
+          url: "https://argos-ci.com/docs",
+          excerpt: "\rrun evil.sh",
+        },
+      ],
+      "x",
+    );
+    expect(output).not.toContain("\u001B");
+    expect(output).not.toContain("\r");
+    expect(output).toContain("1. Fake title");
+  });
+
+  it("says when nothing matched", () => {
+    expect(formatDocsSearchResults([], "nothing")).toBe(
+      'No documentation found for "nothing".',
+    );
   });
 });

@@ -10,6 +10,9 @@ import { getGlobalScript } from "@snapvisor/browser";
 import {
   getMetadataPath,
   getScreenshotName,
+  getTestRunKey,
+  nextCaptureIndex,
+  normalizeBaseNames,
   type ScreenshotMetadata,
   validateThreshold,
 } from "@snapvisor/util/browser";
@@ -30,11 +33,48 @@ type ArgosScreenshotOptions = Partial<
   argosCSS?: string;
 
   /**
+   * Selectors of the elements to hide from the screenshot.
+   * Hidden elements keep their space in the layout, like with the
+   * `data-visual-test="transparent"` helper.
+   * Selectors that match nothing are ignored.
+   * @example
+   *    cy.argosScreenshot("home", { hide: ["#clock", ".avatar"] })
+   */
+  hide?: string[];
+
+  /**
+   * Selectors of the elements to remove from the screenshot.
+   * Removed elements no longer take space in the layout, like with the
+   * `data-visual-test="removed"` helper.
+   * Selectors that match nothing are ignored.
+   * @example
+   *    cy.argosScreenshot("home", { remove: [".cookie-banner"] })
+   */
+  remove?: string[];
+
+  /**
    * Sensitivity threshold between 0 and 1.
    * The higher the threshold, the less sensitive the diff will be.
    * @default 0.5
    */
   threshold?: number;
+
+  /**
+   * Name, or list of names, to compare this screenshot against instead of its
+   * own name. A list is tried in order and the first name found in the baseline
+   * build wins, which lets a brand new screenshot fall back to an existing one
+   * rather than showing up as added.
+   *
+   * The screenshot's own name is not implicitly included: list it first to keep
+   * comparing against itself when it exists.
+   *
+   * @example
+   *    // Compare "home-variant-b" against itself, or against "home" if it is new.
+   *    cy.argosScreenshot("home-variant-b", {
+   *      baseName: ["home-variant-b", "home"],
+   *    })
+   */
+  baseName?: string | string[];
 
   /**
    * Wait for the UI to stabilize before taking the screenshot.
@@ -136,6 +176,31 @@ function beforeEach(options: ArgosScreenshotOptions) {
   };
 }
 
+/**
+ * Apply the `hide` and `remove` options until `afterEach` runs, as if the
+ * matched elements had the `data-visual-test` helper attribute.
+ */
+function applyHelpers({
+  hide = [],
+  remove = [],
+}: Pick<ArgosScreenshotOptions, "hide" | "remove">) {
+  if (hide.length === 0 && remove.length === 0) {
+    return;
+  }
+
+  cy.window({ log: false }).then((window) => {
+    const argos = (window as any).__ARGOS__ as ArgosGlobal;
+    const select = (selector: string) =>
+      Cypress.$(selector, window.document).toArray();
+    hide.forEach((selector) =>
+      argos.applyHelper(select(selector), "transparent"),
+    );
+    remove.forEach((selector) =>
+      argos.applyHelper(select(selector), "removed"),
+    );
+  });
+}
+
 function getRetries(value: unknown) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return 0;
@@ -177,7 +242,19 @@ Cypress.Commands.add(
   "argosScreenshot",
   { prevSubject: ["optional", "element", "window", "document"] },
   (subject, name, options = {}) => {
-    const { viewports, argosCSS: _argosCSS, tag, ...cypressOptions } = options;
+    const {
+      viewports,
+      argosCSS: _argosCSS,
+      tag,
+      baseName,
+      blackout,
+      onAfterScreenshot,
+      hide,
+      remove,
+      ...cypressOptions
+    } = options;
+
+    const baseNames = normalizeBaseNames(baseName);
     if (!name) {
       throw new Error("The `name` argument is required.");
     }
@@ -190,21 +267,30 @@ Cypress.Commands.add(
 
     injectArgos();
 
+    // One index per command, not per file: the viewport variants below are the
+    // same step of the journey seen at several widths, so they share it.
+    const captureIndex = nextCaptureIndex(
+      getTestRunKey({
+        titlePath: Cypress.currentTest.titlePath,
+        retry: Cypress.currentRetry,
+      }),
+    );
+
     const afterAll = beforeAll(options);
 
-    function stabilizeAndScreenshot(name: string) {
+    function stabilizeAndScreenshot(name: string, baseNames: string[] | null) {
       waitForReadiness(options);
+      applyHelpers({ hide, remove });
       const afterEach = beforeEach(options);
       waitForReadiness(options);
 
       const ref: any = {};
 
       cy.wrap(subject).screenshot(`${NAME_PREFIX}${name}`, {
-        blackout: ['[data-visual-test="blackout"]'].concat(
-          options.blackout || [],
-        ),
-        onAfterScreenshot: (_$el, props) => {
+        blackout: ['[data-visual-test="blackout"]'].concat(blackout || []),
+        onAfterScreenshot: ($el, props) => {
           ref.props = props;
+          onAfterScreenshot?.($el, props);
         },
         ...cypressOptions,
       });
@@ -244,9 +330,14 @@ Cypress.Commands.add(
             name: "@snapvisor/cypress",
             version,
           },
+          capture: { index: captureIndex },
         };
 
         metadata.transient = {};
+
+        if (baseNames) {
+          metadata.transient.baseName = baseNames;
+        }
 
         if (tag) {
           metadata.tags = Array.isArray(tag) ? tag : [tag];
@@ -267,8 +358,12 @@ Cypress.Commands.add(
       for (const viewport of viewports) {
         const viewportSize = resolveViewport(viewport);
         cy.viewport(viewportSize.width, viewportSize.height);
+        // The viewport suffix is part of the name, so the baselines need it too.
         stabilizeAndScreenshot(
           getScreenshotName(name, { viewportWidth: viewportSize.width }),
+          baseNames?.map((baseName) =>
+            getScreenshotName(baseName, { viewportWidth: viewportSize.width }),
+          ) ?? null,
         );
       }
 
@@ -278,7 +373,7 @@ Cypress.Commands.add(
         Cypress.config("viewportHeight"),
       );
     } else {
-      stabilizeAndScreenshot(name);
+      stabilizeAndScreenshot(name, baseNames);
     }
 
     afterAll();

@@ -26,6 +26,11 @@ export type TargetOptions = {
   project?: string | undefined;
 };
 
+export type AccountTargetOptions = {
+  token?: string | undefined;
+  account?: string | undefined;
+};
+
 /** A resolved build, ready to drive API calls. */
 export type BuildTarget = ProjectPath & {
   client: ArgosAPIClient;
@@ -38,13 +43,39 @@ export type ProjectTarget = ProjectPath & {
   client: ArgosAPIClient;
 };
 
+/** A resolved account, ready to drive account-scoped API calls. */
+export type AccountTarget = {
+  client: ArgosAPIClient;
+  accountSlug: string;
+};
+
+/**
+ * Resolve the API token if there is one, preferring an explicit token
+ * (`--token` / `ARGOS_TOKEN`) over the one stored by `argos login`.
+ *
+ * Returns `undefined` rather than failing, for the commands that have another way
+ * in: `media upload` falls back to CI tokenless authentication, which needs to be
+ * reached with no token in hand.
+ */
+export async function resolveOptionalToken(options: {
+  token?: string | undefined;
+}): Promise<string | undefined> {
+  return (
+    options.token ||
+    process.env["ARGOS_TOKEN"] ||
+    (await getAccessToken()) ||
+    undefined
+  );
+}
+
 /**
  * Resolve the API token, preferring an explicit token (`--token` /
  * `ARGOS_TOKEN`) over the one stored by `argos login`.
  */
-export async function resolveToken(options: TargetOptions): Promise<string> {
-  const token =
-    options.token || process.env["ARGOS_TOKEN"] || (await getAccessToken());
+export async function resolveToken(options: {
+  token?: string | undefined;
+}): Promise<string> {
+  const token = await resolveOptionalToken(options);
   if (!token) {
     fail(
       "No Snapvisor token found. Use --token, set ARGOS_TOKEN, or run `argos login`.",
@@ -110,16 +141,43 @@ export async function resolveBuildTarget(
  * Resolve a project-scoped command target: an authenticated client and the
  * `owner`/`project` pair every project endpoint needs. The project path comes
  * from `--project owner/project` or the `ARGOS_PROJECT` environment variable.
+ *
+ * With `auth: "project"` a missing project path falls back to the token's own
+ * project, the way {@link resolveBuildTarget} does — that only resolves for a
+ * project token, so read-only commands work out of the box in CI. `auth: "user"`
+ * requires the path, since a personal access token is not bound to a project.
  */
 export async function resolveProjectTarget(
   options: TargetOptions,
+  { auth }: { auth: AuthMode },
 ): Promise<ProjectTarget> {
   const client = createApiClient(await resolveToken(options));
   const projectPath = options.project || process.env["ARGOS_PROJECT"];
-  if (!projectPath) {
+  if (projectPath) {
+    return { client, ...parseProjectPathOrFail(projectPath) };
+  }
+  if (auth === "user") {
     fail(
       "--project <owner/project> is required. Pass it or set ARGOS_PROJECT.",
     );
   }
-  return { client, ...parseProjectPathOrFail(projectPath) };
+  const project = unwrap(await client.GET("/project"));
+  return { client, owner: project.account.slug, project: project.name };
+}
+
+/**
+ * Resolve an account-scoped command target: an authenticated client and the
+ * account slug, taken from `--account <slug>` or the `ARGOS_ACCOUNT`
+ * environment variable. Account endpoints all act as a user, so the token must
+ * be a personal access token scoped to that account.
+ */
+export async function resolveAccountTarget(
+  options: AccountTargetOptions,
+): Promise<AccountTarget> {
+  const accountSlug = options.account || process.env["ARGOS_ACCOUNT"];
+  if (!accountSlug) {
+    fail("An account is required. Use --account <slug> or set ARGOS_ACCOUNT.");
+  }
+  const client = createApiClient(await resolveToken(options));
+  return { client, accountSlug };
 }

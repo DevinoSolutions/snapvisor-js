@@ -1,12 +1,13 @@
 import type { ArgosAttachment } from "@snapvisor/playwright";
 import { resolveAutoName } from "./auto-name";
-import { getTestMetadata, type TestMetadata } from "./metadata";
+import { getCaptureMetadata, type TestMetadata } from "./metadata";
 import type {
   SerializableSnapshotOptions,
   VitestScreenshotOptions,
   VitestSnapshotOptions,
 } from "./options";
 import { serializeSnapshot } from "./serialize";
+import { warnIfStoriesUndetected, type StorybookContext } from "./storybook";
 
 export type { VitestScreenshotOptions, VitestSnapshotOptions };
 
@@ -28,12 +29,16 @@ declare module "vitest/browser" {
       name: string,
       options?: VitestScreenshotOptions,
       test?: TestMetadata,
+      captureIndex?: number | null,
+      storybook?: StorybookContext | null,
     ) => Promise<ArgosAttachment[]>;
     argosSnapshot: (
       name: string,
       content: string,
       options?: SerializableSnapshotOptions,
       test?: TestMetadata,
+      captureIndex?: number | null,
+      storybook?: StorybookContext | null,
     ) => Promise<ArgosAttachment[]>;
   }
 }
@@ -88,19 +93,28 @@ export async function argosScreenshot(
     return [];
   }
 
-  const [resolvedName, test] = await Promise.all([
+  const [resolvedName, { test, captureIndex, storybook }] = await Promise.all([
     resolveAutoName(name, { reservedLength: SCREENSHOT_NAME_RESERVED }),
     // Gather the test metadata here (browser side), where the Vitest test
     // context is available; it crosses the RPC boundary to the Node command.
-    getTestMetadata(),
+    getCaptureMetadata(),
   ]);
+  if (!storybook) {
+    warnIfStoriesUndetected();
+  }
 
   // Load vitest/browser using dynamic import to avoid loading it in non-Vitest
   // environments.
   const { server } = await import("vitest/browser");
   // Pass a defined `options` so the trailing `test` argument is never preceded
   // by an `undefined` hole (which the browser/node RPC would drop).
-  return server.commands.argosScreenshot(resolvedName, options ?? {}, test);
+  return server.commands.argosScreenshot(
+    resolvedName,
+    options ?? {},
+    test,
+    captureIndex,
+    storybook,
+  );
 }
 
 /**
@@ -151,15 +165,18 @@ export async function argosSnapshot(
   const extension = rawExtension.startsWith(".")
     ? rawExtension
     : `.${rawExtension}`;
-  const [resolvedName, test] = await Promise.all([
+  const [resolvedName, { test, captureIndex, storybook }] = await Promise.all([
     resolveAutoName(options.name, {
       reservedLength:
         ".snapshot".length + extension.length + METADATA_SUFFIX.length,
     }),
     // Gather the test metadata here (browser or Node), where the Vitest test
     // context is available.
-    getTestMetadata(),
+    getCaptureMetadata(),
   ]);
+  if (!storybook) {
+    warnIfStoriesUndetected();
+  }
 
   // Serialize on the test side (browser or Node), so values that only exist
   // here (DOM nodes, class instances, …) are serialized before crossing the RPC
@@ -183,12 +200,21 @@ export async function argosSnapshot(
       serialized,
       serializableOptions,
       test,
+      captureIndex,
+      storybook,
     );
   }
 
   // Node: write directly to disk.
   const { writeSnapshotFile } = await import("./snapshot-file");
-  return writeSnapshotFile(resolvedName, serialized, serializableOptions, test);
+  return writeSnapshotFile(
+    resolvedName,
+    serialized,
+    serializableOptions,
+    test,
+    captureIndex,
+    storybook,
+  );
 }
 
 /**
