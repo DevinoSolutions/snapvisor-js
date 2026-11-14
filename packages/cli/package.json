@@ -17,7 +17,7 @@
   },
   "homepage": "https://snapvisor.io/docs",
   "bugs": {
-    "url": "https://github.com/argos-ci/argos-javascript/issues"
+    "url": "https://github.com/DevinoSolutions/snapvisor-js/issues"
   },
   "engines": {
     "node": ">=22.0.0"

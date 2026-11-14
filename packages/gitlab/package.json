@@ -7,12 +7,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/argos-ci/argos-javascript.git",
+    "url": "git+https://github.com/DevinoSolutions/snapvisor-js.git",
     "directory": "packages/gitlab"
   },
-  "homepage": "https://argos-ci.com/docs/learn/integrations/gitlab-integration",
+  "homepage": "https://snapvisor.io/docs/gitlab",
   "bugs": {
-    "url": "https://github.com/argos-ci/argos-javascript/issues"
+    "url": "https://github.com/DevinoSolutions/snapvisor-js/issues"
   },
   "keywords": [
     "argos",
