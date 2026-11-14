@@ -10,6 +10,9 @@
     "directory": "packages/storybook"
   },
   "homepage": "https://snapvisor.io/docs",
+  "bugs": {
+    "url": "https://github.com/DevinoSolutions/snapvisor-js/issues"
+  },
   "keywords": [
     "argos",
     "argos-ci",
