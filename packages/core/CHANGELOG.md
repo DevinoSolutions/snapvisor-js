@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fcore%407.0.2...%40snapvisor%2Fcore%407.1.0) (2026-11-14)
+
+### Bug Fixes
+
+* **core:** baseline PR builds against the commit GitHub merged in ([#371](https://github.com/DevinoSolutions/snapvisor-js/issues/371)) ([c128da4](https://github.com/DevinoSolutions/snapvisor-js/commit/c128da467e9090e987af9d53cb061ef3e2c9f617))
+* **core:** identify the test merge from the merge ref, not the payload ([#372](https://github.com/DevinoSolutions/snapvisor-js/issues/372)) ([a34cf2e](https://github.com/DevinoSolutions/snapvisor-js/commit/a34cf2e65e544f31b0ce203bdce0ca4dd13c2dc7))
+* **core:** prevent git option injection via CI branch names (GHSA-v58q-fvq4-9vh4) ([#378](https://github.com/DevinoSolutions/snapvisor-js/issues/378)) ([67f24a9](https://github.com/DevinoSolutions/snapvisor-js/commit/67f24a907f6779db6916ee8b3c52cbdd97fe586f))
+* **core:** read Buildkite builds without a SHA or a pull request ([7ad1571](https://github.com/DevinoSolutions/snapvisor-js/commit/7ad1571f386ba5fec910817b1a80ec2450534683))
+* **core:** report pull request deployments on the head commit ([#386](https://github.com/DevinoSolutions/snapvisor-js/issues/386)) ([536eea3](https://github.com/DevinoSolutions/snapvisor-js/commit/536eea3235e0719fdd02040f3756205bdb6bd0cf))
+* **core:** stop leaking secrets into debug output (GHSA-28pg-v3hp-9g7f) ([#383](https://github.com/DevinoSolutions/snapvisor-js/issues/383)) ([cd59273](https://github.com/DevinoSolutions/snapvisor-js/commit/cd59273fe325be6c686e38aad3aad7b2e2adffe6))
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+
+### Features
+
+* **core:** upload media over the part size through the multipart relay ([c2a3620](https://github.com/DevinoSolutions/snapvisor-js/commit/c2a36201a419cc2cde48d28da4a7dad2e148f1e1))
+* expose a baseName option to set fallback baselines ([ab26668](https://github.com/DevinoSolutions/snapvisor-js/commit/ab26668e3a40ba405e7ca9143c5df9398d47fb73))
+* support media uploads ([4c8577c](https://github.com/DevinoSolutions/snapvisor-js/commit/4c8577c08ff1d9681c5b951dc73665cc8b7955c8))
+
+
 ## [7.0.2](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/core@7.0.1...@snapvisor/core@7.0.2) (2026-10-29)
 
 

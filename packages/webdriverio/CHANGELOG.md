@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fwebdriverio%400.8.2...%40snapvisor%2Fwebdriverio%400.9.0) (2026-11-14)
+
+### Bug Fixes
+
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+* **webdriverio:** keep capturing native apps without the Argos script ([5712957](https://github.com/DevinoSolutions/snapvisor-js/commit/57129577397cdef16ceb4b81694244f3323dfef8))
+
+### Features
+
+* **webdriverio:** add `hide`, `remove` and selector masks ([fab1fd1](https://github.com/DevinoSolutions/snapvisor-js/commit/fab1fd1a4524c38470a4f0a47863a591ad6126d6))
+* **webdriverio:** support WebdriverIO v10 ([a570882](https://github.com/DevinoSolutions/snapvisor-js/commit/a5708821250c6ed37ce9fe32959dbb26fd5d6d97))
+
+
 ## [0.8.2](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/webdriverio@0.8.1...@snapvisor/webdriverio@0.8.2) (2026-10-29)
 
 

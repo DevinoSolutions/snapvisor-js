@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fstorybook%407.0.3...%40snapvisor%2Fstorybook%407.1.0) (2026-11-14)
+
+### Bug Fixes
+
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+* **storybook:** document uploadToArgos as defaulting to false ([64f21af](https://github.com/DevinoSolutions/snapvisor-js/commit/64f21af10723999cbd440677ae9663ed6ad768d3))
+* **storybook:** install a shared Storybook channel for portable stories ([7663676](https://github.com/DevinoSolutions/snapvisor-js/commit/766367655bea45934a63a263252735ab462022ad))
+* **vitest:** harden the detection of Storybook stories ([38c9bd4](https://github.com/DevinoSolutions/snapvisor-js/commit/38c9bd4b048282dd63c5e230f4af7d99257e7611))
+* **vitest:** size the Vitest iframe from the settled layout ([ef30244](https://github.com/DevinoSolutions/snapvisor-js/commit/ef302441ba8934a00295bfad9711f7f719b6d0cd))
+
+### Features
+
+* **storybook:** support Storybook 11 ([#381](https://github.com/DevinoSolutions/snapvisor-js/issues/381)) ([f05b974](https://github.com/DevinoSolutions/snapvisor-js/commit/f05b974cd2dc924cc8d57f0bf4686938a228fad7))
+* **vitest:** support Vitest 5 alongside Vitest 4 ([#373](https://github.com/DevinoSolutions/snapvisor-js/issues/373)) ([971234f](https://github.com/DevinoSolutions/snapvisor-js/commit/971234f8d7835d5b892a8cba774b88b03be96b2d))
+
+
 ## [7.0.3](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/storybook@7.0.2...@snapvisor/storybook@7.0.3) (2026-10-29)
 
 **Note:** Version bump only for package @snapvisor/storybook

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fvitest%400.4.2...%40snapvisor%2Fvitest%400.5.0) (2026-11-14)
+
+### Bug Fixes
+
+* declare captureIndex on the Vitest browser commands ([d7e8669](https://github.com/DevinoSolutions/snapvisor-js/commit/d7e86699532fb15f1d6d6173567902217bdac2ef))
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+* **vitest:** harden the detection of Storybook stories ([38c9bd4](https://github.com/DevinoSolutions/snapvisor-js/commit/38c9bd4b048282dd63c5e230f4af7d99257e7611))
+* **vitest:** make argosScreenshot and auto-naming work on Vitest 4.0 ([#390](https://github.com/DevinoSolutions/snapvisor-js/issues/390)) ([ad112ad](https://github.com/DevinoSolutions/snapvisor-js/commit/ad112ad4d3200da38d7efd7ac88cbe8fafc91aaa))
+* **vitest:** report object retry options as a retry count ([#391](https://github.com/DevinoSolutions/snapvisor-js/issues/391)) ([921c141](https://github.com/DevinoSolutions/snapvisor-js/commit/921c141b3688cf87a75a73db53a8897d0413e4d7))
+* **vitest:** size the Vitest iframe from the settled layout ([ef30244](https://github.com/DevinoSolutions/snapvisor-js/commit/ef302441ba8934a00295bfad9711f7f719b6d0cd))
+
+### Features
+
+* accept selectors in the Playwright and Vitest `mask` option ([586e091](https://github.com/DevinoSolutions/snapvisor-js/commit/586e091b6541cc3883ae86315fe478597ae6dc5b))
+* add `hide` and `remove` screenshot options ([971e056](https://github.com/DevinoSolutions/snapvisor-js/commit/971e056c57596d4927d8be5e6b3d2e5367af6cf8))
+* expose a baseName option to set fallback baselines ([ab26668](https://github.com/DevinoSolutions/snapvisor-js/commit/ab26668e3a40ba405e7ca9143c5df9398d47fb73))
+* record the capture order of screenshots ([47127b0](https://github.com/DevinoSolutions/snapvisor-js/commit/47127b059426956de250ebc2cf49aaeccb836542))
+* **storybook:** support Storybook 11 ([#381](https://github.com/DevinoSolutions/snapvisor-js/issues/381)) ([f05b974](https://github.com/DevinoSolutions/snapvisor-js/commit/f05b974cd2dc924cc8d57f0bf4686938a228fad7))
+* **vitest:** report screenshots of Storybook stories as Storybook ([6d2f477](https://github.com/DevinoSolutions/snapvisor-js/commit/6d2f477b724471bd1a5c3e199a3af81593e94447))
+* **vitest:** support Vitest 5 alongside Vitest 4 ([#373](https://github.com/DevinoSolutions/snapvisor-js/issues/373)) ([971234f](https://github.com/DevinoSolutions/snapvisor-js/commit/971234f8d7835d5b892a8cba774b88b03be96b2d))
+
+
 ## [0.4.2](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/vitest@0.4.1...@snapvisor/vitest@0.4.2) (2026-10-29)
 
 **Note:** Version bump only for package @snapvisor/vitest

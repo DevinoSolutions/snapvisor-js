@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.28.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fapi-client%400.27.1...%40snapvisor%2Fapi-client%400.28.0) (2026-11-14)
+
+### Bug Fixes
+
+* **api-client:** retry rate-limited requests after Retry-After ([#388](https://github.com/DevinoSolutions/snapvisor-js/issues/388)) ([f5af9f4](https://github.com/DevinoSolutions/snapvisor-js/commit/f5af9f4bad9738b71735d9e3ddec4b6dc4b01465))
+* **core:** report pull request deployments on the head commit ([#386](https://github.com/DevinoSolutions/snapvisor-js/issues/386)) ([536eea3](https://github.com/DevinoSolutions/snapvisor-js/commit/536eea3235e0719fdd02040f3756205bdb6bd0cf))
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+
+### Features
+
+* **cli:** add test and test-comment commands ([5a2bce5](https://github.com/DevinoSolutions/snapvisor-js/commit/5a2bce515595173ae726b739bc0cdf345bef66ce))
+* **cli:** expose team, project, test and review management ([148648a](https://github.com/DevinoSolutions/snapvisor-js/commit/148648aaca98493b3294c308379137f18d025f0b)), closes [argos-ci/argos#2440](https://github.com/argos-ci/argos/issues/2440)
+* **cli:** identify the coding agent driving the CLI ([#367](https://github.com/DevinoSolutions/snapvisor-js/issues/367)) ([01d10cd](https://github.com/DevinoSolutions/snapvisor-js/commit/01d10cd41a6448521f1274cff12a67b50695967f))
+* expose a baseName option to set fallback baselines ([ab26668](https://github.com/DevinoSolutions/snapvisor-js/commit/ab26668e3a40ba405e7ca9143c5df9398d47fb73))
+* support media uploads ([4c8577c](https://github.com/DevinoSolutions/snapvisor-js/commit/4c8577c08ff1d9681c5b951dc73665cc8b7955c8))
+
+
 ## [0.27.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/api-client@0.27.0...@snapvisor/api-client@0.27.1) (2026-10-29)
 
 

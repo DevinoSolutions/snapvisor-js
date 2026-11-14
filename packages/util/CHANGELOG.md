@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Futil%405.0.0...%40snapvisor%2Futil%405.1.0) (2026-11-14)
+
+### Bug Fixes
+
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+* **vitest:** harden the detection of Storybook stories ([38c9bd4](https://github.com/DevinoSolutions/snapvisor-js/commit/38c9bd4b048282dd63c5e230f4af7d99257e7611))
+
+### Features
+
+* expose a baseName option to set fallback baselines ([ab26668](https://github.com/DevinoSolutions/snapvisor-js/commit/ab26668e3a40ba405e7ca9143c5df9398d47fb73))
+* record the capture order of screenshots ([47127b0](https://github.com/DevinoSolutions/snapvisor-js/commit/47127b059426956de250ebc2cf49aaeccb836542))
+
+
 # 5.0.0 (2026-07-24)
 
 

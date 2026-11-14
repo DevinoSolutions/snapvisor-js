@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fbrowser%407.0.0...%40snapvisor%2Fbrowser%407.1.0) (2026-11-14)
+
+### Bug Fixes
+
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+
+### Features
+
+* add `hide` and `remove` screenshot options ([971e056](https://github.com/DevinoSolutions/snapvisor-js/commit/971e056c57596d4927d8be5e6b3d2e5367af6cf8))
+* **browser:** add pauseSvgAnimations stabilization plugin ([#385](https://github.com/DevinoSolutions/snapvisor-js/issues/385)) ([89f2103](https://github.com/DevinoSolutions/snapvisor-js/commit/89f210316fd6e0e6e72c66dc171f1f47d3bd1d7b))
+* **puppeteer:** support the blackout helper and add `mask` option ([63990c0](https://github.com/DevinoSolutions/snapvisor-js/commit/63990c0d2f8083a76c1ec86fd16ec16d49256e9c))
+
+
 # 7.0.0 (2026-07-24)
 
 

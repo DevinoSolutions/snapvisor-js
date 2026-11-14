@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fcypress%408.0.2...%40snapvisor%2Fcypress%408.1.0) (2026-11-14)
+
+### Bug Fixes
+
+* **cypress:** keep default blackout selector when passing `blackout` ([f72211e](https://github.com/DevinoSolutions/snapvisor-js/commit/f72211ef8186a17875c9f41500cb4a375d4bab53))
+* **cypress:** keep metadata when passing `onAfterScreenshot` ([d9b3695](https://github.com/DevinoSolutions/snapvisor-js/commit/d9b3695613efd4fc7192119dc6bfa486ac8992a4))
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+
+### Features
+
+* add `hide` and `remove` screenshot options ([971e056](https://github.com/DevinoSolutions/snapvisor-js/commit/971e056c57596d4927d8be5e6b3d2e5367af6cf8))
+* **cypress:** support Cypress 16 ([18a5937](https://github.com/DevinoSolutions/snapvisor-js/commit/18a5937e243ac94a444736825e070a38964b3f6a)), closes [#387](https://github.com/DevinoSolutions/snapvisor-js/issues/387)
+* expose a baseName option to set fallback baselines ([ab26668](https://github.com/DevinoSolutions/snapvisor-js/commit/ab26668e3a40ba405e7ca9143c5df9398d47fb73))
+* record the capture order of screenshots ([47127b0](https://github.com/DevinoSolutions/snapvisor-js/commit/47127b059426956de250ebc2cf49aaeccb836542))
+
+
 ## [8.0.2](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/cypress@8.0.1...@snapvisor/cypress@8.0.2) (2026-10-29)
 
 **Note:** Version bump only for package @snapvisor/cypress

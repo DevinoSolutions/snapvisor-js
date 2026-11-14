@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fcli%407.1.1...%40snapvisor%2Fcli%407.2.0) (2026-11-14)
+
+### Bug Fixes
+
+* **cli:** request media scopes at login ([#363](https://github.com/DevinoSolutions/snapvisor-js/issues/363)) ([09576db](https://github.com/DevinoSolutions/snapvisor-js/commit/09576db30a57b8de41cf6a611a9653cd0da89507))
+* **cli:** strip terminal escapes from OAuth error text (GHSA-q9j4-4h4j-mv5m) ([#382](https://github.com/DevinoSolutions/snapvisor-js/issues/382)) ([3e83d45](https://github.com/DevinoSolutions/snapvisor-js/commit/3e83d453711d1660e2a776d751de5431523ec716))
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+
+### Features
+
+* **cli:** add `build list`, `build download` and `baseline download` ([b0c5dc3](https://github.com/DevinoSolutions/snapvisor-js/commit/b0c5dc3256ee833edf23e3e7d3ffbfd489a0f35c))
+* **cli:** add `docs search` command ([42e234a](https://github.com/DevinoSolutions/snapvisor-js/commit/42e234ab916b6136edfddbb5b93b8e7c42c27da3))
+* **cli:** add test and test-comment commands ([5a2bce5](https://github.com/DevinoSolutions/snapvisor-js/commit/5a2bce515595173ae726b739bc0cdf345bef66ce))
+* **cli:** expose team, project, test and review management ([148648a](https://github.com/DevinoSolutions/snapvisor-js/commit/148648aaca98493b3294c308379137f18d025f0b)), closes [argos-ci/argos#2440](https://github.com/argos-ci/argos/issues/2440)
+* **cli:** identify the coding agent driving the CLI ([#367](https://github.com/DevinoSolutions/snapvisor-js/issues/367)) ([01d10cd](https://github.com/DevinoSolutions/snapvisor-js/commit/01d10cd41a6448521f1274cff12a67b50695967f))
+* support media uploads ([4c8577c](https://github.com/DevinoSolutions/snapvisor-js/commit/4c8577c08ff1d9681c5b951dc73665cc8b7955c8))
+
+
 ## [7.1.1](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/cli@7.1.0...@snapvisor/cli@7.1.1) (2026-10-29)
 
 **Note:** Version bump only for package @snapvisor/cli

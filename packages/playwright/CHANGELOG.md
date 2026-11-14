@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fplaywright%408.0.2...%40snapvisor%2Fplaywright%408.1.0) (2026-11-14)
+
+### Bug Fixes
+
+* **playwright:** keep the blackout helper when passing `mask` ([4609e4a](https://github.com/DevinoSolutions/snapvisor-js/commit/4609e4a9ac219473a6d1214d76f4eeed16d2f22f))
+* **playwright:** stop warning about Chromium args on Firefox and WebKit device presets ([24650e3](https://github.com/DevinoSolutions/snapvisor-js/commit/24650e3c08c6685ce593f346744b2e63cd08bbe9))
+* point package bugs and homepage links at snapvisor-js ([#25](https://github.com/DevinoSolutions/snapvisor-js/issues/25)) ([a1f9002](https://github.com/DevinoSolutions/snapvisor-js/commit/a1f900261674dae30a611eea8f67f2a00f77105d))
+* **vitest:** harden the detection of Storybook stories ([38c9bd4](https://github.com/DevinoSolutions/snapvisor-js/commit/38c9bd4b048282dd63c5e230f4af7d99257e7611))
+
+### Features
+
+* accept selectors in the Playwright and Vitest `mask` option ([586e091](https://github.com/DevinoSolutions/snapvisor-js/commit/586e091b6541cc3883ae86315fe478597ae6dc5b))
+* add `hide` and `remove` screenshot options ([971e056](https://github.com/DevinoSolutions/snapvisor-js/commit/971e056c57596d4927d8be5e6b3d2e5367af6cf8))
+* **browser:** add pauseSvgAnimations stabilization plugin ([#385](https://github.com/DevinoSolutions/snapvisor-js/issues/385)) ([89f2103](https://github.com/DevinoSolutions/snapvisor-js/commit/89f210316fd6e0e6e72c66dc171f1f47d3bd1d7b))
+* expose a baseName option to set fallback baselines ([ab26668](https://github.com/DevinoSolutions/snapvisor-js/commit/ab26668e3a40ba405e7ca9143c5df9398d47fb73))
+* **playwright:** support Electron apps ([78dfbce](https://github.com/DevinoSolutions/snapvisor-js/commit/78dfbceb776d87451bce51748d6ea4528fedee96))
+* record the capture order of screenshots ([47127b0](https://github.com/DevinoSolutions/snapvisor-js/commit/47127b059426956de250ebc2cf49aaeccb836542))
+* **storybook:** support Storybook 11 ([#381](https://github.com/DevinoSolutions/snapvisor-js/issues/381)) ([f05b974](https://github.com/DevinoSolutions/snapvisor-js/commit/f05b974cd2dc924cc8d57f0bf4686938a228fad7))
+
+
 ## [8.0.2](https://github.com/DevinoSolutions/snapvisor-js/compare/@snapvisor/playwright@8.0.1...@snapvisor/playwright@8.0.2) (2026-10-29)
 
 **Note:** Version bump only for package @snapvisor/playwright
