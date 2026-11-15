@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fvitest%400.5.0...%40snapvisor%2Fvitest%400.6.0) (2026-11-15)
+
+### Features
+
+* add Snapvisor-named exports and SNAPVISOR_TOKEN to every package ([a3ae8f3](https://github.com/DevinoSolutions/snapvisor-js/commit/a3ae8f3c08ed765591c1de6c913974e785e6acc6))
+
+
 # [0.5.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fvitest%400.4.2...%40snapvisor%2Fvitest%400.5.0) (2026-11-14)
 
 ### Bug Fixes
