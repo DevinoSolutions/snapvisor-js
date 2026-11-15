@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fstorybook%407.1.0...%40snapvisor%2Fstorybook%407.2.0) (2026-11-15)
+
+### Features
+
+* **storybook:** add Snapvisor-named exports and fix the README ([b9e8f0e](https://github.com/DevinoSolutions/snapvisor-js/commit/b9e8f0e31d3e6992e83087f252009cb44cec71d6))
+
+
 # [7.1.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fstorybook%407.0.3...%40snapvisor%2Fstorybook%407.1.0) (2026-11-14)
 
 ### Bug Fixes
