@@ -106,3 +106,8 @@ async function checkIsVitestEnv(): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Snapvisor-named alias of {@link argosScreenshot}. Both names stay supported.
+ */
+export const snapvisorScreenshot = argosScreenshot;

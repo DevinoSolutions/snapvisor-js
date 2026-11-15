@@ -21,32 +21,34 @@ The recommended way to run visual tests is with the [Storybook Vitest addon](htt
 ```ts
 // vitest.config.ts
 import { defineConfig } from "vitest/config";
-import { argosVitestPlugin } from "@snapvisor/storybook/vitest-plugin";
+import { snapvisorVitestPlugin } from "@snapvisor/storybook/vitest-plugin";
 
 export default defineConfig({
   plugins: [
-    argosVitestPlugin({
+    snapvisorVitestPlugin({
       // Upload the screenshots to Snapvisor only on CI.
-      uploadToArgos: process.env.CI === "true",
+      uploadToSnapvisor: process.env.CI === "true",
     }),
   ],
 });
 ```
 
-A screenshot is captured for every story automatically. To capture additional screenshots (for example, at different steps of an interaction), call `argosScreenshot` inside a story's `play` function:
+A screenshot is captured for every story automatically. To capture additional screenshots (for example, at different steps of an interaction), call `snapvisorScreenshot` inside a story's `play` function:
 
 ```ts
 // Button.stories.tsx
-import { argosScreenshot } from "@snapvisor/storybook/vitest";
+import { snapvisorScreenshot } from "@snapvisor/storybook/vitest";
 
 export const Example: Story = {
   play: async (ctx) => {
-    await argosScreenshot(ctx, "example");
+    await snapvisorScreenshot(ctx, "example");
   },
 };
 ```
 
-> Using the [Storybook Test Runner](https://storybook.js.org/docs/writing-tests/integrations/test-runner) instead? Import `argosScreenshot` from `@snapvisor/storybook/test-runner` and call it from the `postVisit` hook. See the [Test Runner quickstart](https://argos-ci.com/docs/quickstart/storybook-quickstart/storybook-test-runner-quickstart).
+> Using the [Storybook Test Runner](https://storybook.js.org/docs/writing-tests/integrations/test-runner) instead? Import `snapvisorScreenshot` from `@snapvisor/storybook/test-runner` and call it from the `postVisit` hook. See the [SDKs documentation](https://snapvisor.io/docs/sdks).
+
+> The Argos-named exports from earlier versions (`argosVitestPlugin`, `uploadToArgos`, `argosScreenshot`) still work.
 
 ## Compatibility
 

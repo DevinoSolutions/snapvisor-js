@@ -3,3 +3,8 @@ const argosScreenshot = async (...args) => {
   return argosScreenshot(...args);
 };
 exports.argosScreenshot = argosScreenshot;
+const snapvisorScreenshot = async (...args) => {
+  const { snapvisorScreenshot } = await import("./test-runner.mjs");
+  return snapvisorScreenshot(...args);
+};
+exports.snapvisorScreenshot = snapvisorScreenshot;

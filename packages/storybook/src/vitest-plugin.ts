@@ -35,7 +35,17 @@ export interface ArgosVitestPluginOptions
    * @default false
    */
   uploadToArgos?: boolean;
+  /**
+   * Snapvisor-named alias of `uploadToArgos`. Either one enables the upload.
+   * @default false
+   */
+  uploadToSnapvisor?: boolean;
 }
+
+/**
+ * Snapvisor-named alias of {@link ArgosVitestPluginOptions}.
+ */
+export type SnapvisorVitestPluginOptions = ArgosVitestPluginOptions;
 
 /**
  * Create a command for taking Snapvisor screenshots in Vitest.
@@ -128,6 +138,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
   const {
     root: unresolvedRoot = "./screenshots",
     uploadToArgos,
+    uploadToSnapvisor,
     ...otherOptions
   } = options ?? {};
   const root = resolve(cwd, unresolvedRoot);
@@ -145,7 +156,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
       // unmounts the story.
       project.config.setupFiles.push(setupFile);
 
-      if (uploadToArgos) {
+      if (uploadToArgos || uploadToSnapvisor) {
         vitest.config.reporters.push(
           new ArgosReporter({ ...otherOptions, root }),
         );
@@ -173,3 +184,8 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     },
   };
 }
+
+/**
+ * Snapvisor-named alias of {@link argosVitestPlugin}. Both names stay supported.
+ */
+export const snapvisorVitestPlugin = argosVitestPlugin;

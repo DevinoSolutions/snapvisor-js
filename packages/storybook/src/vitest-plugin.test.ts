@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { argosVitestPlugin } from "./vitest-plugin";
+import { argosVitestPlugin, snapvisorVitestPlugin } from "./vitest-plugin";
 
 function configure(setupFiles: string[]) {
   const plugin = argosVitestPlugin({ uploadToArgos: false }) as any;
@@ -24,5 +24,23 @@ describe("argosVitestPlugin", () => {
     // `afterEach` hooks run in reverse registration order, so registering last
     // is what makes the screenshot happen before Storybook unmounts the story.
     expect(setupFiles.at(-1)).toMatch(/vitest-setup-file\.mjs$/);
+  });
+});
+
+describe("Snapvisor-named aliases", () => {
+  it("exposes snapvisorVitestPlugin as the same plugin factory", () => {
+    expect(snapvisorVitestPlugin).toBe(argosVitestPlugin);
+  });
+
+  it("uploads with uploadToSnapvisor as well as uploadToArgos", () => {
+    for (const option of ["uploadToSnapvisor", "uploadToArgos"]) {
+      const plugin = snapvisorVitestPlugin({ [option]: true }) as any;
+      const reporters: unknown[] = [];
+      plugin.configureVitest({
+        vitest: { config: { reporters } },
+        project: { config: { setupFiles: [] } },
+      });
+      expect(reporters).toHaveLength(1);
+    }
   });
 });
