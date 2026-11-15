@@ -20,7 +20,7 @@ const DEFAULT_PLAYWRIGHT_VIEWPORT_SIZE = { width: 1280, height: 720 };
  * Stabilize the UI and takes a screenshot of the application under test.
  *
  * @example argosScreenshot(page, context, options)
- * @see https://argos-ci.com/docs/reference/playwright
+ * @see https://snapvisor.io/docs/sdks
  */
 export async function argosScreenshot(
   /**
@@ -99,3 +99,8 @@ function applyFitToContent(
       (options?.argosCSS ?? ""),
   };
 }
+
+/**
+ * Snapvisor-named alias of {@link argosScreenshot}. Both names stay supported.
+ */
+export const snapvisorScreenshot = argosScreenshot;
