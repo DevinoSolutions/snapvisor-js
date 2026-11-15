@@ -2,8 +2,14 @@ import type { Plugin } from "vitest/config";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createArgosScreenshotCommand } from "./command";
-import { createArgosSnapshotCommand } from "./snapshot-command";
+import {
+  createArgosScreenshotCommand,
+  createSnapvisorScreenshotCommand,
+} from "./command";
+import {
+  createArgosSnapshotCommand,
+  createSnapvisorSnapshotCommand,
+} from "./snapshot-command";
 import { ArgosReporter } from "./reporter";
 import type { ArgosVitestPluginOptions } from "./options";
 
@@ -12,10 +18,18 @@ export {
   createArgosSnapshotCommand,
   ArgosReporter,
 };
+
+/**
+ * Snapvisor-named alias of {@link ArgosReporter}. Both names stay supported.
+ */
+export const SnapvisorReporter = ArgosReporter;
+export { createSnapvisorScreenshotCommand, createSnapvisorSnapshotCommand };
 export type { ArgosScreenshotCommandArgs } from "./command";
 export type { ArgosSnapshotCommandArgs } from "./snapshot-command";
 export type {
+  ArgosReporterConfig as SnapvisorReporterConfig,
   ArgosVitestPluginOptions,
+  SnapvisorVitestPluginOptions,
   VitestScreenshotOptions,
   VitestSnapshotOptions,
   ArgosReporterConfig,
@@ -70,6 +84,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
   const {
     root: unresolvedRoot = "./snapshots",
     uploadToArgos,
+    uploadToSnapvisor,
     ...otherOptions
   } = options ?? {};
   const root = resolve(cwd, unresolvedRoot);
@@ -88,7 +103,7 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
         project.config.setupFiles.unshift(storybookSetupFile);
       }
 
-      if (uploadToArgos) {
+      if (uploadToArgos || uploadToSnapvisor) {
         vitest.config.reporters.push(
           new ArgosReporter({ ...otherOptions, root }),
         );
@@ -124,3 +139,8 @@ export function argosVitestPlugin(options?: ArgosVitestPluginOptions): Plugin {
     },
   };
 }
+
+/**
+ * Snapvisor-named alias of {@link argosVitestPlugin}. Both names stay supported.
+ */
+export const snapvisorVitestPlugin = argosVitestPlugin;

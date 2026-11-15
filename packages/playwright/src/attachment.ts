@@ -104,3 +104,8 @@ export function checkIsAutomaticScreenshot(
     Boolean(attachment.path)
   );
 }
+
+/**
+ * Snapvisor-named alias of {@link ArgosAttachment}.
+ */
+export type SnapvisorAttachment = ArgosAttachment;

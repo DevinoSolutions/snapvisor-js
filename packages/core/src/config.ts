@@ -119,6 +119,16 @@ convict.addFormat({
   coerce: toIntArray,
 });
 
+/**
+ * Read the project token from the environment: `ARGOS_TOKEN`, or its
+ * Snapvisor-named alias `SNAPVISOR_TOKEN`. `ARGOS_TOKEN` wins when both are set.
+ */
+export function getTokenFromEnv(
+  env: Record<string, string | undefined> = process.env,
+): string | undefined {
+  return env["ARGOS_TOKEN"] || env["SNAPVISOR_TOKEN"] || undefined;
+}
+
 /** Argos API used unless one is named explicitly or by `ARGOS_API_BASE_URL`. */
 export const DEFAULT_API_BASE_URL = "https://api.snapvisor.io/v2/";
 
@@ -449,9 +459,11 @@ function getDefaultConfig() {
   return Object.entries(schema).reduce<Record<string, any>>(
     (cfg, [key, entry]) => {
       cfg[key] =
-        "env" in entry && entry.env && process.env[entry.env]
-          ? process.env[entry.env]
-          : entry.default;
+        key === "token" && getTokenFromEnv()
+          ? getTokenFromEnv()
+          : "env" in entry && entry.env && process.env[entry.env]
+            ? process.env[entry.env]
+            : entry.default;
       return cfg;
     },
     {} as Record<string, any>,

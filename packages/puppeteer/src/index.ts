@@ -527,3 +527,13 @@ export async function argosScreenshot(
 
   await afterAll();
 }
+
+/**
+ * Snapvisor-named alias of {@link argosScreenshot}. Both names stay supported.
+ */
+export const snapvisorScreenshot = argosScreenshot;
+
+/**
+ * Snapvisor-named alias of {@link ArgosScreenshotOptions}.
+ */
+export type SnapvisorScreenshotOptions = ArgosScreenshotOptions;

@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { argosVitestPlugin } from "./plugin";
+import { argosVitestPlugin, snapvisorVitestPlugin } from "./plugin";
 
 // The real implementation, unless a test simulates a missing package.
 vi.mock("node:module", async (importOriginal) => {
@@ -58,5 +58,23 @@ describe("argosVitestPlugin", () => {
         }) as unknown as NodeJS.Require,
     );
     expect(configureProject()).toEqual([join(root, "setup.ts")]);
+  });
+});
+
+describe("Snapvisor-named aliases", () => {
+  it("exposes snapvisorVitestPlugin as the same plugin factory", () => {
+    expect(snapvisorVitestPlugin).toBe(argosVitestPlugin);
+  });
+
+  it("uploads with uploadToSnapvisor as well as uploadToArgos", () => {
+    for (const option of ["uploadToSnapvisor", "uploadToArgos"]) {
+      const plugin = snapvisorVitestPlugin({ [option]: true }) as any;
+      const reporters: unknown[] = [];
+      plugin.configureVitest({
+        vitest: { config: { reporters } },
+        project: { config: { root: "/nowhere", setupFiles: [] } },
+      });
+      expect(reporters).toHaveLength(1);
+    }
   });
 });

@@ -29,7 +29,8 @@
   },
   "type": "module",
   "bin": {
-    "argos-gitlab": "./bin/argos-gitlab.js"
+    "argos-gitlab": "./bin/argos-gitlab.js",
+    "snapvisor-gitlab": "./bin/argos-gitlab.js"
   },
   "exports": {
     ".": {

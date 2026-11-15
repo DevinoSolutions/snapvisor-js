@@ -212,4 +212,14 @@ export interface ArgosVitestPluginOptions
    * @default false
    */
   uploadToArgos?: boolean;
+  /**
+   * Snapvisor-named alias of `uploadToArgos`. Either one enables the upload.
+   * @default false
+   */
+  uploadToSnapvisor?: boolean;
 }
+
+/**
+ * Snapvisor-named alias of {@link ArgosVitestPluginOptions}.
+ */
+export type SnapvisorVitestPluginOptions = ArgosVitestPluginOptions;

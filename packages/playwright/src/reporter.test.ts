@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { devices } from "@playwright/test";
 import type { FullConfig, FullProject } from "@playwright/test/reporter";
-import ArgosReporter from "./reporter";
+import ArgosReporter, {
+  createArgosReporterOptions,
+  createSnapvisorReporterOptions,
+} from "./reporter";
 
 /**
  * Run the reporter's `onBegin` hook with a single project.
@@ -61,5 +64,22 @@ describe("ArgosReporter", () => {
       });
       expect(warn).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe("Snapvisor-named aliases", () => {
+  it("exposes createSnapvisorReporterOptions", () => {
+    expect(createSnapvisorReporterOptions).toBe(createArgosReporterOptions);
+  });
+
+  it("honours uploadToSnapvisor, and lets uploadToArgos win", () => {
+    expect(new ArgosReporter({}).uploadToArgos).toBe(true);
+    expect(new ArgosReporter({ uploadToSnapvisor: false }).uploadToArgos).toBe(
+      false,
+    );
+    expect(
+      new ArgosReporter({ uploadToArgos: true, uploadToSnapvisor: false })
+        .uploadToArgos,
+    ).toBe(true);
   });
 });

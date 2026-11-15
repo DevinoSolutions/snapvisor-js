@@ -1,4 +1,4 @@
-import { readConfig } from "@snapvisor/core";
+import { getTokenFromEnv, readConfig } from "@snapvisor/core";
 import type { ArgosAPIClient, ArgosAPISchema } from "@snapvisor/api-client";
 import { InvalidArgumentError } from "commander";
 import { unwrap } from "./api";
@@ -47,7 +47,7 @@ export async function prepareWait(options: {
   // Only the project token the upload itself uses (--token / ARGOS_TOKEN) is
   // accepted: tokenless / OIDC uploads and `argos login` sessions give us no
   // token the upload and the poll would share. Fail now, before the build is created.
-  const token = options.token || process.env["ARGOS_TOKEN"];
+  const token = options.token || getTokenFromEnv();
   if (!token) {
     fail(
       "--wait needs a project token to read the build back: pass --token or set ARGOS_TOKEN (GitHub Actions OIDC / tokenless uploads and `argos login` are not supported with --wait).",

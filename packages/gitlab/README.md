@@ -10,7 +10,7 @@ Visit the [GitLab integration documentation](https://snapvisor.io/docs/gitlab) f
 
 ## Usage
 
-Run the `argos-gitlab update-statuses` command in your GitLab CI pipeline. It waits for the Snapvisor builds of the current commit to complete and reports their status to the related merge request:
+Run the `snapvisor-gitlab update-statuses` command in your GitLab CI pipeline. It waits for the Snapvisor builds of the current commit to complete and reports their status to the related merge request:
 
 ```yaml
 # .gitlab-ci.yml
@@ -18,11 +18,13 @@ argos-status:
   script:
     - npx @snapvisor/gitlab update-statuses
   variables:
-    ARGOS_TOKEN: $ARGOS_TOKEN
-    ARGOS_GITLAB_TOKEN: $ARGOS_GITLAB_TOKEN
+    SNAPVISOR_TOKEN: $SNAPVISOR_TOKEN
+    SNAPVISOR_GITLAB_TOKEN: $SNAPVISOR_GITLAB_TOKEN
 ```
 
-`ARGOS_GITLAB_TOKEN` is a GitLab access token allowed to post commit statuses. The `CI_PROJECT_ID`, `CI_SERVER_URL`, and `CI_COMMIT_SHA` variables are provided by GitLab CI automatically.
+`SNAPVISOR_GITLAB_TOKEN` is a GitLab access token allowed to post commit statuses. The `CI_PROJECT_ID`, `CI_SERVER_URL`, and `CI_COMMIT_SHA` variables are provided by GitLab CI automatically.
+
+> The Argos-named `argos-gitlab` command, `ARGOS_TOKEN` and `ARGOS_GITLAB_TOKEN` still work, and win if both names are set.
 
 ## Links
 

@@ -21,7 +21,7 @@ Set up the Snapvisor reporter in your Playwright config:
 ```ts
 // playwright.config.ts
 import { defineConfig } from "@playwright/test";
-import { createArgosReporterOptions } from "@snapvisor/playwright/reporter";
+import { createSnapvisorReporterOptions } from "@snapvisor/playwright/reporter";
 
 export default defineConfig({
   // ... other configuration
@@ -33,24 +33,26 @@ export default defineConfig({
     [
       "@snapvisor/playwright/reporter",
       // Upload the screenshots to Snapvisor only on CI.
-      createArgosReporterOptions({ uploadToArgos: !!process.env.CI }),
+      createSnapvisorReporterOptions({ uploadToSnapvisor: !!process.env.CI }),
     ],
   ],
 });
 ```
 
-Then capture stable screenshots with `argosScreenshot` in your tests:
+Then capture stable screenshots with `snapvisorScreenshot` in your tests:
 
 ```ts
 // tests/example.spec.ts
 import { test } from "@playwright/test";
-import { argosScreenshot } from "@snapvisor/playwright";
+import { snapvisorScreenshot } from "@snapvisor/playwright";
 
 test("screenshot homepage", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  await argosScreenshot(page, "homepage");
+  await snapvisorScreenshot(page, "homepage");
 });
 ```
+
+> The Argos-named exports from earlier versions (`createArgosReporterOptions`, `uploadToArgos`, `argosScreenshot`) still work.
 
 ## Links
 

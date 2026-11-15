@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { readConfig, type Config } from "./config";
+import { afterEach, describe, it, expect, vi } from "vitest";
+import { getTokenFromEnv, readConfig, type Config } from "./config";
 
 describe("#readConfig", () => {
   it("gets config", async () => {
@@ -161,5 +161,47 @@ describe("#readConfig", () => {
     const config = await readDummyConfig({ mergeQueuePrNumbers: [202, 203] });
     expect(config.mergeQueuePrNumbers).toEqual([202, 203]);
     delete process.env.ARGOS_MERGE_QUEUE_PRS;
+  });
+});
+
+describe("#getTokenFromEnv", () => {
+  it("reads SNAPVISOR_TOKEN as an alias of ARGOS_TOKEN", () => {
+    expect(getTokenFromEnv({ SNAPVISOR_TOKEN: "snap" })).toBe("snap");
+    expect(getTokenFromEnv({ ARGOS_TOKEN: "argos" })).toBe("argos");
+  });
+
+  it("prefers ARGOS_TOKEN when both are set", () => {
+    expect(
+      getTokenFromEnv({ ARGOS_TOKEN: "argos", SNAPVISOR_TOKEN: "snap" }),
+    ).toBe("argos");
+  });
+
+  it("ignores empty values", () => {
+    expect(getTokenFromEnv({ ARGOS_TOKEN: "", SNAPVISOR_TOKEN: "snap" })).toBe(
+      "snap",
+    );
+    expect(getTokenFromEnv({})).toBeUndefined();
+  });
+});
+
+describe("token from the environment", () => {
+  const commit = "f16f980bd17cccfa93a1ae7766727e67950773d0";
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("uses SNAPVISOR_TOKEN when ARGOS_TOKEN is not set", async () => {
+    vi.stubEnv("ARGOS_TOKEN", "");
+    vi.stubEnv("SNAPVISOR_TOKEN", "a".repeat(40));
+    const config = await readConfig({ commit, branch: "main" });
+    expect(config.token).toBe("a".repeat(40));
+  });
+
+  it("lets ARGOS_TOKEN win over SNAPVISOR_TOKEN", async () => {
+    vi.stubEnv("ARGOS_TOKEN", "b".repeat(40));
+    vi.stubEnv("SNAPVISOR_TOKEN", "a".repeat(40));
+    const config = await readConfig({ commit, branch: "main" });
+    expect(config.token).toBe("b".repeat(40));
   });
 });

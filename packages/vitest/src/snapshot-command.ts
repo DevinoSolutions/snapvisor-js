@@ -56,3 +56,8 @@ export const createArgosSnapshotCommand = (
     );
   };
 };
+
+/**
+ * Snapvisor-named alias of {@link createArgosSnapshotCommand}. Both names stay supported.
+ */
+export const createSnapvisorSnapshotCommand = createArgosSnapshotCommand;

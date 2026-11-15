@@ -1,5 +1,5 @@
 import { createClient, throwAPIError } from "@snapvisor/api-client";
-import type { Config } from "./config";
+import { getTokenFromEnv, type Config } from "./config";
 
 /**
  * Check if GitHub Actions OIDC is available for auto-detection.
@@ -9,7 +9,7 @@ export function isGitHubActionsOidcAvailable(): boolean {
     process.env.GITHUB_ACTIONS === "true" &&
     Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_URL) &&
     Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN) &&
-    !process.env.ARGOS_TOKEN
+    !getTokenFromEnv()
   );
 }
 

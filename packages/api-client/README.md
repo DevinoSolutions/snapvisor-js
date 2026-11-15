@@ -20,7 +20,7 @@ Create a client and call any endpoint. Requests and responses are fully typed fr
 import { createClient } from "@snapvisor/api-client";
 
 const client = createClient({
-  authToken: process.env.ARGOS_TOKEN,
+  authToken: process.env.SNAPVISOR_TOKEN,
 });
 
 const { data, error } = await client.GET("/project");
@@ -31,6 +31,8 @@ if (error) {
 
 console.log(data);
 ```
+
+> The `ArgosAPIClient` and `ArgosAPISchema` names still work next to `SnapvisorAPIClient` and `SnapvisorAPISchema`.
 
 ## Links
 

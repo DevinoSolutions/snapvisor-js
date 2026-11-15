@@ -239,3 +239,13 @@ export function checkIsBrowserEnv(): boolean {
     (globalThis as { __vitest_browser__?: boolean }).__vitest_browser__ === true
   );
 }
+
+/**
+ * Snapvisor-named alias of {@link argosScreenshot}. Both names stay supported.
+ */
+export const snapvisorScreenshot = argosScreenshot;
+
+/**
+ * Snapvisor-named alias of {@link argosSnapshot}. Both names stay supported.
+ */
+export const snapvisorSnapshot = argosSnapshot;

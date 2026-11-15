@@ -1,4 +1,5 @@
 import type { ArgosAPIClient } from "@snapvisor/api-client";
+import { getTokenFromEnv } from "@snapvisor/core";
 import { getAccessToken } from "../auth";
 import { createApiClient, unwrap } from "./api";
 import {
@@ -61,10 +62,7 @@ export async function resolveOptionalToken(options: {
   token?: string | undefined;
 }): Promise<string | undefined> {
   return (
-    options.token ||
-    process.env["ARGOS_TOKEN"] ||
-    (await getAccessToken()) ||
-    undefined
+    options.token || getTokenFromEnv() || (await getAccessToken()) || undefined
   );
 }
 

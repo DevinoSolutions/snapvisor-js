@@ -18,15 +18,15 @@ npm install --save-dev @snapvisor/webdriverio @snapvisor/cli
 
 ## Usage
 
-Use `argosScreenshot` to stabilize the UI and capture a screenshot:
+Use `snapvisorScreenshot` to stabilize the UI and capture a screenshot:
 
 ```ts
-import { argosScreenshot } from "@snapvisor/webdriverio";
+import { snapvisorScreenshot } from "@snapvisor/webdriverio";
 
 describe("Homepage", () => {
   it("takes a screenshot", async () => {
     await browser.url("http://localhost:3000");
-    await argosScreenshot(browser, "homepage");
+    await snapvisorScreenshot(browser, "homepage");
   });
 });
 ```
@@ -36,6 +36,8 @@ Screenshots are saved locally (in `./screenshots/argos` by default). Upload them
 ```sh
 npx @snapvisor/cli upload ./screenshots
 ```
+
+> The Argos-named exports from earlier versions (`argosScreenshot`) still work.
 
 ## Links
 
