@@ -26,12 +26,14 @@ const { build } = await upload({
   root: "./screenshots",
   // Globs matching the screenshots to upload.
   files: ["**/*.png"],
-  // Defaults to the ARGOS_TOKEN environment variable.
-  token: process.env.ARGOS_TOKEN,
+  // Defaults to the SNAPVISOR_TOKEN environment variable.
+  token: process.env.SNAPVISOR_TOKEN,
 });
 
 console.log(`Build created: ${build.url}`);
 ```
+
+> `ARGOS_TOKEN` is still read too, and wins if both are set.
 
 ## Links
 

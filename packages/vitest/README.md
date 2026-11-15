@@ -16,9 +16,9 @@ Install the package:
 npm install --save-dev @snapvisor/vitest
 ```
 
-`argosSnapshot` runs in any Vitest test — browser or Node — and needs nothing else.
+`snapvisorSnapshot` runs in any Vitest test — browser or Node — and needs nothing else.
 
-To capture screenshots with `argosScreenshot`, run your tests in
+To capture screenshots with `snapvisorScreenshot`, run your tests in
 [Vitest browser mode](https://vitest.dev/guide/browser/) with the
 [Playwright provider](https://vitest.dev/guide/browser/playwright) and install the
 following peer dependencies:
@@ -35,13 +35,13 @@ Register the plugin in your Vitest config:
 // vitest.config.ts
 import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
-import { argosVitestPlugin } from "@snapvisor/vitest/plugin";
+import { snapvisorVitestPlugin } from "@snapvisor/vitest/plugin";
 
 export default defineConfig({
   plugins: [
-    argosVitestPlugin({
+    snapvisorVitestPlugin({
       // Upload the screenshots to Snapvisor at the end of the run.
-      uploadToArgos: process.env.CI === "true",
+      uploadToSnapvisor: process.env.CI === "true",
     }),
   ],
   test: {
@@ -60,12 +60,12 @@ Then take screenshots from your browser tests:
 ```ts
 import { test } from "vitest";
 import { render } from "vitest-browser-react";
-import { argosScreenshot } from "@snapvisor/vitest";
+import { snapvisorScreenshot } from "@snapvisor/vitest";
 import { Button } from "./Button";
 
 test("Button", async () => {
   render(<Button>Click me</Button>);
-  await argosScreenshot("button");
+  await snapvisorScreenshot("button");
 });
 ```
 
@@ -78,8 +78,8 @@ captures in the same test get an incrementing counter so they stay unique:
 ```ts
 test("Button", async () => {
   render(<Button>Click me</Button>);
-  await argosScreenshot(); // -> "src/Button.test.tsx > Button 1"
-  await argosScreenshot(); // -> "src/Button.test.tsx > Button 2"
+  await snapvisorScreenshot(); // -> "src/Button.test.tsx > Button 1"
+  await snapvisorScreenshot(); // -> "src/Button.test.tsx > Button 2"
 });
 ```
 
@@ -90,9 +90,9 @@ title in different files never collide.
 
 ## Snapshots
 
-`argosSnapshot` captures a snapshot of any value — not just a screenshot — and
+`snapvisorSnapshot` captures a snapshot of any value — not just a screenshot — and
 uploads it to Snapvisor to diff across builds, mimicking
-[Vitest snapshots](https://vitest.dev/guide/snapshot). Unlike `argosScreenshot`,
+[Vitest snapshots](https://vitest.dev/guide/snapshot). Unlike `snapvisorScreenshot`,
 it does not need a browser and works in **both** browser and Node tests.
 
 The value comes first; the name is optional. Omit it to auto-name the snapshot
@@ -101,14 +101,14 @@ explicitly:
 
 ```ts
 import { test } from "vitest";
-import { argosSnapshot } from "@snapvisor/vitest";
+import { snapvisorSnapshot } from "@snapvisor/vitest";
 
 test("API response", async () => {
   const user = await fetchUser();
   // Objects are serialized with `@vitest/pretty-format`, strings are written
   // verbatim.
-  await argosSnapshot(user); // -> "src/user.test.ts > API response 1"
-  await argosSnapshot(user, { name: "user" }); // explicit name
+  await snapvisorSnapshot(user); // -> "src/user.test.ts > API response 1"
+  await snapvisorSnapshot(user, { name: "user" }); // explicit name
 });
 ```
 
@@ -116,7 +116,7 @@ Use the `extension` option to control how Snapvisor renders and diffs the snapsh
 and `tag` to attach tags:
 
 ```ts
-await argosSnapshot(JSON.stringify(config, null, 2), {
+await snapvisorSnapshot(JSON.stringify(config, null, 2), {
   name: "config",
   extension: ".json",
   tag: "config",
@@ -125,11 +125,13 @@ await argosSnapshot(JSON.stringify(config, null, 2), {
 
 Screenshots and snapshots are both written to the `./snapshots` directory by
 default (configurable via the plugin `root` option) and uploaded by the reporter
-when `uploadToArgos` is enabled.
+when `uploadToSnapvisor` is enabled.
 
 ## Authentication
 
-Uploads need your Snapvisor project token. Create a project in the [Snapvisor app](https://app.snapvisor.io), copy its token, and expose it to your CI job as the `ARGOS_TOKEN` environment variable (store it as a CI secret, never in the repository). The variable keeps the upstream Argos name on purpose, so pipelines already wired for the Argos SDKs keep working. On GitHub Actions you can skip the token with tokenless authentication.
+Uploads need your Snapvisor project token. Create a project in the [Snapvisor app](https://app.snapvisor.io), copy its token, and expose it to your CI job as the `SNAPVISOR_TOKEN` environment variable (store it as a CI secret, never in the repository). `ARGOS_TOKEN` is still read too and wins if both are set, so pipelines already wired for the Argos SDKs keep working. On GitHub Actions you can skip the token with tokenless authentication.
+
+> The Argos-named exports from earlier versions (`argosVitestPlugin`, `uploadToArgos`, `argosScreenshot`, `argosSnapshot`) still work.
 
 ## Links
 

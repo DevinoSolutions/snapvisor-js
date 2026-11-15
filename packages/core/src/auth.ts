@@ -11,7 +11,7 @@ import { debug, maskToken } from "./debug";
 
 /**
  * Resolve the Snapvisor authentication token.
- * Priority: ARGOS_TOKEN > GitHub Actions OIDC > GitHub Actions tokenless exchange.
+ * Priority: ARGOS_TOKEN (or SNAPVISOR_TOKEN) > GitHub Actions OIDC > GitHub Actions tokenless exchange.
  */
 export async function resolveArgosToken(config: Config): Promise<string> {
   if (config.token) {
@@ -44,5 +44,7 @@ export async function resolveArgosToken(config: Config): Promise<string> {
     return token;
   }
 
-  throw new Error("Missing Snapvisor repository token 'ARGOS_TOKEN'");
+  throw new Error(
+    "Missing Snapvisor repository token 'ARGOS_TOKEN' (or 'SNAPVISOR_TOKEN')",
+  );
 }

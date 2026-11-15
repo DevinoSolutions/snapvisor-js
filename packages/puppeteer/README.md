@@ -18,16 +18,16 @@ npm install --save-dev @snapvisor/puppeteer @snapvisor/cli
 
 ## Usage
 
-Use `argosScreenshot` to stabilize the UI and capture a screenshot:
+Use `snapvisorScreenshot` to stabilize the UI and capture a screenshot:
 
 ```ts
 import puppeteer from "puppeteer";
-import { argosScreenshot } from "@snapvisor/puppeteer";
+import { snapvisorScreenshot } from "@snapvisor/puppeteer";
 
 const browser = await puppeteer.launch();
 const page = await browser.newPage();
 await page.goto("http://localhost:3000");
-await argosScreenshot(page, "homepage");
+await snapvisorScreenshot(page, "homepage");
 await browser.close();
 ```
 
@@ -36,6 +36,8 @@ Screenshots are saved locally (in `./screenshots/argos` by default). Upload them
 ```sh
 npx @snapvisor/cli upload ./screenshots
 ```
+
+> The Argos-named exports from earlier versions (`argosScreenshot`) still work.
 
 ## Links
 

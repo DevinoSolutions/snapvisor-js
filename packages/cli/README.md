@@ -16,10 +16,10 @@ npm install --save-dev @snapvisor/cli
 
 ## Usage
 
-Upload a directory of screenshots to Snapvisor. Authenticate with your project token via the `ARGOS_TOKEN` environment variable:
+Upload a directory of screenshots to Snapvisor. Authenticate with your project token via the `SNAPVISOR_TOKEN` environment variable:
 
 ```sh
-ARGOS_TOKEN="<your-project-token>" npx @snapvisor/cli upload ./screenshots
+SNAPVISOR_TOKEN="<your-project-token>" npx @snapvisor/cli upload ./screenshots
 ```
 
 ### Failing CI when a build needs review
@@ -27,7 +27,7 @@ ARGOS_TOKEN="<your-project-token>" npx @snapvisor/cli upload ./screenshots
 By default `upload` exits right after the build is created, so a build with unreviewed changes does not fail the job (the commit status does). Pass `--wait` to make the command wait for the build to finish and report the result through its exit code:
 
 ```sh
-ARGOS_TOKEN="<your-project-token>" npx @snapvisor/cli upload ./screenshots --wait --wait-timeout 300
+SNAPVISOR_TOKEN="<your-project-token>" npx @snapvisor/cli upload ./screenshots --wait --wait-timeout 300
 ```
 
 | Build state                                                | Exit code |
@@ -38,13 +38,15 @@ ARGOS_TOKEN="<your-project-token>" npx @snapvisor/cli upload ./screenshots --wai
 | `rejected`, `expired`, `aborted`, `error`                  | `1`       |
 | Still running after `--wait-timeout` seconds (default 600) | `1`       |
 
-The exit code always agrees with the build's commit status: success is exit 0, pending review or failure is exit 1. A `429` from the API is retried until the timeout. The build URL and final state are printed either way. `--wait` polls the Snapvisor API, so it needs a token it can read the build with (`--token` or `ARGOS_TOKEN`): GitHub Actions OIDC and tokenless uploads, and `argos login` sessions, are not supported. It cannot be combined with `--parallel`, because a parallel build only finishes once it is finalized.
+The exit code always agrees with the build's commit status: success is exit 0, pending review or failure is exit 1. A `429` from the API is retried until the timeout. The build URL and final state are printed either way. `--wait` polls the Snapvisor API, so it needs a token it can read the build with (`--token` or `SNAPVISOR_TOKEN`): GitHub Actions OIDC and tokenless uploads, and `argos login` sessions, are not supported. It cannot be combined with `--parallel`, because a parallel build only finishes once it is finalized.
 
 The CLI also exposes commands to `deploy` a static build, inspect and `review` builds, post a `comment`, and more. List them all with:
 
 ```sh
 npx @snapvisor/cli --help
 ```
+
+> `ARGOS_TOKEN` is still read too and wins if both are set.
 
 ## Links
 

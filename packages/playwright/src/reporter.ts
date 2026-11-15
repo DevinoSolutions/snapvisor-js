@@ -55,6 +55,12 @@ export type ArgosReporterOptions<T extends string[] = string[]> = Omit<
   uploadToArgos?: boolean;
 
   /**
+   * Snapvisor-named alias of `uploadToArgos`. `uploadToArgos` wins if both are set.
+   * @default true
+   */
+  uploadToSnapvisor?: boolean;
+
+  /**
    * If true, the reporter will not fail the test suite when the upload fails.
    * @default false
    */
@@ -156,7 +162,8 @@ class ArgosReporter implements Reporter {
 
   constructor(config: ArgosReporterOptions) {
     this.config = config;
-    this.uploadToArgos = config.uploadToArgos ?? true;
+    this.uploadToArgos =
+      config.uploadToArgos ?? config.uploadToSnapvisor ?? true;
     this.rootUploadDirectoryPromise = null;
     this.uploadDirectoryPromises = new Map();
   }
@@ -352,5 +359,13 @@ class ArgosReporter implements Reporter {
     return false;
   }
 }
+
+export type SnapvisorReporterOptions<T extends string[] = string[]> =
+  ArgosReporterOptions<T>;
+
+/**
+ * Snapvisor-named alias of {@link createArgosReporterOptions}. Both names stay supported.
+ */
+export const createSnapvisorReporterOptions = createArgosReporterOptions;
 
 export default ArgosReporter;

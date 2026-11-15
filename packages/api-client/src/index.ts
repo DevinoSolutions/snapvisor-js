@@ -4,9 +4,15 @@ import { apiFetch, APIError } from "./fetch";
 import type { paths, components } from "./schema";
 
 export * as ArgosAPISchema from "./schema";
+export * as SnapvisorAPISchema from "./schema";
 export { APIError } from "./fetch";
 
 export type ArgosAPIClient = ReturnType<typeof createClient>;
+
+/**
+ * Snapvisor-named alias of {@link ArgosAPIClient}.
+ */
+export type SnapvisorAPIClient = ArgosAPIClient;
 
 /**
  * A `User-Agent` value, or a resolver for it. The resolver may be async and is

@@ -21,14 +21,14 @@ Register the Snapvisor task in your Cypress config:
 ```ts
 // cypress.config.js
 const { defineConfig } = require("cypress");
-const { registerArgosTask } = require("@snapvisor/cypress/task");
+const { registerSnapvisorTask } = require("@snapvisor/cypress/task");
 
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      registerArgosTask(on, config, {
+      registerSnapvisorTask(on, config, {
         // Upload the screenshots to Snapvisor only on CI.
-        uploadToArgos: !!process.env.CI,
+        uploadToSnapvisor: !!process.env.CI,
       });
 
       return config;
@@ -44,17 +44,19 @@ Import the command in your support file:
 import "@snapvisor/cypress/support";
 ```
 
-Then capture stable screenshots with `cy.argosScreenshot` in your tests:
+Then capture stable screenshots with `cy.snapvisorScreenshot` in your tests:
 
 ```ts
 // cypress/e2e/example.cy.js
 describe("Homepage", () => {
   it("takes a screenshot", () => {
     cy.visit("http://localhost:3000");
-    cy.argosScreenshot("homepage");
+    cy.snapvisorScreenshot("homepage");
   });
 });
 ```
+
+> The Argos-named exports from earlier versions (`registerArgosTask`, `uploadToArgos`, `cy.argosScreenshot`) still work.
 
 ## Links
 

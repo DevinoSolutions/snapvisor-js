@@ -120,3 +120,8 @@ export const createArgosScreenshotCommand = (
     }
   };
 };
+
+/**
+ * Snapvisor-named alias of {@link createArgosScreenshotCommand}. Both names stay supported.
+ */
+export const createSnapvisorScreenshotCommand = createArgosScreenshotCommand;

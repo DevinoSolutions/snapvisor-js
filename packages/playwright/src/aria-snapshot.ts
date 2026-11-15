@@ -159,3 +159,13 @@ function getStabilizationContext(
     options: stabilize,
   };
 }
+
+/**
+ * Snapvisor-named alias of {@link argosAriaSnapshot}. Both names stay supported.
+ */
+export const snapvisorAriaSnapshot = argosAriaSnapshot;
+
+/**
+ * Snapvisor-named alias of {@link ArgosSnapshotOptions}.
+ */
+export type SnapvisorSnapshotOptions = ArgosSnapshotOptions;

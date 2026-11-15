@@ -11,18 +11,24 @@ export function getConfig() {
   if (!process.env.CI_COMMIT_SHA) {
     throw new Error("CI_COMMIT_SHA is not set");
   }
-  if (!process.env.ARGOS_GITLAB_TOKEN) {
-    throw new Error("ARGOS_GITLAB_TOKEN is not set");
+  // The Snapvisor-named variables are aliases; the Argos-named ones win.
+  const gitlabToken =
+    process.env.ARGOS_GITLAB_TOKEN || process.env.SNAPVISOR_GITLAB_TOKEN;
+  const snapvisorToken = process.env.ARGOS_TOKEN || process.env.SNAPVISOR_TOKEN;
+  if (!gitlabToken) {
+    throw new Error(
+      "ARGOS_GITLAB_TOKEN (or SNAPVISOR_GITLAB_TOKEN) is not set",
+    );
   }
-  if (!process.env.ARGOS_TOKEN) {
-    throw new Error("ARGOS_TOKEN is not set");
+  if (!snapvisorToken) {
+    throw new Error("ARGOS_TOKEN (or SNAPVISOR_TOKEN) is not set");
   }
   return {
     commit: process.env.CI_COMMIT_SHA,
-    argosToken: process.env.ARGOS_TOKEN,
+    argosToken: snapvisorToken,
     gitlab: {
       projectId: process.env.CI_PROJECT_ID,
-      authToken: process.env.ARGOS_GITLAB_TOKEN,
+      authToken: gitlabToken,
       baseUrl: process.env.CI_SERVER_URL,
     },
   };

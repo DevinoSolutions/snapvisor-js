@@ -14,7 +14,17 @@ export type RegisterArgosTaskOptions = Omit<
    * @default true
    */
   uploadToArgos?: boolean;
+  /**
+   * Snapvisor-named alias of `uploadToArgos`. `uploadToArgos` wins if both are set.
+   * @default true
+   */
+  uploadToSnapvisor?: boolean;
 };
+
+/**
+ * Snapvisor-named alias of {@link RegisterArgosTaskOptions}.
+ */
+export type RegisterSnapvisorTaskOptions = RegisterArgosTaskOptions;
 
 function checkIsCypressFailedResult(
   results:
@@ -50,7 +60,7 @@ function getArgosConfigFromOptions(
   options: RegisterArgosTaskOptions | undefined,
 ) {
   return {
-    uploadToArgos: options?.uploadToArgos ?? true,
+    uploadToArgos: options?.uploadToArgos ?? options?.uploadToSnapvisor ?? true,
   };
 }
 
@@ -163,3 +173,8 @@ export function registerArgosTask(
     return argosAfterRun(config, results, options);
   });
 }
+
+/**
+ * Snapvisor-named alias of {@link registerArgosTask}. Both names stay supported.
+ */
+export const registerSnapvisorTask = registerArgosTask;

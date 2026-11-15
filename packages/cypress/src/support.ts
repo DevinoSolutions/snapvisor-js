@@ -112,6 +112,23 @@ declare global {
          */
         options?: ArgosScreenshotOptions,
       ) => Chainable<null>;
+      /**
+       * Snapvisor-named alias of `argosScreenshot`. Both commands stay supported.
+       *
+       * @example
+       *    cy.snapvisorScreenshot("my-screenshot")
+       *    cy.get(".post").snapvisorScreenshot()
+       */
+      snapvisorScreenshot: (
+        /**
+         * Name of the screenshot. Must be unique.
+         */
+        name: string,
+        /**
+         * Options for the screenshot.
+         */
+        options?: ArgosScreenshotOptions,
+      ) => Chainable<null>;
     }
   }
 }
@@ -238,144 +255,163 @@ function waitForReadiness(options: ArgosScreenshotOptions) {
   );
 }
 
-Cypress.Commands.add(
-  "argosScreenshot",
-  { prevSubject: ["optional", "element", "window", "document"] },
-  (subject, name, options = {}) => {
-    const {
-      viewports,
-      argosCSS: _argosCSS,
-      tag,
-      baseName,
-      blackout,
-      onAfterScreenshot,
-      hide,
-      remove,
-      ...cypressOptions
-    } = options;
+const screenshotCommandOptions: Cypress.CommandOptions & {
+  prevSubject: ["optional", "element", "window", "document"];
+} = {
+  prevSubject: ["optional", "element", "window", "document"],
+};
 
-    const baseNames = normalizeBaseNames(baseName);
-    if (!name) {
-      throw new Error("The `name` argument is required.");
-    }
+const screenshotCommand = (
+  subject: any,
+  name: string,
+  options: ArgosScreenshotOptions = {},
+) => {
+  const {
+    viewports,
+    argosCSS: _argosCSS,
+    tag,
+    baseName,
+    blackout,
+    onAfterScreenshot,
+    hide,
+    remove,
+    ...cypressOptions
+  } = options;
 
-    Cypress.log({
-      name: "argosScreenshot",
-      displayName: `Snapvisor Screenshot`,
-      message: name,
+  const baseNames = normalizeBaseNames(baseName);
+  if (!name) {
+    throw new Error("The `name` argument is required.");
+  }
+
+  Cypress.log({
+    name: "argosScreenshot",
+    displayName: `Snapvisor Screenshot`,
+    message: name,
+  });
+
+  injectArgos();
+
+  // One index per command, not per file: the viewport variants below are the
+  // same step of the journey seen at several widths, so they share it.
+  const captureIndex = nextCaptureIndex(
+    getTestRunKey({
+      titlePath: Cypress.currentTest.titlePath,
+      retry: Cypress.currentRetry,
+    }),
+  );
+
+  const afterAll = beforeAll(options);
+
+  function stabilizeAndScreenshot(name: string, baseNames: string[] | null) {
+    waitForReadiness(options);
+    applyHelpers({ hide, remove });
+    const afterEach = beforeEach(options);
+    waitForReadiness(options);
+
+    const ref: any = {};
+
+    cy.wrap(subject).screenshot(`${NAME_PREFIX}${name}`, {
+      blackout: ['[data-visual-test="blackout"]'].concat(blackout || []),
+      onAfterScreenshot: ($el, props) => {
+        ref.props = props;
+        onAfterScreenshot?.($el, props);
+      },
+      ...cypressOptions,
     });
 
-    injectArgos();
+    cy.window({ log: false }).then((window) => {
+      const mediaType = (
+        (window as any).__ARGOS__ as ArgosGlobal
+      ).getMediaType();
+      const colorScheme = (
+        (window as any).__ARGOS__ as ArgosGlobal
+      ).getColorScheme();
 
-    // One index per command, not per file: the viewport variants below are the
-    // same step of the journey seen at several widths, so they share it.
-    const captureIndex = nextCaptureIndex(
-      getTestRunKey({
-        titlePath: Cypress.currentTest.titlePath,
-        retry: Cypress.currentRetry,
-      }),
-    );
-
-    const afterAll = beforeAll(options);
-
-    function stabilizeAndScreenshot(name: string, baseNames: string[] | null) {
-      waitForReadiness(options);
-      applyHelpers({ hide, remove });
-      const afterEach = beforeEach(options);
-      waitForReadiness(options);
-
-      const ref: any = {};
-
-      cy.wrap(subject).screenshot(`${NAME_PREFIX}${name}`, {
-        blackout: ['[data-visual-test="blackout"]'].concat(blackout || []),
-        onAfterScreenshot: ($el, props) => {
-          ref.props = props;
-          onAfterScreenshot?.($el, props);
+      const metadata: ScreenshotMetadata = {
+        url: window.location.href,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
         },
-        ...cypressOptions,
-      });
+        colorScheme,
+        mediaType,
+        test: {
+          title: Cypress.currentTest.title,
+          titlePath: Cypress.currentTest.titlePath,
+          retry: Cypress.currentRetry,
+          // @ts-expect-error - private property
+          retries: getRetries(cy.state("runnable")._retries),
+        },
+        browser: {
+          name: Cypress.browser.name,
+          version: Cypress.browser.version,
+        },
+        automationLibrary: {
+          name: "cypress",
+          version: Cypress.version,
+        },
+        sdk: {
+          name: "@snapvisor/cypress",
+          version,
+        },
+        capture: { index: captureIndex },
+      };
 
-      cy.window({ log: false }).then((window) => {
-        const mediaType = (
-          (window as any).__ARGOS__ as ArgosGlobal
-        ).getMediaType();
-        const colorScheme = (
-          (window as any).__ARGOS__ as ArgosGlobal
-        ).getColorScheme();
+      metadata.transient = {};
 
-        const metadata: ScreenshotMetadata = {
-          url: window.location.href,
-          viewport: {
-            width: window.innerWidth,
-            height: window.innerHeight,
-          },
-          colorScheme,
-          mediaType,
-          test: {
-            title: Cypress.currentTest.title,
-            titlePath: Cypress.currentTest.titlePath,
-            retry: Cypress.currentRetry,
-            // @ts-expect-error - private property
-            retries: getRetries(cy.state("runnable")._retries),
-          },
-          browser: {
-            name: Cypress.browser.name,
-            version: Cypress.browser.version,
-          },
-          automationLibrary: {
-            name: "cypress",
-            version: Cypress.version,
-          },
-          sdk: {
-            name: "@snapvisor/cypress",
-            version,
-          },
-          capture: { index: captureIndex },
-        };
-
-        metadata.transient = {};
-
-        if (baseNames) {
-          metadata.transient.baseName = baseNames;
-        }
-
-        if (tag) {
-          metadata.tags = Array.isArray(tag) ? tag : [tag];
-        }
-
-        if (options.threshold !== undefined) {
-          validateThreshold(options.threshold);
-          metadata.transient.threshold = options.threshold;
-        }
-
-        cy.writeFile(getMetadataPath(ref.props.path), JSON.stringify(metadata));
-      });
-
-      afterEach();
-    }
-
-    if (viewports) {
-      for (const viewport of viewports) {
-        const viewportSize = resolveViewport(viewport);
-        cy.viewport(viewportSize.width, viewportSize.height);
-        // The viewport suffix is part of the name, so the baselines need it too.
-        stabilizeAndScreenshot(
-          getScreenshotName(name, { viewportWidth: viewportSize.width }),
-          baseNames?.map((baseName) =>
-            getScreenshotName(baseName, { viewportWidth: viewportSize.width }),
-          ) ?? null,
-        );
+      if (baseNames) {
+        metadata.transient.baseName = baseNames;
       }
 
-      // Restore the original viewport
-      cy.viewport(
-        Cypress.config("viewportWidth"),
-        Cypress.config("viewportHeight"),
+      if (tag) {
+        metadata.tags = Array.isArray(tag) ? tag : [tag];
+      }
+
+      if (options.threshold !== undefined) {
+        validateThreshold(options.threshold);
+        metadata.transient.threshold = options.threshold;
+      }
+
+      cy.writeFile(getMetadataPath(ref.props.path), JSON.stringify(metadata));
+    });
+
+    afterEach();
+  }
+
+  if (viewports) {
+    for (const viewport of viewports) {
+      const viewportSize = resolveViewport(viewport);
+      cy.viewport(viewportSize.width, viewportSize.height);
+      // The viewport suffix is part of the name, so the baselines need it too.
+      stabilizeAndScreenshot(
+        getScreenshotName(name, { viewportWidth: viewportSize.width }),
+        baseNames?.map((baseName) =>
+          getScreenshotName(baseName, { viewportWidth: viewportSize.width }),
+        ) ?? null,
       );
-    } else {
-      stabilizeAndScreenshot(name, baseNames);
     }
 
-    afterAll();
-  },
+    // Restore the original viewport
+    cy.viewport(
+      Cypress.config("viewportWidth"),
+      Cypress.config("viewportHeight"),
+    );
+  } else {
+    stabilizeAndScreenshot(name, baseNames);
+  }
+
+  afterAll();
+};
+
+Cypress.Commands.add(
+  "argosScreenshot",
+  screenshotCommandOptions,
+  screenshotCommand,
+);
+
+// Snapvisor-named alias; both commands stay supported.
+Cypress.Commands.add(
+  "snapvisorScreenshot",
+  screenshotCommandOptions,
+  screenshotCommand,
 );
