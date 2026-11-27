@@ -18,12 +18,16 @@ export interface paths {
         get: operations["getAccount"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete a team
+         * @description Delete a team permanently, with its projects, builds and integrations, and cancel its subscription. A subscription bought through the App Store or Google Play can only be cancelled by the user, and storeSubscriptionNotice then says so: show it to the user. Requires administrator access to the team. Asks for confirmation once (confirmToken). Use it only when the user explicitly asks to delete the team.
+         */
+        delete: operations["deleteTeam"];
         options?: never;
         head?: never;
         /**
-         * Update a team's defaults
-         * @description Change the role given to users that join a team through its invite link or a verified email domain. Requires administrator access to the team. Use it when a team administrator wants new joiners to start with a different role.
+         * Update a team's name, slug or defaults
+         * @description Change a team's name, its slug (the team's URL), or the role given to users that join it through its invite link or a verified email domain. Omitted fields are unchanged. Requires administrator access to the team. Use it when a team administrator wants to rename the team or have new joiners start with a different role.
          */
         patch: operations["updateAccount"];
         trace?: never;
@@ -202,6 +206,990 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounts/{accountSlug}/billing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a team's plan, usage and subscription
+         * @description Get the plan, subscription status, trial end, this period's screenshot usage, spend limit and (for administrators) recent invoices of an account. Personal accounts are always on the Free plan. Use it when the user asks what they pay or how much they used, and before upgrade_plan or manage_subscription.
+         */
+        get: operations["billingStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/billing/upgrade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get a checkout link to upgrade a team
+         * @description Get a single-use checkout link, valid 15 minutes, that upgrades the team: checkout opens prefilled, the user enters a card and confirms. A team that never had a trial gets the trial. Show the link to the user; it opens only for them. Use it when the user wants to upgrade a team to a paid plan.
+         */
+        post: operations["upgradePlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/billing/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel, resume, refund or open the billing portal
+         * @description Change the team's subscription. cancel stops it at the end of the period; resume undoes a pending cancel; refund refunds the last payment and ends it now; portal returns a single-use link to the billing portal (invoices, card, tax ids). cancel and refund ask for confirmation once (confirmToken). A subscription bought in the iOS app or on GitHub Marketplace is managed by that store: those actions return a link to the store's subscription page. extend is refused: upgrade with upgrade_plan instead. Use it when the user wants to cancel, resume or refund a subscription, or see invoices and change the card.
+         */
+        post: operations["manageSubscription"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/spend-limit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Set a team's spend limit
+         * @description Set the most the team may spend on additional screenshots in one billing period, and whether builds stop when it is reached. The team's owners are notified when the new limit is already partly used. Use it when the user wants to cap a team's spend limit or lift it.
+         */
+        patch: operations["setSpendLimit"];
+        trace?: never;
+    };
+    "/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the plans a team can subscribe to
+         * @description List the plans a team can subscribe to, with their monthly price in your currency (USD where there is no local price) and included screenshots. Use it when the user compares plans; pass a plan id to upgrade_plan.
+         */
+        get: operations["listPlans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get your profile
+         * @description Get the signed-in user's profile: name, personal account slug, emails, quoting currency, connected logins and notification preferences. Use it before update_profile or update_notification_prefs, or when the user asks how their account is set up.
+         */
+        get: operations["getProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update your profile
+         * @description Update your display name, personal account slug, quoting currency, or where you found Snapvisor. Omitted fields are unchanged. Use it when the user wants to rename their personal account, change its URL or change the currency prices are shown in.
+         */
+        patch: operations["updateProfile"];
+        trace?: never;
+    };
+    "/me/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Turn notification categories on or off
+         * @description Turn notification categories (review, build_review, billing, project, integration, product_prompts) on or off on a channel (email, in_app, push). Each category is delivered on only some channels: get_profile lists the valid pairs, and lists push only once the user has registered the Snapvisor iOS app. Only the pairs you send change. Use it when the user wants fewer or more notification emails or app pushes.
+         */
+        put: operations["updateNotificationPrefs"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Export your data
+         * @description Export everything Snapvisor holds about you as JSON: profile, emails, teams, the projects you administer, API key and authorized-app metadata and notification preferences. Above 1 MB it returns a single-use download link instead. Use it when the user asks for a copy of their data.
+         */
+        post: operations["exportData"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a team
+         * @description Create a team you own. A new team starts a Pro trial: when a card is needed for it, the result carries a single-use checkout link (15 minutes) to show the user; otherwise the trial has started. Use it when the user wants to work with others, or needs a team for a paid plan.
+         */
+        post: operations["createTeam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List your API keys
+         * @description List your API keys (never their secrets) with their permission tiers, accounts, expiry and last use. Use it before rotate_api_key or revoke_api_key, or when the user asks which keys exist.
+         */
+        get: operations["listApiKeys"];
+        put?: never;
+        /**
+         * Create an API key
+         * @description Create an API key limited to the given permission tiers and accounts (the accounts this connection reaches when omitted). The secret is returned once. Use it when the user needs a key for CI, a script or another tool.
+         */
+        post: operations["createApiKey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/api-keys/{keyId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Revoke an API key
+         * @description Delete an API key; anything using it stops working. Asks for confirmation once (confirmToken). Use it when a key is no longer needed or may have leaked.
+         */
+        delete: operations["revokeApiKey"];
+        options?: never;
+        head?: never;
+        /**
+         * Rename an API key
+         * @description Rename one of your API keys; its secret and permissions stay. Use it when the user wants a key's name to say where it is used.
+         */
+        patch: operations["renameApiKey"];
+        trace?: never;
+    };
+    "/me/api-keys/{keyId}/rotate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rotate an API key
+         * @description Replace an API key's secret: the old secret stops working at once; the name, tiers and accounts stay. The new secret is returned once. Asks for confirmation once (confirmToken). Use it when a secret may have leaked.
+         */
+        post: operations["rotateApiKey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/authorized-apps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List authorized apps
+         * @description List the apps and agents you connected to Snapvisor through OAuth, with the permission tiers each holds and when it was last used. Use it when the user asks which agents can reach their account.
+         */
+        get: operations["listAuthorizedApps"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/authorized-apps/{grantId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Disconnect an authorized app
+         * @description Disconnect an app or agent you authorized through OAuth; it loses access until it is connected again. Asks for confirmation once (confirmToken). Use it when the user no longer uses that agent.
+         */
+        delete: operations["revokeAuthorizedApp"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/scopes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List this connection's permissions
+         * @description List the permission tiers and scopes this connection holds, the accounts it reaches, and for OAuth the app it belongs to. Use it to tell the user what you can do, or before request_scopes.
+         */
+        get: operations["listGrantedScopes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/scopes/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ask the user for more permissions
+         * @description Get a single-use link (15 minutes) where the user approves extra permission tiers for this same connection; once approved, retry the refused call. Use it when a call is refused with SCOPE_MISSING.
+         */
+        post: operations["requestScopes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/referral": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the user's referral summary
+         * @description Get the user's Refer & Earn referral link, its clicks, signups and sales, and their pending, cleared and paid earnings. Use it when the user asks for their referral link or how much they have earned.
+         */
+        get: operations["getReferralSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/custom-domains": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a custom domain
+         * @description Add a custom domain to serve a project's production deployments on. Returns the CNAME target to set in DNS; the domain turns active once DNS and its certificate are ready (checkProjectCustomDomain). Needs a paid plan. Use it when the user wants deployments on their own domain.
+         */
+        post: operations["addProjectCustomDomain"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/custom-domains/{domain}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove a custom domain
+         * @description Stop serving a project's deployments on a custom domain. Asks for confirmation once (confirmToken). Use it when the user no longer uses the domain.
+         */
+        delete: operations["removeProjectCustomDomain"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/custom-domains/{domain}/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check a custom domain
+         * @description Check again whether a project's custom domain is ready (DNS pointed, certificate issued) and return its status. Use it after the user changed their DNS record.
+         */
+        post: operations["checkProjectCustomDomain"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Regenerate a project's upload token
+         * @description Replace a project's upload token and return the new one, shown once; CI using the old token fails until it is updated. Asks for confirmation once (confirmToken). Use it when the token may have leaked.
+         */
+        post: operations["regenerateProjectToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/automation-rules/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Test automation actions
+         * @description Send the project's latest build (build.completed) or build review (build.reviewed) through the given actions, so the user sees the messages a rule would post. Requires administrator access to the project. Use it before createAutomationRule to check the destinations work.
+         */
+        post: operations["testAutomationRule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/webhooks/discord": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a Discord webhook
+         * @description Post Snapvisor build and review notifications to a Discord channel through its webhook URL (Channel settings, Integrations, Webhooks). Requires administrator access to the account. Use it when the user wants notifications in Discord.
+         */
+        post: operations["createDiscordWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/webhooks/msteams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add a Microsoft Teams webhook
+         * @description Post Snapvisor build and review notifications to a Microsoft Teams channel through its incoming webhook or Workflows URL. Requires administrator access to the account. Use it when the user wants notifications in Microsoft Teams.
+         */
+        post: operations["createMsTeamsWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/github/repositories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List GitHub repositories
+         * @description List the GitHub repositories a GitHub App installation covers that you can use (installation ids come from list_connections), 100 per page. Use it before importProject or linkRepository with a GitHub repository.
+         */
+        get: operations["listGithubRepositories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/gitlab/projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List GitLab projects
+         * @description List the GitLab projects the account's GitLab access token is a member of, 100 per page, optionally filtered by a search term. Use it before importProject or linkRepository with a GitLab project.
+         */
+        get: operations["listGitlabProjects"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/projects/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import a repository as a project
+         * @description Create a project from a GitHub repository, a GitLab project or a Cursor Origin repository, linked to it so builds report statuses there. Requires administrator access to the account. Use it when the user wants visual tests on a repository that has no project yet.
+         */
+        post: operations["importProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/gitlab-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save a GitLab access token
+         * @description Save the GitLab personal access token (with the api scope) Snapvisor uses to list, import and report on the account's GitLab projects; it is checked with GitLab first. Requires administrator access to the account. Use it before listGitlabProjects when the account has none.
+         */
+        put: operations["setGitlabAccessToken"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{owner}/{project}/repository": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Link a project's repository
+         * @description Link a project to a GitHub repository, GitLab project or Cursor Origin repository, replacing its current link, so builds report statuses and comments there. Requires administrator access to the project. Use it when a project should follow another repository.
+         */
+        put: operations["linkRepository"];
+        post?: never;
+        /**
+         * Unlink a project's repository
+         * @description Disconnect a project from its repository; Snapvisor stops posting statuses and comments on it. Requires administrator access to the project. Asks for confirmation once (confirmToken). Use it when the repository moved or the project should stand alone.
+         */
+        delete: operations["unlinkRepository"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/sso": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a team's single sign-on
+         * @description Get a team's single sign-on setup: GitHub SSO, whether SAML is available on its plan, the SAML identity provider settings and the values to enter in the identity provider. Requires administrator access to the team. Use it before changing SSO or when the user asks how members sign in.
+         */
+        get: operations["getTeamSso"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/sso/github": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Turn GitHub SSO on or off
+         * @description Turn GitHub single sign-on on or off for a team. Turning it on needs the id of a GitHub App installation on the organization (githubInstallationId, from list_connections), imports the organization's members, and adds the paid GitHub SSO add-on to the subscription when the plan does not include it; turning it off removes the add-on. Asks for confirmation once (confirmToken). Use it when the user wants members to sign in through their GitHub organization.
+         */
+        put: operations["setTeamGithubSso"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/sso/saml": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Configure a team's SAML
+         * @description Set the team's SAML identity provider (entity id, SSO URL, signing certificate) and whether SAML is enabled and enforced. Needs a plan with SAML or the SAML add-on. Returns the service-provider values to enter in the identity provider. Use it when the user sets up SAML single sign-on for a team.
+         */
+        put: operations["configureTeamSaml"];
+        post?: never;
+        /**
+         * Remove a team's SAML
+         * @description Delete the team's SAML configuration; members sign in with their other methods. Asks for confirmation once (confirmToken). Use it when the team stops using its identity provider.
+         */
+        delete: operations["removeTeamSaml"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/sso/saml/add-on": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Turn the SAML add-on on or off
+         * @description Turn the paid SAML SSO add-on on or off for a team's subscription. Plans that include SAML do not need it. Turning it off also stops enforcing SAML so members are not locked out. Asks for confirmation once (confirmToken). Use it before configureTeamSaml when getTeamSso reports samlAvailable false.
+         */
+        put: operations["setTeamSamlAddOn"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/sso/saml/metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read SAML metadata
+         * @description Extract the entity id, SSO URL and signing certificate from an identity provider's metadata XML, without saving anything. Use it when the user has a metadata file, then pass the values to configureTeamSaml.
+         */
+        post: operations["importTeamSamlMetadata"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/emails": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add an email address
+         * @description Add an email address to your account and send it a verification link. Use it when the user wants another address on their account; once verified it can become primary and open teams to its domain.
+         */
+        post: operations["addUserEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/emails/primary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Choose your primary email
+         * @description Set a verified address as your primary email: notifications and support replies go there. Use it when the user wants mail sent to another of their addresses.
+         */
+        put: operations["setPrimaryEmail"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/emails/{email}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove an email address
+         * @description Remove a non-primary email address from your account. Asks for confirmation once (confirmToken). Use it when the user no longer owns or wants an address.
+         */
+        delete: operations["deleteUserEmail"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/emails/{email}/verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend a verification email
+         * @description Send a new verification link to one of your unverified addresses. Use it when the user lost or never got the first link.
+         */
+        post: operations["sendUserEmailVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List your signed-in browsers
+         * @description List the browsers and devices signed in to your account, with where and when they were last used. Use it before revokeSession, or when the user asks where they are signed in.
+         */
+        get: operations["listSessions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/sessions/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Sign out one browser
+         * @description Sign out one browser session by id (from listSessions). Use it when the user does not recognize a device or left one signed in.
+         */
+        delete: operations["revokeSession"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/sessions/revoke-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign out every browser
+         * @description Sign out every browser session of your account; API keys and connected agents keep working. Asks for confirmation once (confirmToken). Use it when the user thinks their account was accessed by someone else.
+         */
+        post: operations["revokeAllSessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/passkeys/{passkeyId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Rename a passkey
+         * @description Rename one of your passkeys (ids from list_connections). Use it when the user wants to tell their passkeys apart.
+         */
+        patch: operations["renamePasskey"];
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/connections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List connected services
+         * @description List an account's connections: GitHub, GitLab, Cursor Origin, and on teams Slack, Discord and Microsoft Teams. On your personal account it also lists your sign-in identities and passkeys. Use it before disconnect or reverify, or when a notification or repository link does not work.
+         */
+        get: operations["listConnections"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/connections/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get links to connect services
+         * @description Get one single-use link (15 minutes) per provider; it opens the provider's own authorization page, signed in as you, for this account. Omit providers for every provider not connected yet. Discord and Microsoft Teams connect by webhook URL instead (createDiscordWebhook, createMsTeamsWebhook). Use it when the user wants to connect a service, or to reach a GitHub App's settings to uninstall it.
+         */
+        post: operations["getConnectLinks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/connections/disconnect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Disconnect a service
+         * @description Disconnect one service from an account: Slack, a Discord or Microsoft Teams webhook, GitLab, or one of your own sign-in identities or passkeys. GitHub Apps and Cursor Origin are uninstalled on the provider's side. Asks for confirmation once (confirmToken). Use it when the user wants to stop notifications to a channel or remove a login.
+         */
+        post: operations["disconnect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/connections/reverify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check a connection
+         * @description Check that a connection still works: a Discord or Microsoft Teams webhook gets a test message, Slack, GitLab and the GitHub light app are asked with the stored credentials, and Cursor Origin is re-synced. Returns ok and what was found. Use it when notifications stop arriving or a repository stops syncing.
+         */
+        post: operations["reverify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/support/tickets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List your support requests
+         * @description List the support requests you sent, newest first (at most 100). Use it before create_support_ticket to avoid sending the same request twice, or when the user asks about a request they sent.
+         */
+        get: operations["listSupportTickets"];
+        put?: never;
+        /**
+         * Open a support request
+         * @description Submit a request to the support team; the reply goes to your primary email. Include the project, the build number and what you expected. Five requests per 10 minutes. Use it when something is broken, a tool keeps failing, or the user asks for help from a person.
+         */
+        post: operations["createSupportTicket"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Leave a team
+         * @description Remove yourself from a team. The last member cannot leave: delete the team instead. Asks for confirmation once (confirmToken). Use it when the user no longer wants access to a team's projects.
+         */
+        post: operations["leaveTeam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/accounts/{accountSlug}/invite-link/reset": {
         parameters: {
             query?: never;
@@ -216,6 +1204,66 @@ export interface paths {
          * @description Rotate the team's shared invite link, invalidating the previous one. Anyone holding the old link can no longer use it to join. Requires administrator access to the team. Use it when the shared invite link has leaked or has been shared too widely.
          */
         post: operations["resetAccountInviteLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teams/invites/{secret}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Look up a team invite
+         * @description Look up the team an invite link leads to, the role it grants and whether it expired, without accepting it. Use it when the user shares an invite link and wants to know where it leads.
+         */
+        get: operations["getTeamInvite"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teams/invites/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept a team invite
+         * @description Accept a team invite, from a team's invite link or a personal invite sent to the user's email, and join the team. A personal invite also adds its email address to the user's verified emails. Use it when the user asks to join the team an invite link points to.
+         */
+        post: operations["acceptTeamInvite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountSlug}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Join a team
+         * @description Join a team that invited one of the user's verified email addresses, or that lets in everyone with a verified email on its domain. Use it when the user wants to join their company's team without an invite link.
+         */
+        post: operations["joinTeam"];
         delete?: never;
         options?: never;
         head?: never;
@@ -808,7 +1856,11 @@ export interface paths {
         get: operations["getMe"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete your account
+         * @description Delete your personal account permanently, with its projects, API keys and team memberships. A paid subscription is cancelled; one bought through the App Store or Google Play can only be cancelled by the user, and storeSubscriptionNotice then says so: show it to the user. Asks for confirmation once (confirmToken). A team whose sole owner you are must be deleted or handed to another owner first. Use it only when the user explicitly asks to delete their Snapvisor account.
+         */
+        delete: operations["deleteAccount"];
         options?: never;
         head?: never;
         patch?: never;
@@ -825,7 +1877,7 @@ export interface paths {
         put?: never;
         /**
          * Request deletion of your account
-         * @description Email a confirmation link for deleting the authenticated user's personal account. Nothing is deleted until the person opens the link and confirms in the web app, so this call is safe to retry. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
+         * @description Email a confirmation link for deleting the authenticated user's personal account. Nothing is deleted until the person opens the link and confirms, so this call is safe to retry. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused. Agents use delete_account instead, which confirms with a confirmToken.
          */
         post: operations["requestAccountDeletion"];
         delete?: never;
@@ -865,7 +1917,7 @@ export interface paths {
         put?: never;
         /**
          * Register a push device
-         * @description Register the Snapvisor iOS app's APNs device token for the authenticated user, so builds that need their review reach the phone. Safe to repeat: the same token registered again moves to the caller and refreshes its environment. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
+         * @description Register the Snapvisor iOS app's APNs device token for the authenticated user, so builds that need their review reach the phone. Safe to repeat: the same token registered again moves to the caller and refreshes its environment. A user keeps at most 10 devices; registering more drops the least recently registered. A personal access token or the Snapvisor iOS app's own OAuth session may call it; other OAuth clients are refused.
          */
         post: operations["registerDevice"];
         delete?: never;
@@ -963,12 +2015,16 @@ export interface paths {
         };
         /**
          * Get a project
-         * @description Retrieve a project by its owner (account slug) and project name. Use it when you need a project's details or settings, for example before changing them. Returns the project's settings including default base branch and auto-approve globs — useful for understanding how baselines are selected.
+         * @description Retrieve a project by its owner (account slug) and project name. Requires view access to the project. Use it when you need a project's details or settings, for example before changing them. Returns the project's settings including default base branch and auto-approve globs — useful for understanding how baselines are selected.
          */
         get: operations["getProject"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete a project
+         * @description Delete a project with its builds, screenshots and deployments; its URL stops working. Requires administrator access to the project. Asks for confirmation once (confirmToken). Use it only when the user explicitly asks to delete the project.
+         */
+        delete: operations["deleteProject"];
         options?: never;
         head?: never;
         /**
@@ -1055,7 +2111,7 @@ export interface paths {
         };
         /**
          * List a project's contributors
-         * @description List the users explicitly granted access to a project, with their level. Team owners and members are not listed — they reach every project through their team role. The authenticated user comes first when they are one of them. Use it to check who, beyond the team's owners and members, can access a project.
+         * @description List the users explicitly granted access to a project, with their level. Team owners and members are not listed — they reach every project through their team role. The authenticated user comes first when they are one of them. Requires view access to the project. Use it to check who, beyond the team's owners and members, can access a project.
          */
         get: operations["listProjectContributors"];
         put?: never;
@@ -1123,7 +2179,7 @@ export interface paths {
          *
          *     `branch` and `prNumber` are what this is usually for: everything uploaded for the work in hand, whether or not a pull request exists yet. `branch` covers both — a media keeps its branch after publishing — so it stays a single query across the moment the pull request opens.
          *
-         *     Use it to find everything uploaded for a branch or pull request.
+         *     Requires view access to the project. Use it to find everything uploaded for a branch or pull request.
          */
         get: operations["listMedia"];
         put?: never;
@@ -1143,7 +2199,7 @@ export interface paths {
         };
         /**
          * List a project's builds
-         * @description List the builds of a project, most recent first. Results are paginated. Use `search` to match builds by name, branch or commit, and `distinctName` to return only the latest build per name and commit. Use it to find a build by branch, commit or name, or to see the latest builds of a project.
+         * @description List the builds of a project, most recent first. Results are paginated. Use `search` to match builds by name, branch or commit, and `distinctName` to return only the latest build per name and commit. Requires view access to the project. Use it to find a build by branch, commit or name, or to see the latest builds of a project.
          */
         get: operations["listBuilds"];
         put?: never;
@@ -1159,7 +2215,7 @@ export interface paths {
          *
          *     **Baseline:** if the project has no connected Git repository, a build that sends no `referenceCommit` and whose `parentCommits` match nothing is compared against the latest approved build on its `referenceBranch` (the default base branch when unset), else the latest completed one. A `referenceCommit` with no build is never replaced: that build is compared against nothing. Simplest: call `findBaselineForProject` first and pass the returned build's `head.sha` as `referenceCommit` (and its branch as `referenceBranch`). The first build has no baseline; approve it and later builds compare against it.
          *
-         *     Use it to start a visual test build for a project without a CI pipeline.
+         *     Requires reviewer access to the project. Use it to start a visual test build for a project without a CI pipeline.
          */
         post: operations["createBuildForProject"];
         delete?: never;
@@ -1179,9 +2235,9 @@ export interface paths {
         put?: never;
         /**
          * Capture screenshots of web pages
-         * @description Create a build from public web pages: Snapvisor opens each address in a browser, takes the screenshot itself and compares it with the previous build. Nothing to upload and no CI needed.
+         * @description Create a build from public web pages: Snapvisor opens each address in a browser, takes the screenshot itself and compares it with the last approved capture. Nothing to upload and no CI needed.
          *
-         *     **Workflow:** `captureScreenshotsForProject` → poll `getBuild` while `status` is `pending` or `progress` (capturing takes a few seconds per page) → on `changes-detected`, `listBuildDiffs` shows what changed. If `status` is `error`, a page could not be captured: `getBuildCapture` names the page and the reason.
+         *     **Workflow:** `captureScreenshotsForProject` → poll `getBuild` while `status` is `pending` or `progress` (capturing takes a few seconds per page) → on `changes-detected`, `listBuildDiffs` shows what changed → when the user says the changes are wanted, `createReview` approves them and that capture becomes the new baseline. If `status` is `error`, a page could not be captured: `getBuildCapture` names the page and the reason. When `getBuild` returns `autoApproved: true` the capture ran on an auto-approved branch and is already the new baseline.
          *
          *     **Pages:** only addresses on the public internet; private, local and internal addresses are refused. Give every page a stable `name`: screenshots are compared by name. If one page cannot be captured, nothing is stored for the build.
          *
@@ -1207,7 +2263,7 @@ export interface paths {
          * Finalize parallel builds for a project
          * @description Mark every parallel shard sharing the given `parallelNonce` as complete. Once finalized, the server compares the aggregated screenshots and starts processing the build.
          *
-         *     Use it when all shards of a parallel build have been uploaded.
+         *     Requires reviewer access to the project. Use it when all shards of a parallel build have been uploaded.
          */
         post: operations["finalizeProjectBuilds"];
         delete?: never;
@@ -1231,7 +2287,7 @@ export interface paths {
          *
          *     **Agent workflow:** call this before `createBuildForProject` and pass the returned build's `head.sha` as its `referenceCommit`. Without a connected Git repository, a build that sends no `referenceCommit` and whose `parentCommits` match nothing compares against the latest build on its `referenceBranch`; a `referenceCommit` with no build compares against nothing.
          *
-         *     Use it to discover which ancestor commit has an approved baseline build.
+         *     Requires reviewer access to the project. Use it to discover which ancestor commit has an approved baseline build.
          */
         post: operations["findBaselineForProject"];
         delete?: never;
@@ -1249,9 +2305,9 @@ export interface paths {
         };
         /**
          * Get a build
-         * @description Retrieve a single build by its number within a project, including its status and metadata. Use it when you have a build number and need its status, for example to check whether it still needs review.
+         * @description Retrieve a single build by its number within a project, including its status and metadata. Requires view access to the project. Use it when you have a build number and need its status, for example to check whether it still needs review.
          *
-         *     **Polling for completion:** after creating and finalizing a build, poll this endpoint while `status` is `pending` or `progress` (processing is still running). It then settles on `no-changes` (nothing to review), `changes-detected` (diffs found — review needed), or `error`, `aborted` or `expired`. On `changes-detected`, call `listBuildDiffs` to inspect the individual screenshot diffs. A reviewed build reads `accepted` or `rejected`.
+         *     **Polling for completion:** after creating and finalizing a build, poll this endpoint while `status` is `pending` or `progress` (processing is still running). It then settles on `no-changes` (nothing to review), `changes-detected` (diffs found — review needed), or `error`, `aborted` or `expired`. On `changes-detected`, call `listBuildDiffs` to inspect the individual screenshot diffs. A reviewed build reads `accepted` or `rejected`. When `autoApproved` is true the build ran on an auto-approved branch: it is already the new baseline and needs no review, whatever `status` says.
          */
         get: operations["getBuild"];
         /**
@@ -1260,7 +2316,7 @@ export interface paths {
          *
          *     Set `final: true` on the last request to finalize the build and start diff processing. For parallel builds, use `parallelIndex` and `parallelTotal` to identify shards.
          *
-         *     Use it after uploading screenshots to push their metadata and close the build.
+         *     Requires reviewer access to the project. Use it after uploading screenshots to push their metadata and close the build.
          */
         put: operations["updateBuildForProject"];
         post?: never;
@@ -1325,7 +2381,7 @@ export interface paths {
         };
         /**
          * List a build's screenshot diffs
-         * @description List the screenshot diffs of a build, with pagination. Each diff compares a baseline screenshot to the one captured by the build. Each diff also carries its test's flakiness metrics and, when it is a change, its ignore state and occurrence count — so you can tell whether a change is worth reviewing or is just a flaky one. Use `needsReview` to return only the diffs that require review. Use it to see what visually changed in a build before reviewing it.
+         * @description List the screenshot diffs of a build, with pagination. Each diff compares a baseline screenshot to the one captured by the build. Each diff also carries its test's flakiness metrics and, when it is a change, its ignore state and occurrence count — so you can tell whether a change is worth reviewing or is just a flaky one. Use `needsReview` to return only the diffs that require review. Requires view access to the project. Use it to see what visually changed in a build before reviewing it.
          *
          *     **Agent workflow:** call this after `getBuild` reports `changes-detected`. Inspect the diffs, then call `createReview` with `APPROVE` or `REJECT`.
          */
@@ -1349,7 +2405,9 @@ export interface paths {
         put?: never;
         /**
          * Ignore a test change
-         * @description Ignore a test change so its diffs no longer require review and are automatically approved on future builds. Use it to silence a change that has been identified as flaky.
+         * @description Ignore a test change so its diffs no longer require review and are automatically approved on future builds. A project can require a person to approve: ignoring a change with an access token (this API or the MCP server) is then refused with a 403, so ask the user to ignore it themselves in Snapvisor; unignoring still works.
+         *
+         *     Use it to silence a change that has been identified as flaky.
          */
         post: operations["ignoreChange"];
         delete?: never;
@@ -1393,7 +2451,7 @@ export interface paths {
         put?: never;
         /**
          * Create a review on a build
-         * @description Submit a review on a build to approve or reject the changes it captured. Use `APPROVE` to accept all changes as the new baseline, or `REJECT` to flag them for rework. Optionally pass per-screenshot decisions in `snapshots`. Confirm with the user first: the decision is reported to GitHub or GitLab, where it can unblock or block a merge.
+         * @description Submit a review on a build to approve or reject the changes it captured. Use `APPROVE` to accept all changes as the new baseline, or `REJECT` to flag them for rework. Optionally pass per-screenshot decisions in `snapshots`. Confirm with the user first: the decision is reported to GitHub or GitLab, where it can unblock or block a merge. A project can require a person to approve: an approval sent with an access token (this API or the MCP server) is then refused with a 403, so ask the user to approve the build themselves in Snapvisor; rejections still work, and so do comments, except one that would replace the same user's own rejection. A token cannot switch that rule off either.
          *
          *     Use it after reviewing diffs to approve or reject a build.
          */
@@ -1413,7 +2471,7 @@ export interface paths {
         };
         /**
          * Get the GitHub pull request for a commit
-         * @description Look up, on GitHub, the pull request that contains a commit of a repository connected to Snapvisor, with its number, title, state, link and changed files. Use it when you have a commit SHA, for example from a build, and need the pull request it belongs to. Accepts a personal access token only; OAuth connections are refused.
+         * @description Look up, on GitHub, the pull request that contains a commit of a repository connected to Snapvisor, with its number, title, state, link and changed files. Use it when you have a commit SHA, for example from a build, and need the pull request it belongs to.
          */
         get: operations["getRepoCommitPulls"];
         put?: never;
@@ -1433,7 +2491,7 @@ export interface paths {
         };
         /**
          * List a build's requested reviewers
-         * @description List the users currently requested to review a build. Use it to check who has been asked to review a build. Check this before `addBuildReviewers` to avoid redundant requests.
+         * @description List the users currently requested to review a build. Requires view access to the project. Use it to check who has been asked to review a build. Check this before `addBuildReviewers` to avoid redundant requests.
          */
         get: operations["listBuildReviewers"];
         put?: never;
@@ -1511,7 +2569,9 @@ export interface paths {
         put?: never;
         /**
          * Dismiss a submitted review on a build
-         * @description Dismiss a previously submitted review on a build, clearing its effect on the build's review status. Use it when a review was submitted by mistake or no longer reflects the build.
+         * @description Dismiss a previously submitted review on a build, clearing its effect on the build's review status. A project can require a person to approve: dismissing a rejection with an access token (this API or the MCP server) is then refused with a 403, so ask the user to dismiss it themselves in Snapvisor; dismissing an approval or a comment still works.
+         *
+         *     Use it when a review was submitted by mistake or no longer reflects the build.
          */
         post: operations["dismissReview"];
         delete?: never;
@@ -1669,7 +2729,7 @@ export interface paths {
         };
         /**
          * List a project's tests
-         * @description List the tests currently running in a project, flakiest first. A test is listed when it appeared in the latest reference build of its build name — tests that were deleted, renamed or skipped drop out. Use it to find what to stabilise: the first page is the project's flakiness backlog.
+         * @description List the tests currently running in a project, flakiest first. A test is listed when it appeared in the latest reference build of its build name — tests that were deleted, renamed or skipped drop out. Requires view access to the project. Use it to find what to stabilise: the first page is the project's flakiness backlog.
          */
         get: operations["listTests"];
         put?: never;
@@ -1689,7 +2749,7 @@ export interface paths {
         };
         /**
          * List a project's deployments
-         * @description List a project's deployments, most recent first. Use `environment` to keep only the production ones — the deployments that answer "what is live right now?". Use it to find what is deployed for a project, or the address of a deployment.
+         * @description List a project's deployments, most recent first. Use `environment` to keep only the production ones — the deployments that answer "what is live right now?". Requires view access to the project. Use it to find what is deployed for a project, or the address of a deployment.
          */
         get: operations["listProjectDeployments"];
         put?: never;
@@ -1709,7 +2769,7 @@ export interface paths {
         };
         /**
          * Get a project's deployment domain
-         * @description Retrieve the domain the project's production deployments are served on. Use it to find the address a project's production deployments are served on.
+         * @description Retrieve the domain the project's production deployments are served on. Requires view access to the project. Use it to find the address a project's production deployments are served on.
          */
         get: operations["getProjectDomain"];
         /**
@@ -1733,7 +2793,7 @@ export interface paths {
         };
         /**
          * List a project's ignored changes
-         * @description List the changes currently ignored in a project, most recently ignored first. Use it to audit what has been silenced and to unignore anything that should be reviewed again.
+         * @description List the changes currently ignored in a project, most recently ignored first. Requires view access to the project. Use it to audit what has been silenced and to unignore anything that should be reviewed again.
          */
         get: operations["listIgnoredChanges"];
         put?: never;
@@ -1753,7 +2813,7 @@ export interface paths {
         };
         /**
          * Get a test and its flakiness metrics
-         * @description Get a test with its flakiness metrics over a period: how many builds ran it, how many times it changed, and how stable and consistent those changes were. The metrics also come bucketed over time, so you can tell a test that has always been flaky from one that started recently. Pair it with `listTestChanges` to see what actually keeps changing. Use it when asked whether a test is flaky, or since when.
+         * @description Get a test with its flakiness metrics over a period: how many builds ran it, how many times it changed, and how stable and consistent those changes were. The metrics also come bucketed over time, so you can tell a test that has always been flaky from one that started recently. Pair it with `listTestChanges` to see what actually keeps changing. Requires view access to the project. Use it when asked whether a test is flaky, or since when.
          */
         get: operations["getTest"];
         put?: never;
@@ -1773,7 +2833,7 @@ export interface paths {
         };
         /**
          * List a test's changes
-         * @description List the distinct changes a test produced over a period, the ones that came back most often first. Each change is one exact visual difference, with how many times it reappeared, whether it is ignored, and the diff of its latest occurrence — so you can look at what moved. A change that keeps reappearing while nothing in the UI changed is a flaky one: fix what makes it unstable, or silence it with `ignoreChange`. Use it to see what keeps changing in a flaky test.
+         * @description List the distinct changes a test produced over a period, the ones that came back most often first. Each change is one exact visual difference, with how many times it reappeared, whether it is ignored, and the diff of its latest occurrence — so you can look at what moved. A change that keeps reappearing while nothing on the page changed is a flaky one: fix what makes it unstable, or silence it with `ignoreChange`. Requires view access to the project. Use it to see what keeps changing in a flaky test.
          */
         get: operations["listTestChanges"];
         put?: never;
@@ -1938,6 +2998,12 @@ export interface components {
          * @enum {string}
          */
         TeamUserLevel: "owner" | "member" | "contributor";
+        SpendLimit: {
+            /** @description Most the team may spend on additional screenshots per billing period, in whole units of the subscription's currency; null removes the limit. */
+            monthlyLimit: number | null;
+            /** @description Whether new builds are refused once the limit is reached. */
+            blockWhenReached: boolean;
+        };
         /** @description The public ID of the comment (e.g. `comment-xf23d`) */
         CommentId: string;
         /** @description Public ID of any comment in the thread (e.g. `comment-xf23d`) */
@@ -2105,6 +3171,10 @@ export interface components {
                     mode?: string;
                     /** @description True if the story has a play function */
                     play?: boolean;
+                } | null;
+                capture?: {
+                    /** @description The 0-based position of the screenshot within its test, following capture order */
+                    index: number;
                 } | null;
                 /** @description Tags associated to the screenshot */
                 tags?: string[];
@@ -2366,6 +3436,8 @@ export interface components {
             githubActionsOidcEnabled: boolean;
             /** @description Whether builds from forked pull requests can be uploaded without a token. */
             tokenlessAuthEnabled: boolean;
+            /** @description Whether approvals must come from a person signed in to the Snapvisor web app (approvals sent with an access token, including over the MCP server, are refused). */
+            requireHumanApproval: boolean;
             /** @description Whether deployments are served for this project. */
             deploymentEnabled: boolean;
             deploymentAuth: components["schemas"]["DeploymentAuth"];
@@ -2409,12 +3481,262 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
         };
+        BillingStatus: {
+            accountSlug: string;
+            plan: {
+                id: string;
+                name: string;
+                paid: boolean;
+            };
+            subscription: {
+                /** @enum {string} */
+                provider: "stripe" | "revenuecat" | "github";
+                status: string;
+                trialEndsAt: string | null;
+                /** @description When a cancelled subscription stops; null while it renews. */
+                endsAt: string | null;
+            } | null;
+            period: {
+                /** Format: date-time */
+                start: string;
+                /** Format: date-time */
+                end: string;
+            };
+            usage: {
+                screenshots: number;
+                includedScreenshots: number;
+                consumptionRatio: number;
+                additionalScreenshotsCost: number;
+            };
+            spendLimit: {
+                monthly: number | null;
+                blockWhenReached: boolean;
+            };
+            /** @description The 10 latest Stripe invoices; empty unless you administer the team. */
+            invoices: {
+                number: string | null;
+                status: string;
+                /** @description In the currency's minor unit (cents). */
+                total: number;
+                currency: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** @description The app's session-authenticated invoice route, which redirects to a fresh Stripe URL; null when Stripe has no hosted document. */
+                hostedInvoiceUrl: string | null;
+            }[];
+        };
+        Handoff: {
+            /**
+             * Format: uri
+             * @description Single-use link; opens only for the same signed-in user. Show it to the user.
+             */
+            url: string;
+            /** @description Seconds until the link expires (900). */
+            expires_in: number;
+            /** @description What the link does, in one line. */
+            what: string;
+        };
+        ManageSubscriptionResult: {
+            action: string;
+            status?: string;
+            cancelAtPeriodEnd?: boolean;
+            /** @description In the currency's minor unit (cents). */
+            refundedAmount?: number;
+            handoff?: components["schemas"]["Handoff"];
+        };
+        PlanOption: {
+            /** @enum {string} */
+            id: "free" | "pro";
+            name: string;
+            monthlyPrice: {
+                /** @description In the currency's major unit. */
+                amount: number;
+                currency: string;
+            };
+            includedScreenshots: number;
+            additionalScreenshotPrice: {
+                /** @description In the currency's major unit. */
+                amount: number;
+                currency: string;
+            } | null;
+        };
+        Profile: {
+            id: string;
+            name: string | null;
+            slug: string;
+            primaryEmail: string | null;
+            emails: {
+                email: string;
+                verified: boolean;
+                primary: boolean;
+            }[];
+            currency: string | null;
+            connectedLogins: ("github" | "gitlab" | "google" | "apple")[];
+            notificationPreferences: {
+                category: string;
+                /** @enum {string} */
+                channel: "email" | "in_app" | "push";
+                label: string;
+                description: string;
+                enabled: boolean;
+            }[];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ApiKey: {
+            id: string;
+            name: string;
+            /** @description Permission tiers; null means every tier (keys created before tiers existed). */
+            tiers: string[] | null;
+            readOnly: boolean;
+            accountSlugs: string[];
+            /** @enum {string} */
+            source: "user" | "cli" | "widget";
+            /** Format: date-time */
+            createdAt: string;
+            expireAt: string | null;
+            lastUsedAt: string | null;
+        };
+        AuthorizedApp: {
+            id: string;
+            clientName: string | null;
+            tiers: ("read" | "write" | "destructive" | "billing" | "account" | "team" | "connections" | "support" | "keys")[];
+            scopes: string[];
+            /** Format: date-time */
+            createdAt: string;
+            lastUsedAt: string | null;
+        };
+        ReferralSummary: {
+            /** @description false when the program is off for this user: see `reason`. */
+            enabled: boolean;
+            /**
+             * @description Why the program is off: `guest` for a user without an email address, `unconfigured` when this deployment has no referral provider.
+             * @enum {string}
+             */
+            reason?: "guest" | "unconfigured";
+            /** @description The user's referral link and its lifetime counters; null with `enabled: true` means it could not be read right now. */
+            link?: ({
+                shortLink: string;
+                clicks: number;
+                leads: number;
+                sales: number;
+            } & {
+                [key: string]: unknown;
+            }) | null;
+            /** @description Earnings in US cents. */
+            earnings?: {
+                pendingCents: number;
+                clearedCents: number;
+                paidCents: number;
+                readyToWithdraw: boolean;
+                currency: string;
+            } & {
+                [key: string]: unknown;
+            };
+            /** @description Where the user withdraws earnings. */
+            portalUrl?: string;
+            /** @description One row per referred person, newest first, when `includeReferrals` is true and the list could be read in full. */
+            referrals?: {
+                [key: string]: unknown;
+            }[];
+        } & {
+            [key: string]: unknown;
+        };
+        ProjectCustomDomain: {
+            domain: string;
+            status: string;
+            statusReason: string | null;
+            /** @description Where the domain's DNS record must point (a CNAME). */
+            routingEndpoint: string | null;
+        };
+        ChatWebhook: {
+            id: string;
+            name: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        TeamSso: {
+            githubSso: {
+                enabled: boolean;
+                githubOrganization: string | null;
+            };
+            /** @description Whether the team's plan includes SAML or the SAML add-on is on. */
+            samlAvailable: boolean;
+            saml: components["schemas"]["TeamSamlSettings"] | null;
+            serviceProvider: components["schemas"]["SamlServiceProvider"];
+        };
+        TeamSamlSettings: {
+            idpEntityId: string;
+            ssoUrl: string;
+            enabled: boolean;
+            enforced: boolean;
+        };
+        /** @description The values to enter in the identity provider. */
+        SamlServiceProvider: {
+            entityId: string;
+            acsUrl: string;
+            metadataUrl: string;
+            ssoUrl: string;
+        };
+        UserEmailAddress: {
+            email: string;
+            verified: boolean;
+            primary: boolean;
+        };
+        UserSessionSummary: {
+            id: string;
+            device: string | null;
+            ip: string | null;
+            location: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            lastSeenAt: string;
+        };
+        PasskeySummary: {
+            id: string;
+            name: string;
+            /** Format: date-time */
+            createdAt: string;
+            lastUsedAt: string | null;
+        };
+        Connection: {
+            /**
+             * @description github_app (repositories), github_light (GitHub without content access), gitlab, origin, slack, discord, msteams, or your own github_login, gitlab_login, google_login, apple_login and passkey.
+             * @enum {string}
+             */
+            provider: "github_app" | "github_light" | "gitlab" | "origin" | "slack" | "discord" | "msteams" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey";
+            /** @enum {string} */
+            status: "connected" | "not_connected";
+            /** @description The id to pass to disconnect or reverify for discord, msteams and passkey. */
+            connectionId: string | null;
+            label: string | null;
+            connectedAt: string | null;
+        };
+        SupportTicket: {
+            id: string;
+            subject: string | null;
+            /** @enum {string} */
+            type: "problem" | "feature_request" | "question" | "other";
+            /** @enum {string} */
+            status: "open" | "closed";
+            /** Format: date-time */
+            createdAt: string;
+        };
         InviteLink: {
             /**
              * Format: uri
              * @description The team's new shared invite link. Anyone with it joins at the team's default role.
              */
             inviteLink: string;
+        };
+        TeamRef: {
+            id: string;
+            slug: string;
+            name: string | null;
+        };
+        JoinedTeam: {
+            team: components["schemas"]["TeamRef"];
         };
         /** @description A standalone image or video uploaded to Snapvisor */
         Media: {
@@ -2588,6 +3910,10 @@ export interface components {
             status: ("accepted" | "rejected") | ("no-changes" | "changes-detected") | ("expired" | "pending" | "progress" | "error" | "aborted");
             /** @description The conclusion of the build */
             conclusion: ("no-changes" | "changes-detected") | null;
+            /** @description True when the build ran on an auto-approved branch (by default the project's default base branch): it became the new baseline by itself and needs no review, even when `status` is `changes-detected`. False until the build is processed. */
+            autoApproved: boolean;
+            /** @description Who or what created the build, for telling an agent-created build from a CI or a person's. Null for a build created before this was recorded: it is not guessed. */
+            creator: components["schemas"]["BuildCreator"] | null;
             /** @description Stats of the diffs present in the build */
             stats: {
                 /** @description Added snapshots */
@@ -2661,6 +3987,16 @@ export interface components {
             /** @description The branch name */
             branch: string;
         };
+        /** @description Who or what created a build. */
+        BuildCreator: {
+            /**
+             * @description Who created the build: `ci` (a project token: CI, tokenless or OIDC), `agent` (a coding agent, over the MCP server or reporting itself as one) or `user` (a person's own call: the web app, or a personal token with no agent marker). Self-reported by the caller, so not proof of who it was.
+             * @enum {string}
+             */
+            kind: "ci" | "agent" | "user";
+            /** @description The coding agent that created the build. Set exactly when `kind` is `agent`; `unknown` as its id when the agent could not be identified. */
+            agent: components["schemas"]["Agent"] | null;
+        };
         ImageDiffVerdict: {
             /** @description True when Snapvisor would flag the pair as a visual change. */
             changed: boolean;
@@ -2714,7 +4050,6 @@ export interface components {
             name: string | null;
             /** @enum {string} */
             type: "user" | "team";
-            mcpAccessIncluded: boolean;
         };
         /** @description GitHub linkage status for the authenticated user's account */
         MeGithub: {
@@ -2738,7 +4073,7 @@ export interface components {
              * @constant
              */
             entitlement: "pro";
-            /** @description The RevenueCat public SDK key (appl_…) of the App Store app, for the app to configure the SDK with. Public by design; delivered here so it never ships in the app binary. */
+            /** @description The RevenueCat public SDK key (appl_…) of the App Store app, for the app to configure the SDK with. Public by design; delivered here so it never ships inside the app binary. */
             publicApiKey: string;
         };
         /** @description A push device registered for the authenticated user */
@@ -2909,6 +4244,10 @@ export interface components {
                         /** @description True if the story has a play function */
                         play?: boolean;
                     } | null;
+                    capture?: {
+                        /** @description The 0-based position of the screenshot within its test, following capture order */
+                        index: number;
+                    } | null;
                     /** @description Tags associated to the screenshot */
                     tags?: string[];
                 } | null;
@@ -3020,6 +4359,10 @@ export interface components {
                         mode?: string;
                         /** @description True if the story has a play function */
                         play?: boolean;
+                    } | null;
+                    capture?: {
+                        /** @description The 0-based position of the screenshot within its test, following capture order */
+                        index: number;
                     } | null;
                     /** @description Tags associated to the screenshot */
                     tags?: string[];
@@ -3237,6 +4580,12 @@ export interface components {
                 changes: number;
             } | null;
         };
+        SpendLimitOutput: {
+            /** @description Most the team may spend on additional screenshots per billing period, in whole units of the subscription's currency; null removes the limit. */
+            monthlyLimit: number | null;
+            /** @description Whether new builds are refused once the limit is reached. */
+            blockWhenReached: boolean;
+        };
         /** @description One stored part. Send it back unchanged when completing the upload. */
         UploadedMultipartPartOutput: {
             /** @description 1-based number of the part. */
@@ -3379,6 +4728,79 @@ export interface operations {
             };
         };
     };
+    deleteTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        deleted: true;
+                        /** @description Present when a subscription bought through the App Store or Google Play is still renewing. Only the user can cancel it, in the store; show them this message. */
+                        storeSubscriptionNotice?: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     updateAccount: {
         parameters: {
             query?: never;
@@ -3392,7 +4814,10 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    defaultUserLevel: components["schemas"]["TeamDefaultUserLevel"];
+                    defaultUserLevel?: components["schemas"]["TeamDefaultUserLevel"];
+                    name?: string;
+                    /** @description Lowercase letters, digits and inner hyphens. Changes every URL of the team. */
+                    slug?: string;
                 };
             };
         };
@@ -4241,6 +5666,3809 @@ export interface operations {
             };
         };
     };
+    billingStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Billing status */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingStatus"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    upgradePlan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description Plan id from list_plans.
+                     * @enum {string}
+                     */
+                    plan: "pro";
+                };
+            };
+        };
+        responses: {
+            /** @description Checkout handoff */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Handoff"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    manageSubscription: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    action: "cancel" | "resume" | "extend" | "refund" | "portal";
+                };
+            };
+        };
+        responses: {
+            /** @description Result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManageSubscriptionResult"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setSpendLimit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpendLimit"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpendLimitOutput"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listPlans: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Plans */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOption"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Profile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Profile"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Display name of your personal account. */
+                    name?: string;
+                    /** @description Personal account slug (your URL): lowercase letters, digits and inner hyphens. */
+                    slug?: string;
+                    /**
+                     * @description Currency prices are quoted in.
+                     * @enum {string}
+                     */
+                    currency?: "usd" | "cad" | "eur" | "gbp" | "aud" | "brl" | "mxn" | "jpy" | "php";
+                    /**
+                     * @description Where you found Snapvisor (the welcome question).
+                     * @enum {string}
+                     */
+                    signupSource?: "search_engine" | "ai_assistant" | "social_media" | "github" | "word_of_mouth" | "other";
+                    /** @description Free-text answer, kept only with signupSource `other`. */
+                    signupSourceDetail?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Profile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Profile"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateNotificationPrefs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    preferences: {
+                        category: string;
+                        /** @enum {string} */
+                        channel: "email" | "in_app" | "push";
+                        enabled: boolean;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description Every preference after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        category: string;
+                        /** @enum {string} */
+                        channel: "email" | "in_app" | "push";
+                        label: string;
+                        description: string;
+                        enabled: boolean;
+                    }[];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    exportData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            [key: string]: unknown;
+                        };
+                        handoff?: components["schemas"]["Handoff"];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                    /** @description A company email domain you hold a verified address on; people signing up with it join automatically. */
+                    autoJoinDomain?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Team */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        team: {
+                            id: string;
+                            slug: string;
+                            name: string | null;
+                        };
+                        /** @enum {string} */
+                        trial: "started" | "needs-checkout" | "none";
+                        checkout?: components["schemas"]["Handoff"];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listApiKeys: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Keys */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiKey"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createApiKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                    tiers: ("read" | "write" | "destructive" | "billing" | "account" | "team" | "connections" | "support" | "keys")[];
+                    accountSlugs?: string[];
+                    expireInDays?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Key and its secret */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        key: components["schemas"]["ApiKey"];
+                        /** @description The secret. Shown once: store it now. */
+                        token: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    revokeApiKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id of the API key (list_api_keys). */
+                keyId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Revoked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        revoked: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    renameApiKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id of the API key (list_api_keys). */
+                keyId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Key */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiKey"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    rotateApiKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id of the API key (list_api_keys). */
+                keyId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Key and its new secret */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        key: components["schemas"]["ApiKey"];
+                        /** @description The secret. Shown once: store it now. */
+                        token: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listAuthorizedApps: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authorized apps */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorizedApp"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    revokeAuthorizedApp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id of the authorized app (listAuthorizedApps). */
+                grantId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Disconnected */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        revoked: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listGrantedScopes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Granted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        kind: "oauth" | "pat";
+                        tiers: ("read" | "write" | "destructive" | "billing" | "account" | "team" | "connections" | "support" | "keys")[];
+                        scopes: string[];
+                        client: string | null;
+                        accountSlugs: string[];
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    requestScopes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    tiers: ("read" | "write" | "destructive" | "billing" | "account" | "team" | "connections" | "support" | "keys")[];
+                };
+            };
+        };
+        responses: {
+            /** @description Approval link */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Handoff"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getReferralSummary: {
+        parameters: {
+            query?: {
+                /** @description true to also list the people the user referred (slower). */
+                includeReferrals?: "true" | "false";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Referral summary */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReferralSummary"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    addProjectCustomDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    domain: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Custom domain */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectCustomDomain"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeProjectCustomDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The custom domain. */
+                domain: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        removed: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    checkProjectCustomDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+                /** @description The custom domain. */
+                domain: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Custom domain */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectCustomDomain"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    regenerateProjectToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description New upload token */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        token: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    testAutomationRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    event: "build.completed" | "build.reviewed";
+                    actions: ({
+                        /** @constant */
+                        type: "sendSlackMessage";
+                        payload: {
+                            /** @default  */
+                            slackId?: string;
+                            name: string;
+                        };
+                    } | {
+                        /** @constant */
+                        type: "sendMsTeamsMessage";
+                        payload: {
+                            webhookId: string;
+                        };
+                    } | {
+                        /** @constant */
+                        type: "sendDiscordMessage";
+                        payload: {
+                            webhookId: string;
+                        };
+                    })[];
+                };
+            };
+        };
+        responses: {
+            /** @description Sent */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        sent: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createDiscordWebhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Label shown in Snapvisor, e.g. the channel name. */
+                    name: string;
+                    /**
+                     * Format: uri
+                     * @description The webhook URL the service gave you.
+                     */
+                    url: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Webhook added (its URL is a secret and never returned) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatWebhook"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createMsTeamsWebhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Label shown in Snapvisor, e.g. the channel name. */
+                    name: string;
+                    /**
+                     * Format: uri
+                     * @description The webhook URL the service gave you.
+                     */
+                    url: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Webhook added (its URL is a secret and never returned) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatWebhook"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listGithubRepositories: {
+        parameters: {
+            query: {
+                installationId: string;
+                page?: number;
+            };
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Repositories */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        repositories: {
+                            owner: string;
+                            name: string;
+                            private: boolean;
+                        }[];
+                        totalCount: number;
+                        hasNextPage: boolean;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listGitlabProjects: {
+        parameters: {
+            query?: {
+                search?: string;
+                page?: number;
+            };
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description GitLab projects */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        projects: {
+                            id: string;
+                            name: string;
+                            pathWithNamespace: string;
+                        }[];
+                        totalCount: number;
+                        hasNextPage: boolean;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    importProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    provider: "github" | "gitlab" | "origin";
+                    /** @description GitHub only, required: GitHub App installation id (from list_connections). */
+                    installationId?: string;
+                    /** @description GitHub only, required: the repository owner. */
+                    repoOwner?: string;
+                    /** @description GitHub only, required: the repository name. */
+                    repoName?: string;
+                    /** @description GitLab only, required: GitLab project id (from listGitlabProjects). */
+                    gitlabProjectId?: string;
+                    /** @description Cursor Origin only, required: the Origin repository id. */
+                    originRepositoryId?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The new project */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Project"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setGitlabAccessToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    token: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        saved: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    linkRepository: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    provider: "github" | "gitlab" | "origin";
+                    /** @description GitHub only, required: GitHub App installation id (from list_connections). */
+                    installationId?: string;
+                    /** @description GitHub only, required: the repository owner. */
+                    repoOwner?: string;
+                    /** @description GitHub only, required: the repository name. */
+                    repoName?: string;
+                    /** @description GitLab only, required: GitLab project id (from listGitlabProjects). */
+                    gitlabProjectId?: string;
+                    /** @description Cursor Origin only, required: the Origin repository id. */
+                    originRepositoryId?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The project */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Project"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    unlinkRepository: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The project */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Project"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getTeamSso: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Team single sign-on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamSso"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setTeamGithubSso: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    enabled: boolean;
+                    /** @description GitHub App installation id; required to turn on. */
+                    githubInstallationId?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Team single sign-on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamSso"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    configureTeamSaml: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    idpEntityId?: string;
+                    /** Format: uri */
+                    ssoUrl?: string;
+                    /** @description The identity provider's X.509 certificate (PEM). */
+                    signingCertificate?: string;
+                    enabled?: boolean;
+                    /** @description Require members to sign in with SAML. */
+                    enforced?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Team single sign-on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamSso"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    removeTeamSaml: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Team single sign-on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamSso"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setTeamSamlAddOn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    enabled: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Team single sign-on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamSso"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    importTeamSamlMetadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    metadataXml: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Identity provider values */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        idpEntityId: string;
+                        ssoUrl: string;
+                        signingCertificate: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    addUserEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    email: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Email added */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserEmailAddress"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setPrimaryEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    email: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Primary email */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserEmailAddress"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteUserEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description One of your email addresses. */
+                email: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        removed: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    sendUserEmailVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description One of your email addresses. */
+                email: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Sent */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        sent: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Sessions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserSessionSummary"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    revokeSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id from listSessions. */
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signed out */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        revoked: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    revokeAllSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signed out */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        revoked: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    renamePasskey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id from list_connections. */
+                passkeyId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Passkey */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasskeySummary"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listConnections: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the account. Your own sign-in identities and passkeys are on your personal account. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Connections */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Connection"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getConnectLinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the account. Your own sign-in identities and passkeys are on your personal account. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    providers?: ("github_app" | "github_light" | "gitlab" | "origin" | "slack" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey")[];
+                };
+            };
+        };
+        responses: {
+            /** @description Links */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description github_app (repositories), github_light (GitHub without content access), gitlab, origin, slack, discord, msteams, or your own github_login, gitlab_login, google_login, apple_login and passkey.
+                         * @enum {string}
+                         */
+                        provider: "github_app" | "github_light" | "gitlab" | "origin" | "slack" | "discord" | "msteams" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey";
+                        url: string;
+                        expires_in: number;
+                        what: string;
+                    }[];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    disconnect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the account. Your own sign-in identities and passkeys are on your personal account. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description github_app (repositories), github_light (GitHub without content access), gitlab, origin, slack, discord, msteams, or your own github_login, gitlab_login, google_login, apple_login and passkey.
+                     * @enum {string}
+                     */
+                    provider: "github_app" | "github_light" | "gitlab" | "origin" | "slack" | "discord" | "msteams" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey";
+                    /** @description Required for discord, msteams and passkey. */
+                    connectionId?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Disconnected */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description github_app (repositories), github_light (GitHub without content access), gitlab, origin, slack, discord, msteams, or your own github_login, gitlab_login, google_login, apple_login and passkey.
+                         * @enum {string}
+                         */
+                        provider: "github_app" | "github_light" | "gitlab" | "origin" | "slack" | "discord" | "msteams" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey";
+                        /** @constant */
+                        disconnected: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    reverify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the account. Your own sign-in identities and passkeys are on your personal account. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description github_app (repositories), github_light (GitHub without content access), gitlab, origin, slack, discord, msteams, or your own github_login, gitlab_login, google_login, apple_login and passkey.
+                     * @enum {string}
+                     */
+                    provider: "github_app" | "github_light" | "gitlab" | "origin" | "slack" | "discord" | "msteams" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey";
+                    /** @description Required for discord, msteams and passkey. */
+                    connectionId?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description github_app (repositories), github_light (GitHub without content access), gitlab, origin, slack, discord, msteams, or your own github_login, gitlab_login, google_login, apple_login and passkey.
+                         * @enum {string}
+                         */
+                        provider: "github_app" | "github_light" | "gitlab" | "origin" | "slack" | "discord" | "msteams" | "github_login" | "gitlab_login" | "google_login" | "apple_login" | "passkey";
+                        ok: boolean;
+                        detail: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listSupportTickets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Tickets */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupportTicket"][];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createSupportTicket: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    subject: string;
+                    body: string;
+                    /**
+                     * @default question
+                     * @enum {string}
+                     */
+                    type?: "problem" | "feature_request" | "question" | "other";
+                    expectedOutcome?: string;
+                    /** @description Links (a build URL, a screenshot) appended to the message. */
+                    attachments?: {
+                        name: string;
+                        /** Format: uri */
+                        url: string;
+                    }[];
+                    /**
+                     * Format: uuid
+                     * @description Repeat a request safely: the same key returns the same ticket.
+                     */
+                    idempotencyKey?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Ticket */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupportTicket"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    leaveTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Slug of the team. */
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Left */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        left: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     resetAccountInviteLink: {
         parameters: {
             query?: never;
@@ -4282,6 +9510,191 @@ export interface operations {
             };
             /** @description Forbidden */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getTeamInvite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The secret at the end of the invite link. */
+                secret: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invite */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        team: components["schemas"]["TeamRef"];
+                        /** @enum {string} */
+                        role: "owner" | "member" | "contributor";
+                        expired: boolean;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    acceptTeamInvite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The secret at the end of the invite link. */
+                    secret: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Joined */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinedTeam"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    joinTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Joined */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinedTeam"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6217,6 +11630,8 @@ export interface operations {
                     branch: components["schemas"]["GitBranch"];
                     /** @description The pull request number */
                     prNumber?: number | null;
+                    /** @description The head commit of the pull request. When `commit` is a merge commit built for the pull request, such as the test-merge commit GitHub Actions checks out, the deployment status is reported on this commit, where the pull request shows it. */
+                    prHeadCommit?: components["schemas"]["Sha1Hash"] | null;
                     /**
                      * @description The deployment environment. When omitted, it is inferred from `branch`: branches matching the configured production-branch glob are treated as `production`; all others default to `preview`. A tokenless GitHub Actions credential cannot choose: it is deployed to `production` only from the production branch of the repository itself (never from a fork), and asking for `production` from anywhere else is refused with 403.
                      * @enum {string}
@@ -6885,6 +12300,76 @@ export interface operations {
             };
         };
     };
+    deleteAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        deleted: true;
+                        /** @description Present when a subscription bought through the App Store or Google Play is still renewing. Only the user can cancel it, in the store; show them this message. */
+                        storeSubscriptionNotice?: string;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     requestAccountDeletion: {
         parameters: {
             query?: never;
@@ -7398,6 +12883,77 @@ export interface operations {
             };
         };
     };
+    deleteProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                owner: string;
+                project: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        deleted: true;
+                    };
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     updateProject: {
         parameters: {
             query?: never;
@@ -7429,6 +12985,10 @@ export interface operations {
                     deploymentAuth?: components["schemas"]["DeploymentAuth"];
                     githubActionsOidcEnabled?: boolean;
                     tokenlessAuthEnabled?: boolean;
+                    /** @description When true, an approval must come from a person signed in to the Snapvisor web app: approvals sent with an access token (this API or the MCP server) are refused. Rejections are still accepted, and so are comments, except one that would replace the same user's own rejection. A token can switch this setting on but not off, and while it is on a token cannot change the auto-approved branches, the default base branch or the ignore settings, or turn on tokenless or GitHub Actions OIDC uploads, either: a person changes those while signed in to Snapvisor. */
+                    requireHumanApproval?: boolean;
+                    /** @description Post a Snapvisor summary comment on pull requests. */
+                    prCommentEnabled?: boolean;
                 };
             };
         };
@@ -8526,7 +14086,7 @@ export interface operations {
                          */
                         fullPage?: boolean;
                     }[];
-                    /** @description Branch to record the build on. Default: the project's default base branch, where each build is compared against the previous one. */
+                    /** @description Branch to record the capture on. Default "captures": each capture is compared with the last approved capture on its branch and waits for approval; only approved captures become the baseline. Pass a branch the project auto-approves (by default its base branch, such as "main") for monitoring instead: each capture is approved automatically and becomes the baseline at once. */
                     branch?: components["schemas"]["GitBranch"];
                     /** @description Build name, to keep separate series of captures apart (for example "mobile"). Default "default". */
                     name?: string;
@@ -11040,6 +16600,15 @@ export interface operations {
                     "application/json": components["schemas"]["Error"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             /** @description Not found */
             404: {
                 headers: {
@@ -11120,6 +16689,15 @@ export interface operations {
                     "application/json": components["schemas"]["Error"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             /** @description Not found */
             404: {
                 headers: {
@@ -11172,6 +16750,15 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -11321,6 +16908,15 @@ export interface operations {
                     "application/json": components["schemas"]["Error"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             /** @description Not found */
             404: {
                 headers: {
@@ -11378,6 +16974,15 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -11451,6 +17056,15 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
