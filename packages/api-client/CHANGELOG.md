@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fapi-client%400.29.0...%40snapvisor%2Fapi-client%400.30.0) (2026-11-27)
+
+### Features
+
+* **api-client:** regenerate schema from Snapvisor API at 31bd3247 ([#28](https://github.com/DevinoSolutions/snapvisor-js/issues/28)) ([41726e7](https://github.com/DevinoSolutions/snapvisor-js/commit/41726e74195fec75b8bfe1ceceb5193e7ed82114))
+
+### BREAKING CHANGES
+
+* **api-client:** MeAccount.mcpAccessIncluded is removed from the generated types.
+
+
 # [0.29.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fapi-client%400.28.0...%40snapvisor%2Fapi-client%400.29.0) (2026-11-15)
 
 ### Features

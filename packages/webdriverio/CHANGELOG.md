@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fwebdriverio%400.10.0...%40snapvisor%2Fwebdriverio%400.10.1) (2026-11-27)
+
+**Note:** Version bump only for package @snapvisor/webdriverio
+
+
+
+
+
 # [0.10.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fwebdriverio%400.9.0...%40snapvisor%2Fwebdriverio%400.10.0) (2026-11-15)
 
 ### Features

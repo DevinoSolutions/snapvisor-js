@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fgitlab%400.9.0...%40snapvisor%2Fgitlab%400.9.1) (2026-11-27)
+
+**Note:** Version bump only for package @snapvisor/gitlab
+
+
+
+
+
 # [0.9.0](https://github.com/DevinoSolutions/snapvisor-js/compare/%40snapvisor%2Fgitlab%400.8.3...%40snapvisor%2Fgitlab%400.9.0) (2026-11-15)
 
 ### Features
